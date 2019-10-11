@@ -119,17 +119,7 @@ Lots of companies spend millions on research and development, yet never look at 
 
 > *Student 2 should complete this section.*
 
-## Example
-
-> Example: Here's how you can include images in markdown documents...
-
-<!-- Basically, just use HTML! -->
-
-<p align="center">
-  <img src="./res/cat.png" width="300px">
-</p>
-
-## References:
+### References
 [Boston Globe](https://www.bostonglobe.com/ideas/2018/11/09/what-complex-technology-can-learn-from-simple-ants/nRUJgi2duvaS0tg6Nk7WcL/story.html)
 
 [biomimicry-link]: https://biomimicry.org/what-is-biomimicry/
