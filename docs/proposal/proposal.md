@@ -75,12 +75,14 @@ Also, the way ants move from anthill to food source is of particular interest. T
 
 Lots of companies spend millions on research and development, yet never look at nature, which has had essentially billions of years of research and development by way of evolution. We think that by simulating ants, we can get emphasise the importance of biomimicry in Artificial Intelligence.  
 
+The simulation of ant colony behaviour in the past has been useful for research surrounding traffic control, self-building robots and drone swarms. The inclusion of simulated environmental changes and rival colonies in this particular project can build upon traffic control etc. by being used to analyse/improve emergency response to natural disasters and aggressive invasions in the real world. A emergency vehicle's ability to traverse the site of a natural disaster can be the difference between life and death for people trapped in the wreckage. 
+
 ### Programming language(s)
 
 > List the proposed language(s) to be used.
 
 - Java will be used to create classes for the ants, colonies, environment etc
-- Java will also be used to display our simulation
+- Java will also be used to display our simulation using a Java Visual Library
 
 ### Programming tools / Tech stack
 
@@ -101,7 +103,7 @@ Lots of companies spend millions on research and development, yet never look at 
 > List the main new things (technologies, languages, tools, etc) that you will have to learn.
 
 - Neither of us have had any past experience with AI outside of this course. We will be delving a lot further into this field for this project and so will have to study various approaches
-- We have both had past experience programming in Java, but we intend to use Java to also display our 2D/3D display of our simulation. This is a new application of Java programming we will need to learn when undertaking this project.
+- We have both had past experience programming in Java, but we intend to use Java to also display our 2D/3D display of our simulation. This is a new application of Java programming we will need to learn when undertaking this project. We will most likely use [Java Swing](java-swing-link) or [Java AWT](java-awt-link) in order to make a graphical user interface that the user can interact with. 
 
 ### Breakdown of work
 
@@ -121,5 +123,9 @@ Lots of companies spend millions on research and development, yet never look at 
 
 ### References
 [Boston Globe](https://www.bostonglobe.com/ideas/2018/11/09/what-complex-technology-can-learn-from-simple-ants/nRUJgi2duvaS0tg6Nk7WcL/story.html)
+[Java Swing](https://www.guru99.com/java-swing-gui.html)
+[Java AWT](https://www.ntu.edu.sg/home/ehchua/programming/java/J4a_GUI.html)
 
 [biomimicry-link]: https://biomimicry.org/what-is-biomimicry/
+[java-swing-link]: https://www.guru99.com/java-swing-gui.html
+[java-awt-link]: https://www.ntu.edu.sg/home/ehchua/programming/java/J4a_GUI.html
