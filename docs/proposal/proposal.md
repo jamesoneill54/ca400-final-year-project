@@ -122,9 +122,9 @@ The simulation of ant colony behaviour in the past has been useful for research 
 > *Student 2 should complete this section.*
 
 ### References
-[Boston Globe](https://www.bostonglobe.com/ideas/2018/11/09/what-complex-technology-can-learn-from-simple-ants/nRUJgi2duvaS0tg6Nk7WcL/story.html)
-[Java Swing](https://www.guru99.com/java-swing-gui.html)
-[Java AWT](https://www.ntu.edu.sg/home/ehchua/programming/java/J4a_GUI.html)
+- [Boston Globe](https://www.bostonglobe.com/ideas/2018/11/09/what-complex-technology-can-learn-from-simple-ants/nRUJgi2duvaS0tg6Nk7WcL/story.html)
+- [Java Swing](https://www.guru99.com/java-swing-gui.html)
+- [Java AWT](https://www.ntu.edu.sg/home/ehchua/programming/java/J4a_GUI.html)
 
 [biomimicry-link]: https://biomimicry.org/what-is-biomimicry/
 [java-swing-link]: https://www.guru99.com/java-swing-gui.html
