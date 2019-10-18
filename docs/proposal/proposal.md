@@ -1,10 +1,5 @@
 # School of Computing &mdash; Year 4 Project Proposal Form
 
-> Edit (then commit and push) this document to complete your proposal form.
-> Make use of figures / diagrams where appropriate.
->
-> Do not rename this file.
-
 ## SECTION A
 
 |                     |                         |
@@ -16,19 +11,7 @@
 |Student 2 ID:        | 16410652                |
 |Project Supervisor:  | Alistair Sutherland     |
 
-> Ensure that the Supervisor formally agrees to supervise your project; this is only recognised once the
-> Supervisor assigns herself/himself via the project Dashboard.
->
-> Project proposals without an assigned
-> Supervisor will not be accepted for presentation to the Approval Panel.
-
 ## SECTION B
-
-> Guidance: This document is expected to be approximately 3 pages in length, but it can exceed this page limit.
-> It is also permissible to carry forward content from this proposal to your later documents (e.g. functional
-> specification) as appropriate.
->
-> Your proposal must include *at least* the following sections.
 
 ### Introduction
 
@@ -111,21 +94,6 @@ The simulation of ant colony behaviour in the past has been useful for research 
 
 ### Breakdown of work
 
-> Clearly identify who will undertake which parts of the project.
->
-> It must be clear from the explanation of this breakdown of work both that each student is responsible for
-> separate, clearly-defined tasks, and that those responsibilities substantially cover all of the work required
-> for the project.
-
-Jobs to be done: 
-- Continuous integration (CI) pipeline.
-- Logging.
-- Elasticsearch interfacing.
-- Displaying metrics. 
-- GUI setup (to be broken down further).
-- Ant simulation (to be broken down further).
-- Ant movement research.
-
 Over the course of the project we will be using a [Trello][trello-link] board to report, assign and review our work and progress. We will also be assigning each other our Git merge requests. 
 
 ![Our Trello Agile board setup](./res/trello-agile-board.png)
@@ -134,7 +102,7 @@ Over the course of the project we will be using a [Trello][trello-link] board to
 
 #### Student 1
 
-> *Student 1 should complete this section.*
+> *Kevin's Task Breakdown*
 
 - Integration testing pipeline. 
 - Back-end boilerplate (Basic classes and interfaces). 
@@ -143,7 +111,7 @@ Over the course of the project we will be using a [Trello][trello-link] board to
 
 #### Student 2
 
-> *Student 2 should complete this section.*
+> *James' Task Breakdown*
 
 - Logging metrics. 
 - GUI Boilerplate. 
