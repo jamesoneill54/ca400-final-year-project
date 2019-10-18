@@ -9,12 +9,12 @@
 
 |                     |                         |
 |---------------------|-------------------------|
-|Project Title:       | Modelling an ant colony |
+|Project Title:       | Modelling An Ant Colony |
 |Student 1 Name:      | Kevin Thomas Cleary     |
 |Student 1 ID:        | 16373026                |
 |Student 2 Name:      | James Edward O'Neill    |
 |Student 2 ID:        | 16410652                |
-|Project Supervisor:  | xxxxxx                  |
+|Project Supervisor:  | Alistair Sutherland     |
 
 > Ensure that the Supervisor formally agrees to supervise your project; this is only recognised once the
 > Supervisor assigns herself/himself via the project Dashboard.
@@ -30,16 +30,15 @@
 >
 > Your proposal must include *at least* the following sections.
 
-
 ### Introduction
 
 > Describe the general area covered by the project.
 
+This project will aim to properly simulate colonies and individual ants using Artificial Intelligence, and simulate their evolution from generation to generation in the Darwinist style. We will then use our trained ants to solve real world problems such as emergency vehicle response following natural disasters. 
+
 Ants in a colony have different jobs and goals within the colony, such as collecting food, defending the colony, looking after the young, removing rubbish etc. Each of these jobs must be distributed equally among the ants, no matter if some ants die or more ants are born. This project will simulate ants performing their jobs for the upkeep of the colony. 
 
-This project will aim to properly simulate colonies and individual ants using Artificial Intelligence, and simulate their evolution from generation to generation in the Darwinist style. 
-
-This project will also, on a smaller scale, aim to outline the importance of [biomimicry](biomimicry-link) in modern design. 
+This project will also, on a smaller scale, aim to outline the importance of [biomimicry][biomimicry-link] in modern design. 
 
 ### Outline
 
@@ -53,11 +52,13 @@ The simulation will be designed in such a way that with different environmental 
 
 We would like to extend this idea by introducing multiple species of ant colonies with different, customizable attributes to simulate the constant warring between ant colonies in any given environment. This would ideally allow each colony to evolve and mutate over time to try and tackle problems set out by both rival colonies and their native environment. We plan to have certain 'locked' attributes inherent in each colony; for example, the speed of one colony could increase over generations whereas an ant's size could be static throughout. This would again be modelled on the real world, where rival colonies across the world have adapted to each other in order to fight for their territory.
 
+Time permitting, we would also like to extend this project to include simulations of natural disasters, and emergency response vehicle's reaction to it. In the case of typhoons, hurricanes, or tsunamis, regular access routes are blocked off, so emergency vehicles must find other ways to get to those in need. We can apply the algorithms used by our trained ants to these emergency vehicles. 
+
 ### Background
 
 > Where did the ideas come from?
 
-This idea was originally selected from Alastair Sutherland's list of proposed projects, but we hope to extend and expand upon the basis for this ant colony project as described above. We really want to explore Artificial Intelligence and study the behaviour of Neural Networks through the lens of [biomimicry](biomimicry-link). 
+This idea was originally selected from Alastair Sutherland's list of proposed projects, but we hope to extend and expand upon the basis for this ant colony project as described above. We really want to explore Artificial Intelligence and study machine learning through the lens of [biomimicry][biomimicry-link]. 
 
 ### Achievements
 
@@ -65,9 +66,9 @@ This idea was originally selected from Alastair Sutherland's list of proposed pr
 
 This project could be used for educational purposes, both from an artificial intelligence point of view and to outline the importance of biomimicry in technology. The customisation aspect of our simulation will also boost engagement with users and prompt deep exploration into what factors can have a big impact on colonies such as these.
 
-The way ants find their way to and from food sources is particularly interesting, as they have no central control, no hierarchical structure in the colony, yet they still perform so efficiently. They innately know what to do and how to do it in order to benefit the colony as a whole. This can be very useful for designing technology, as it requires no dedicated central "mind" or "leader", negating the risk of a single point of failure if used in technology. 
+The way ants find their way to and from food sources is particularly interesting, as they have no central control, no hierarchical structure in the colony, yet they still perform so efficiently. This can be very useful for designing technology, as it requires no dedicated central "mind" or "leader", negating the risk of a single point of failure if used in technology. 
 
-Also, the way ants move from anthill to food source is of particular interest. They will always find they shortest path to a destination by use of pheromones. This behaviour would be very useful for everyday use (ie. for delivery services, emergency services or public transport) in order to find the shortest path to and from a destination. 
+There are a lot of real world optimisation applications of this project. Specifically, users could be those designing delivery routes, public transport routes or automated emergency responses. This stems from the way ants will always find the shortest path to a destination.  
 
 ### Justification
 
@@ -81,29 +82,32 @@ The simulation of ant colony behaviour in the past has been useful for research 
 
 > List the proposed language(s) to be used.
 
-- Java will be used to create classes for the ants, colonies, environment etc
-- Java will also be used to display our simulation using a Java Visual Library
+- Java will be used to create classes for the ants, colonies, environment etc.
+- Java will also be used to display our simulation using a Java Visual Library.
 
 ### Programming tools / Tech stack
 
 > Describe the compiler, database, web server, etc., and any other software tools you plan to use.
 
-- ELKStack's ElasticSearch & Kibana to display logging metrics
-- Grafana to visually display metrics
-- GitlabCI for Continuous Integration
+- [ELKStack's ElasticSearch, Kibana & Logstash][elkstack-link] to display logging metrics.
+- [Grafana][grafana-link] to visually display metrics.
+- JUnit for unit testing. 
+- Java Swing/AWT for building our GUI and simulation. 
+- GitlabCI for Continuous Integration. 
+- [Trello][trello-link] for Scrum and Agile development. 
 
 ### Hardware
 
 > Describe any non-standard hardware components which will be required.
 
-- No non-standard hardware components as of this proposal document
+- No non-standard hardware components as of this proposal document.
 
 ### Learning Challenges
 
 > List the main new things (technologies, languages, tools, etc) that you will have to learn.
 
-- Neither of us have had any past experience with AI outside of this course. We will be delving a lot further into this field for this project and so will have to study various approaches
-- We have both had past experience programming in Java, but we intend to use Java to also display our 2D/3D display of our simulation. This is a new application of Java programming we will need to learn when undertaking this project. We will most likely use [Java Swing](java-swing-link) or [Java AWT](java-awt-link) in order to make a graphical user interface that the user can interact with. 
+- Neither of us have had any past experience with AI outside of this course. We will be delving a lot further into this field for this project and so will have to study various approaches.
+- We have both had past experience programming in Java, but we intend to use Java to also display our 2D/3D display of our simulation. This is a new application of Java programming we will need to learn when undertaking this project. We will most likely use [Java Swing][java-swing-link]/[Java AWT][java-awt-link] in order to make a graphical user interface that the user can interact with. 
 
 ### Breakdown of work
 
@@ -113,13 +117,38 @@ The simulation of ant colony behaviour in the past has been useful for research 
 > separate, clearly-defined tasks, and that those responsibilities substantially cover all of the work required
 > for the project.
 
+Jobs to be done: 
+- Continuous integration (CI) pipeline.
+- Logging.
+- Elasticsearch interfacing.
+- Displaying metrics. 
+- GUI setup (to be broken down further).
+- Ant simulation (to be broken down further).
+- Ant movement research.
+
+Over the course of the project we will be using a [Trello][trello-link] board to report, assign and review our work and progress. We will also be assigning each other our Git merge requests. 
+
+![Our Trello Agile board setup](./res/trello-agile-board.png)
+
+**Note:** The following list is only comprised of tasks that we can see immediately. The tasks that are assigned for student 1 and student 2 are subject to change, depending on the needs of the project. For example, with further research we may find that one task should be split up more and divided between the two students instead of being handled by only one of us. 
+
 #### Student 1
 
 > *Student 1 should complete this section.*
 
+- Integration testing pipeline. 
+- Back-end boilerplate (Basic classes and interfaces). 
+- GUI ant simulation integration. 
+- Training ants epic. 
+
 #### Student 2
 
 > *Student 2 should complete this section.*
+
+- Logging metrics. 
+- GUI Boilerplate. 
+- Back-end class development. 
+- Simulation design epic. 
 
 ### References
 - [Boston Globe](https://www.bostonglobe.com/ideas/2018/11/09/what-complex-technology-can-learn-from-simple-ants/nRUJgi2duvaS0tg6Nk7WcL/story.html)
@@ -129,3 +158,6 @@ The simulation of ant colony behaviour in the past has been useful for research 
 [biomimicry-link]: https://biomimicry.org/what-is-biomimicry/
 [java-swing-link]: https://www.guru99.com/java-swing-gui.html
 [java-awt-link]: https://www.ntu.edu.sg/home/ehchua/programming/java/J4a_GUI.html
+[trello-link]: https://trello.com
+[elkstack-link]: https://www.elastic.co/what-is/elk-stack
+[grafana-link]: https://grafana.com/
