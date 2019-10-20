@@ -1,0 +1,16 @@
+image: java:latest
+
+stages:
+  - build
+  - execute
+
+build:
+  stage: build
+  script: /Program Files/Java/jdk1.8.0_221/bin/javac HelloWorld.java
+  artifacts:
+    paths:
+      - HelloWorld.*
+
+execute:
+  stage: execute
+  script: /Program Files/Java/jdk1.8.0_221/bin/java HelloWorld
