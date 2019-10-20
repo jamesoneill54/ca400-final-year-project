@@ -1,16 +1,8 @@
-image: java:latest
+image: maven:3.6.2
 
 stages:
   - build
-  - execute
 
 build:
   stage: build
-  script: /Program Files/Java/jdk1.8.0_221/bin/javac HelloWorld.java
-  artifacts:
-    paths:
-      - HelloWorld.*
-
-execute:
-  stage: execute
-  script: /Program Files/Java/jdk1.8.0_221/bin/java HelloWorld
+  script: "mvn install -B"
