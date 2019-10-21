@@ -6,3 +6,12 @@ stages:
 build:
   stage: build
   script: "mvn install -B"
+
+unit-test:
+  stage: test
+  script:
+    - mvn test
+  artifacts:
+    reports:
+      junit:
+        - target/surefire-reports/TEST-*.xml
