@@ -8,7 +8,7 @@ build:
   script: "mvn install -B"
 
 unit-test:
-  stage: test
+  stage: build
   script:
     - mvn test
   artifacts:
