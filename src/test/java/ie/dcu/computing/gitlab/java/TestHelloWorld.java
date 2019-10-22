@@ -14,10 +14,10 @@ public class TestHelloWorld {
 //        Assert.fail();
 //    }
 
-    private HelloWorld testHelloWorm = new HelloWorld();
+    private HelloWorld testHelloAnt = new HelloWorld();
 
     @Test
     void classTest() {
-        Assert.assertEquals("Hello, Worm!", testHelloWorm.getHello());
+        Assert.assertEquals("Hello, Ant!", testHelloAnt.getHello());
     }
 }
