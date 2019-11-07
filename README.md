@@ -1,34 +1,20 @@
-# CA400 template repo
+# CA400 clearyk6-oneilj54
 
-This is a template for CA400 projects.
+|                      |                         |
+|----------------------|-------------------------|
+|**Project Title**     | Modelling An Ant Colony |
+|**Student 1 Name**    | Kevin Thomas Cleary     |
+|**Student 1 ID**      | 16373026                |
+|**Student 2 Name**    | James Edward O'Neill    |
+|**Student 2 ID**      | 16410652                |
+|**Project Supervisor**| Alistair Sutherland     |
 
-## 1. Create your repo
+## Project Overview
 
-One person from your project team should fork this repo, then add other teammates as project members on GitLab.
+This project will aim to properly simulate colonies and individual ants using Artificial Intelligence, and simulate their evolution from generation to generation in the Darwinist style. We will then use our trained ants to solve real world problems such as emergency vehicle response following natural disasters. 
 
-## 2. Name your repo appropriately
+Ants in a colony have different jobs and goals within the colony, such as collecting food, defending the colony, looking after the young, removing rubbish etc. Each of these jobs must be distributed equally among the ants, no matter if some ants die or more ants are born. This project will simulate ants performing their jobs for the upkeep of the colony. 
 
-The name of your project must be of the form `2020-ca400-XXXXXXX`, where "`XXXXXXX`"
-should be replaced with your usernames (e.g. `2020-ca400-sblott-pclark`).
+This project will also, on a smaller scale, aim to outline the importance of [biomimicry][biomimicry-link] in modern design. 
 
-It is the *name of your repo* which matters (not the name of your project).
-
-You can change the name of your repo on GitLab under:
-
-- Settings / General / Advanced / Change path
-
-It looks like this:
-
-![change-repo-path](./res/repo-change-path.png "Change repo path.")
-
-You should replace all of this file with a README describing your own project.
-
-## Additional resources
-
-- Repo [hygiene](https://gitlab.computing.dcu.ie/sblott/local-gitlab-documentation/blob/master/repo-hygiene.md)
-- Git [cheat sheet](https://gitlab.computing.dcu.ie/sblott/local-gitlab-documentation/blob/master/cheat-sheet.md)
-- Gitlab [CI environment](https://gitlab.computing.dcu.ie/sblott/docker-ci-environment) and it's [available software](https://gitlab.computing.dcu.ie/sblott/docker-ci-environment/blob/master/Dockerfile)
-- Example projects with CI configured:
-   * [Python](https://gitlab.computing.dcu.ie/sblott/test-project-python)
-   * [Java](https://gitlab.computing.dcu.ie/sblott/test-project-java)
-   * [MySql](https://gitlab.computing.dcu.ie/sblott/test-project-mysql)
+[biomimicry-link]: https://biomimicry.org/what-is-biomimicry/
