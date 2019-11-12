@@ -4,6 +4,7 @@ stages:
   - build
 
 build:
+  image: java:latest
   stage: build
   script: "mvn install -B"
 
