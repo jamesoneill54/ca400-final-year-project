@@ -7,8 +7,6 @@ public class HelloWorld {
 
     public static void main(String[] args) {
         System.out.println(getHello());
-        System.out.println("Generating GUI...");
-        GUI myGUI = new GUI(400, 500);
-        myGUI.displayGUI();
+        new GUI();
     }
 }
