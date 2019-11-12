@@ -10,5 +10,8 @@ public class HelloWorld {
         System.out.println("Generating GUI...");
         GUI myGUI = new GUI(400, 500);
         myGUI.displayGUI();
+        System.out.println("Running Ant Colony Optimisation Algorithm...");
+        AntColonyOptimisation myACO = new AntColonyOptimisation(40);
+        myACO.startOptimization();
     }
 }
