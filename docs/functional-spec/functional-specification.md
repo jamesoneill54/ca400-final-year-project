@@ -74,15 +74,56 @@ Business Context 3:
 
 ### 2.1 System Functions
 
+- **Start Simulation**
+
+- **Edit environment**
+
+- **Edit ant class**
+
+- **View metrics**
+
 ### 2.2 User Characteristics and Objectives
+
+The focus of this project is to apply our trained ants to solve route problems faced by Emergency Response teams, but we want to design our system to be applicable to many different user bases.
+As such, our aim is to create a system that is simple at first glance, and while focusing on our assigned problem we want to identify transferable aspects of our system for future growth.
+
+We are not assuming any prior knowledge of genetic algorithms from our userbase, and so want our application to be both simple to use and also to offer descriptions of the theory behind our simulation.
+As well as a tool to be used by different services, we want our app to be as educational as possible.
+Our GUI will be designed in such a way that users can view our virtual colony at work in real time, as well as clearly being able to visually identify the different components within our simulated environment. 
+We also plan to display informative metrics to all users during/after any given simulation for further clarity on the operation of our system. 
+This will allow users to pinpoint which attributes have an impact on the colony in any particular environment.
 
 ### 2.3 Operational Scenarios
 
+#### Scenario 1: 
+
+**Goal in context**:
+
+**Description**:
+
+1.
+2.
+3.
+
 ### 2.4 Constraints
+
+**Time Constraints**: As we only have a limited amount of time to deliver this system, we are limiting our scope to have one main user base, although we plan to identify where we can expand our system to cater to a wider group.
+
+**Other Constraints**: ??? 
 
 ---
 
 ## 3. Functional Requirements
+
+#### 3.1 - 
+
+**Description**:
+
+**Criticality**:
+
+**Technical Issues**:
+
+**Dependencies**:
 
 ---
 
