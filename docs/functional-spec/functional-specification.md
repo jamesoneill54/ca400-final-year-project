@@ -12,20 +12,20 @@ ___
 
 ## Table of Contents
 
-1. Introduction
-    - Overview
-    - Business Context
-    - Glossary
-2. General Description
-    - System Functions
-    - User Characteristics and Objectives
-    - Operational Scenarios
-    - Constraints
-3. Functional Requirements
-4. System Architecture
-5. High-Level Design
-6. Preliminary Schedule
-7. Appendices
+1. [Introduction](#1-introduction)
+    - [Overview](#11-overview)
+    - [Business Context](#12-business-context)
+    - [Glossary](#13-glossary)
+2. [General Description](#2-general-description)
+    - [System Functions](#21-system-functions)
+    - [User Characteristics and Objectives](#22-user-characteristics-and-objectives)
+    - [Operational Scenarios](#23-operational-scenarios)
+    - [Constraints](#24-constraints)
+3. [Functional Requirements](#3-functional-requirements)
+4. [System Architecture](#4-system-architecture)
+5. [High-Level Design](#5-high-level-design)
+6. [Preliminary Schedule](#6-preliminary-schedule)
+7. [Appendices](#7-appendices)
 
 ---
 
@@ -64,7 +64,7 @@ This would need to be on the assumption that obstacles to routes are known in re
  
 Business Context 2: Education
 
-Business Context 3: 
+Business Context 3: Autonomous Cars
 
 ### 1.3 Glossary
 
@@ -77,6 +77,26 @@ Business Context 3:
 ---
 
 ## 2. General Description
+
+This project aims to develop a simulation that mimics the behaviour of 
+ants traversing their environment to find food. In nature, ants are 
+extremely proficient at finding the shortest path from their anthill to 
+the source of food. Through use of chemical trails (pheromones) ants can 
+successfully find the shortest path to and from a food source, and in 
+turn notify the other ants of this short path using the chemical trails. 
+
+Our project will be broken down into various functional stages:
+
+1. **Simulating Ant Movement:** The first stage will involve developing 
+our Graphical User Interface to display the movement of our ants, 
+generating the randomised environment that the ants will traverse, and 
+developing the basic way the ants will move around that environment. 
+
+2. **Enhancing the Ants' Movement Algorithm:** The second stage will involve mirroring the behaviour of real-life ants, and making our ants as efficient at finding their way from anthill to food source as ants are in the real world. 
+
+3. **Incorporating Environmental Changes:** This is where we will simulate changes to the ants' environment. This will properly test the ants' ability to adapt to changing circumstances, and at this point, we will improve upon the ants' movement algorithm. 
+
+4. **Applying To Real-World Circumstances:** This will involve introducing our trained ants to real-life environments. By having the ants' "anthill" and their "food source" at different ends of a real world environment (ie. changing the environment to mimic Dublin's streets), we can find the shortest path to and from two points. Also, making use of the environmental changes, we can simulate streets being blocked, and a new route being calculated. 
 
 ### 2.1 System Functions
 
