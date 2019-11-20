@@ -68,45 +68,63 @@ Business Context 3: Autonomous Cars
 
 ### 1.3 Glossary
 
-- Travelling Salesman Problem: An optimisation algorithm problem defined by mathematicians W.R. Hamilton and Thomas Kirkman, with a focus on finding the cheapest, shortest or fastest route around a graph of nodes.
-- Pheromones: a chemical substance produced and released into the environment by a mammal or insect, affecting the behaviour or physiology of others of its species.
-- Stigmergy: a mechanism of indirect coordination in which the trace left by an action in a medium stimulates subsequent actions
-- GUI: A graphical user interface, a computer environment that simplifies the user's interaction with the computer by offering visual elements to the user.
-- Biomimicry: the design and production of materials, structures and systems that are modelled on biological entities and processes
+- **Travelling Salesman Problem:** An optimisation algorithm problem defined by mathematicians W.R. Hamilton and Thomas Kirkman, with a focus on finding the cheapest, shortest or fastest route around a graph of nodes.
+- **Pheromones:** a chemical substance produced and released into the environment by a mammal or insect, affecting the behaviour or physiology of others of its species.
+- **Stigmergy:** a mechanism of indirect coordination in which the trace left by an action in a medium stimulates subsequent actions
+- **GUI:** A graphical user interface, a computer environment that simplifies the user's interaction with the computer by offering visual elements to the user.
+- **Biomimicry:** the design and production of materials, structures and systems that are modelled on biological entities and processes
 
 ---
 
 ## 2. General Description
 
-This project aims to develop a simulation that mimics the behaviour of 
-ants traversing their environment to find food. In nature, ants are 
-extremely proficient at finding the shortest path from their anthill to 
-the source of food. Through use of chemical trails (pheromones) ants can 
-successfully find the shortest path to and from a food source, and in 
-turn notify the other ants of this short path using the chemical trails. 
+This project aims to develop a simulation that mimics the behaviour of ants traversing their environment to find food. In nature, ants are extremely proficient at finding the shortest path from their anthill to the source of food. Through use of chemical trails (pheromones) ants can successfully find the shortest path to and from a food source, and in turn notify the other ants of this short path using the chemical trails. 
 
 Our project will be broken down into various functional stages:
 
-1. **Simulating Ant Movement:** The first stage will involve developing 
-our Graphical User Interface to display the movement of our ants, 
-generating the randomised environment that the ants will traverse, and 
-developing the basic way the ants will move around that environment. 
+1. **Simulating Ant Movement** 
 
-2. **Enhancing the Ants' Movement Algorithm:** The second stage will involve mirroring the behaviour of real-life ants, and making our ants as efficient at finding their way from anthill to food source as ants are in the real world. 
+    The first stage will involve developing our Graphical User Interface to display the movement of our ants, generating the randomised environment that the ants will traverse, and developing the basic way the ants will move around that environment. 
 
-3. **Incorporating Environmental Changes:** This is where we will simulate changes to the ants' environment. This will properly test the ants' ability to adapt to changing circumstances, and at this point, we will improve upon the ants' movement algorithm. 
+2. **Enhancing the Ants' Movement Algorithm** 
 
-4. **Applying To Real-World Circumstances:** This will involve introducing our trained ants to real-life environments. By having the ants' "anthill" and their "food source" at different ends of a real world environment (ie. changing the environment to mimic Dublin's streets), we can find the shortest path to and from two points. Also, making use of the environmental changes, we can simulate streets being blocked, and a new route being calculated. 
+    The second stage will involve mirroring the behaviour of real-life ants, and making our ants as efficient at finding their way from anthill to food source as ants are in the real world. 
+
+3. **Incorporating Environmental Changes** 
+
+    This is where we will simulate changes to the ants' environment. This will properly test the ants' ability to adapt to changing circumstances, and at this point, we will improve upon the ants' movement algorithm. 
+
+4. **Applying To Real-World Circumstances** 
+
+    This will involve introducing our trained ants to real-life environments. By having the ants' "anthill" and their "food source" at different ends of a real world environment (ie. changing the environment to mimic Dublin's streets), we can find the shortest path to and from two points. Also, making use of the environmental changes, we can simulate streets being blocked, and a new route being calculated. 
 
 ### 2.1 System Functions
 
 - **Start Simulation**
 
+    Allow the user to start a simulation successfully. The graphical simulation will load up a randomised environment, and the environment will be populated with the anthill and a number of food sources. Ants will spawn from this anthill and will begin their search for food. 
+    
+    This will be the basis for all other system functions, so this will be the function with the highest priority. However, while the other functions are being developed, this function will also be enhanced to suit the other functions as needs be, but basic functionality is needed before starting on any of the other system functions. 
+    
+    For us to consider this system function accomplished, the ants must spawn into the environment, have a movement algorithm that successfully finds the food, brings it back to the anthill, and leaves a trail that will aid other ants in finding the food source. The user must be able to view this simulation graphically after starting the program, and must be able to start and terminate the simulation at any point. 
+
 - **Edit environment**
+
+    Allow the user to edit the environment that the ants traverse. This will involve allowing the user to drop food sources, drop obstacles, and choose where the anthill will be placed. This will allow users to test our ant movement algorithm, and will allow users to model real life environments to find the shortest path. 
+    
+    For us to consider this system function accomplished, the user must be able to choose the location of the food sources, the location of the anthill, and the location of any obstacles. The user must be able to run a simulation with these new environmental changes with ease. 
 
 - **Edit ant class**
 
+    Allow the user to edit the ant characteristics. This will involve allowing them to edit the ant's speed, spawn rate, time-to-live, etc, allowing the user to impose extra constraints on the ants on their search for the food sources. 
+    
+    For us to consider this system function accomplished, the user must be able to successfully edit the ants characteristics and start the simulation with the new characteristics in effect. 
+
 - **View metrics**
+
+    Allow the user to see the statistics of previous simulations. The user will be able to see basic metrics, such as simulation duration, how many food sources collected, ant characteristics for that simulation, etc. 
+    
+    For us to consider this system function accomplished, the user must be able to view all statistics and metrics gathered from previous simulations. 
 
 ### 2.2 User Characteristics and Objectives
 
@@ -176,6 +194,7 @@ This will allow users to pinpoint which attributes have an impact on the colony 
 5. If the user clicks the back navigation button, they are brought back to the main menu with no unsaved changes applied.
 
 #### Scenario 5:
+
 **Goal in context**: User views system information and theory
 
 **Description**: The user views a menu surrounding the information and theory behind the system and its basis/applications
