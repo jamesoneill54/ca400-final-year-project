@@ -22,6 +22,11 @@ ___
     - [Operational Scenarios](#23-operational-scenarios)
     - [Constraints](#24-constraints)
 3. [Functional Requirements](#3-functional-requirements)
+    - [3.1 - Defining the Ant Movement Algorithm](#31-defining-the-ant-movement-algorithm)
+    - [3.2 - Generating a Simulation Environment](#32-generating-a-simulation-environment)
+    - [3.3 - Displaying Ant Movement](#33-displaying-ant-movement)
+    - [3.4 - Gathering, Storing & Displaying Simulation Metrics](#34-gathering-storing-&-displaying-simulation-metrics)
+    - [3.5 - Allowing User to Generate Specified Environments & Ant Classes](#35-allowing-user-to-generate-specified-environments-&-ant-classes)
 4. [System Architecture](#4-system-architecture)
 5. [High-Level Design](#5-high-level-design)
 6. [Preliminary Schedule](#6-preliminary-schedule)
@@ -214,15 +219,131 @@ This will allow users to pinpoint which attributes have an impact on the colony 
 
 ## 3. Functional Requirements
 
-#### 3.1 - 
+#### 3.1 - Defining the Ant Movement Algorithm
 
-**Description**:
+| Priority | Urgency |
+|----------|---------|
+| 1        | 2       |
 
-**Criticality**:
+- **Description**
 
-**Technical Issues**:
+    This will define the way in which the ants move around their environment, how they find food, and how they communicate with each other. This is the centrepiece for the entire project, and most other functional requirements will depend upon and make use of this function. Because of it's importance to the project, it is likely that this function will require constant and thorough development across the entire project lifecycle. Optimisations and enhancements will be constantly and consistently made right up until project submission. 
 
-**Dependencies**:
+- **Criticality**
+
+    As mentioned in the description, this function is the centrepiece for the entire project, and as a result is essential to the system as a whole. Without this function, the project cannot expand in any meaningful direction, and any real world applications for the project are less prevalent. 
+
+- **Technical Issues**
+
+    A lot of research will go into this functional requirement, including research into biology and into computer science. We will need to study ants themselves in order to properly understand and emulate their movement and hive-like interaction with each other into our algorithm. Properly simulating a biological phenomenon will be a particular technical issue which we must overcome. 
+    
+    Along with researching ants in nature, we will also need to research more into computer science for search and pathfinding optimisations. Extensive research has gone into search and pathfinding, and it would be ignorant of us to disregard this research. Properly understanding these search and pathfinding optimisations, and then applying them correctly in our own project will be a significant technical challenge. 
+    
+    We think that there exists a combination of biological research and computer science research that will lead us to a fruitful simulation of ant movement. 
+
+- **Dependencies**
+
+    This function will depend upon ["3.2 - Generating a Simulation Environment"](#32-generating-a-simulation-environment), as the ants need some space to actually traverse, need somewhere to spawn, and need some "food source" to find a path to. 
+    
+#### 3.2 - Generating a Simulation Environment
+
+| Priority | Urgency |
+|----------|---------|
+| 2        | 1       |
+
+- **Description**
+
+    This function will make the environment in which the ants will move. It will determine the location of the anthill (where the ants will spawn from) and will determine the location of food sources. It will also include obstacles and impasses that the ants must be aware of and must move around in order to reach food sources. 
+    
+    Later iterations will involve mid-simulation blockages, requiring the ants to recalculate their path. These blockages must be generated randomly, and will be a part of this functional requirement. 
+
+- **Criticality**
+
+    This feature is another one of the most critical features in the system, and is depended upon by ["3.1 - Defining the Ant Movement Algorithm"](#31-defining-the-ant-movement-algorithm). However, it is only a platform for our Ant Movement Algorithm to stand upon, so therefore it is defined as _more critical than all other features except for our Ant Movement Algorithm._ 
+
+- **Technical Issues**
+
+    The layout of the environment must be simulated in a specific way, one which is sufficiently random, but not so random that it becomes impassable. There must be a certain degree of fairness in the environment for the simulation to be realistic and useful. For example, there shouldn't be a case where the environment blocks all food sources from the anthill or vice versa. This could be combated by having a limited amount of blockages, so the environment doesn't become too cluttered. 
+    
+    On another note, the environment should be sufficiently challenging for the ant movement algorithm, and not have food sources in easy to access spots. 
+
+- **Dependencies**
+
+    As of writing this functional specification, there is no other feature in the system that this function depends upon. 
+
+#### 3.3 - Displaying Ant Movement
+
+| Priority | Urgency |
+|----------|---------|
+| 2        | 2       |
+
+- **Description**
+
+    This involves graphically displaying features ["3.1 - Defining the Ant Movement Algorithm"](#31-defining-the-ant-movement-algorithm) and ["3.2 - Generating a Simulation Environment"](#32-generating-a-simulation-environment) correctly to the user, so progress can be visually observed. This will be the main feedback for the user apart from the [metrics gathered](#34-gathering-storing-&-displaying-simulation-metrics), and this visual feedback will be allow users to properly understand how our movement algorithm works. 
+
+- **Criticality**
+
+    As this is the main feedback to the user in our project, this feature is determined to be of medium to high importance, as it is the main output for the other features developed in this project. While functions [3.1](#31-defining-the-ant-movement-algorithm) and [3.2](#32-generating-a-simulation-environment) will be the ones developed most in this project, the importance of displaying these functions to the user should not be understated. 
+
+- **Technical Issues**
+
+    The main issues with this feature will be fully understanding how to display features [3.1](#31-defining-the-ant-movement-algorithm) and [3.2](#32-generating-a-simulation-environment) correctly. Displaying the position of each ant, along with it's updated position as it moves will be challenging. Each environmental feature (anthill, food sources and impasses) will need to be displayed correctly too. 
+    
+    We must learn the specific technologies needed to display these features, and this will be another technical issue/challenge. 
+
+- **Dependencies**
+
+    This feature directly depends on features [3.1](#31-defining-the-ant-movement-algorithm) and [3.2](#32-generating-a-simulation-environment), as these are the two features that this function will be graphically displaying. 
+
+#### 3.4 - Gathering, Storing & Displaying Simulation Metrics
+
+| Priority | Urgency |
+|----------|---------|
+| 3        | 3       |
+
+- **Description**
+
+    During simulations, we plan to gather values of interest, such as current colony size, total ants spawned, total ants deceased, simulation runtime, food sources collected, and more. These metrics will not only help the user see how well our movement algorithm is working, but will also aid us in determining if we have improved our ant movement algorithm from one simulation to the next. 
+
+- **Criticality**
+
+    This feature is of medium importance to the project, however it will be particularly useful to display exactly how much our algorithm has progressed over the course of the project. 
+
+- **Technical Issues**
+
+    The system must interface between both [Elasticsearch, Logstash and Kibana](https://www.elastic.co/what-is/elk-stack) in order to store and display the metrics gathered in the simulation. We must learn exactly how to interface with these outside applications, which will be this features most prominent technical issue/challenge. 
+
+- **Dependencies**
+
+    This feature depends on functions [3.1](#31-defining-the-ant-movement-algorithm) and [3.2](#32-generating-a-simulation-environment), and more loosely on function [3.3](#33-displaying-ant-movement). Function 3.3 isn't directly needed, but metrics could be displayed to the user during the simulation, hence this functions loose dependency on function 3.3.
+
+#### 3.5 - Allowing User to Generate Specified Environments & Ant Classes
+
+| Priority | Urgency |
+|----------|---------|
+| 2        | 4       |
+
+- **Description**
+
+    This feature will allow the user to change the environment and ant classes in the simulation as they please. 
+    
+    For the environment, they will be able to define where food sources are, where the anthill will be, and any blockages that may be present in the simulation. 
+    
+    For the ant classes, the user will be able to define the speed and time-to-live of the ants in the simulation, along with other characteristics we may think are useful for the simulation. This will effectively give certain constraints to the ants, and will allow the user to test specific scenarios. 
+    
+    Also, this feature will allow the user to simulate environments in the real world, like a campus they wish to find the quickest path through. This ability to edit the environment and ants will makes the project particularly applicable to everyday life. 
+
+- **Criticality**
+
+    This feature is essential when applying our algorithm to everyday life and travel. For this feature to be effective, it relies on previous features to be implemented first, as applying an algorithm to the user's specification is useless if the algorithm has not been optimised yet. 
+
+- **Technical Issues**
+
+    Defining exactly how the user will be able to change the simulation variables will be the main issue with this feature. We will need to be able to provide a graphical user interface for the variables in the simulation, and validation must also take place on the values entered by the user. Finally, we must also make sure that the variables applied by the user are correctly implemented. 
+
+- **Dependencies**
+
+    This feature depends on features [3.1](#31-defining-the-ant-movement-algorithm) and [3.2](#32-generating-a-simulation-environment), and feature [3.3](#33-displaying-ant-movement) would not be 100% necessary, but would be incredibly helpful in order to visually see the changes made by this feature.
 
 ---
 
