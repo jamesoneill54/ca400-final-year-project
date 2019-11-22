@@ -404,6 +404,17 @@ The makeup of the backend can be seen below in the [High-Level Design](#5-high-l
 
 ## 6. Preliminary Schedule
 
+We have broken down the current projected workload for the project as in the table below. 
+We plan to stick to this schedule with the use of a trello board to update on progress and to arrange weekly standup meetings in an agile fashion.
+
+![Our Preliminary Schedule, giving tasks, start and end dates and duration in days](./res/PreliminarySchedule.png)
+
 ---
 
 ## 7. Appendices
+
+- [Ant Colony Optimisation Algorithm, Indian Institue of Technology Bombay](http://mat.uab.cat/~alseda/MasterOpt/ACO_Intro.pdf)
+
+- [Java Swing](https://www.javatpoint.com/java-swing)
+
+- [ElasticSearch, for metrics gathering](https://www.elastic.co/)
