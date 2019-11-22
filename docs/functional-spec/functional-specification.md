@@ -69,6 +69,14 @@ This would need to be on the assumption that obstacles to routes are known in re
  
 Business Context 2: Education
 
+Although we are focusing on the context of Emergency Response, a lot of our work can be transferred into multiple other contexts.
+Our system will act as a resource for education around Genetic Algorithms and the theory behind our simulation.
+We are going to achieve this through the customisable elements within the Ant Colony and the Environment. 
+Users will clearly be able to see what effect their changes have on any given simulation through the metrics our system will gather and display at the end of each simulation.
+
+When dealing with this interaction-based learning feature of our project, we have to ensure that only the attributes changed by the user will differ between any two simulations. 
+This way, the user can clearly see the impact of their changes on the simulation, unaffected by any other external factors.
+
 Business Context 3: Autonomous Cars
 
 ### 1.3 Glossary
