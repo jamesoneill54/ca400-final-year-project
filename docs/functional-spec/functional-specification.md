@@ -366,6 +366,16 @@ We broke the project into two sections; the GUI and the backend.
 ### 5.1 Object Diagram
 
 ![A component diagram of our project, showing frontend and GUI.](./res/ant-simulation-object-diagram.png)
+<<<<<<< HEAD
+
+### 5.2 Context Diagram
+
+![A context diagram for the project showing some basic interactions between components](./res/context-diagram.png)
+
+### 5.3 Use Case Diagram
+
+![A use case diagram for the project showing the end to end communication within the system](./res/use-case-diagram.png)
+
 
 ---
 
