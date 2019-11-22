@@ -28,8 +28,13 @@ ___
     - [3.4 - Gathering, Storing & Displaying Simulation Metrics](#34-gathering-storing-&-displaying-simulation-metrics)
     - [3.5 - Allowing User to Generate Specified Environments & Ant Classes](#35-allowing-user-to-generate-specified-environments-&-ant-classes)
 4. [System Architecture](#4-system-architecture)
+    - [4.1 Graphical User Interface](#41-graphical-user-interface)
+    - [4.2 System Backend](#42-system-backend)
 5. [High-Level Design](#5-high-level-design)
-    - [5.1 Object Diagram](#51-object-diagram)
+    - [5.1 Context Diagram](#51-context-diagram)
+    - [5.2 Object Diagram](#52-object-diagram)
+    - [5.3 Class Diagram](#53-class-diagram)
+    - [5.4 Use Case Diagram](#54-use-case-diagram)
 6. [Preliminary Schedule](#6-preliminary-schedule)
 7. [Appendices](#7-appendices)
 
@@ -359,22 +364,41 @@ Due to the nature of this project, no outside services need to be communicated w
 
 We broke the project into two sections; the GUI and the backend. 
 
+### 4.1 Graphical User Interface
+
+This component interacts with the user and the backend of the system, allowing the user to select simulation options, make changes, start the simulation and stop the simulation. It displays the main simulation to the user, and allows the user to see metrics on the current simulation and simulations in the past. 
+
+During the simulation, the GUI shows how the algorithm works through visual display. They can see all obstacles and food sources that the ants must travel to. 
+    
+The makeup of the GUI can be seen below in the [High-Level Design](#5-high-level-design).
+
+### 4.2 System Backend
+
+This component of the system is responsible for correctly defining the ants movements and sending them to the GUI where they can be rendered. The movement of the ants in the simulation will be determined by the movement algorithm defined in this component. 
+
+Taking the current position of the ants, the algorithm will determine the next best route for each ant, and will re-render the simulation, and send it to the GUI for the GUI to display the updated positions of the ants and food sources. 
+
+The makeup of the backend can be seen below in the [High-Level Design](#5-high-level-design).
+    
 ---
 
 ## 5. High-Level Design
 
-### 5.1 Object Diagram
-
-![A component diagram of our project, showing frontend and GUI.](./res/ant-simulation-object-diagram.png)
-
-### 5.2 Context Diagram
+### 5.1 Context Diagram
 
 ![A context diagram for the project showing some basic interactions between components](./res/context-diagram.png)
 
-### 5.3 Use Case Diagram
+### 5.2 Object Diagram
+
+![A component diagram of our project, showing frontend and GUI.](./res/ant-simulation-object-diagram.png)
+
+### 5.3 Class Diagram
+
+![A class diagram showing all of the main classes needed for this project.](./res/ant-simulation-class-diagram.png)
+
+### 5.4 Use Case Diagram
 
 ![A use case diagram for the project showing the end to end communication within the system](./res/use-case-diagram.png)
-
 
 ---
 
