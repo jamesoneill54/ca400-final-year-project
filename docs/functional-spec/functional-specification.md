@@ -365,7 +365,7 @@ We broke the project into two sections; the GUI and the backend.
 
 ### 5.1 Object Diagram
 
-![A component diagram of our project, showing frontend and GUI.][./res/ant-simulation-object-diagram.png]
+![A component diagram of our project, showing frontend and GUI.](./res/ant-simulation-object-diagram.png)
 
 ---
 
