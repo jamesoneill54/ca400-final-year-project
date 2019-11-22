@@ -6,7 +6,7 @@ Kevin Cleary - 16373026
 
 James O'Neill - 16410652
 
-Date:
+Date: 22/11/2019
 
 ___
 
@@ -29,6 +29,7 @@ ___
     - [3.5 - Allowing User to Generate Specified Environments & Ant Classes](#35-allowing-user-to-generate-specified-environments-&-ant-classes)
 4. [System Architecture](#4-system-architecture)
 5. [High-Level Design](#5-high-level-design)
+    - [5.1 Object Diagram](#51-object-diagram)
 6. [Preliminary Schedule](#6-preliminary-schedule)
 7. [Appendices](#7-appendices)
 
@@ -145,10 +146,7 @@ The focus of this project is to apply our trained ants to solve route problems f
 As such, our aim is to create a system that is simple at first glance, and while focusing on our assigned problem we want to identify transferable aspects of our system for future growth.
 
 Taking Emergency Response as our target userbase, the primary focus of our ant colony will be to find the fastest route to their food source while also adapting to environmental change as quickly as possible. 
-We plan on determining the optimal route by ______.
-
-* comparing the ant colonies optimisation algorithm with a different algorithm in the same matrix.
-* 
+We plan on determining the optimal route for emergency response vehicles looking for survivors in a natural disaster, by using our trained ant movement algorithm to determine the quickest paths from vehicles to survivors. The ant movement algorithm will determine the shortest route, even if some streets are blocked due to wreckage in the disaster. 
 
 We are not assuming any prior knowledge of genetic algorithms from our userbase, and so want our application to be both simple to use and also to offer descriptions of the theory behind our simulation.
 As well as a tool to be used by different services, we want our app to be as educational as possible.
@@ -219,9 +217,9 @@ This will allow users to pinpoint which attributes have an impact on the colony 
 
 ### 2.4 Constraints
 
-**Time Constraints**: As we only have a limited amount of time to deliver this system, we are limiting our scope to have one main user base, although we plan to identify where we can expand our system to cater to a wider group.
+**Time Constraints:** As we only have a limited amount of time to deliver this system, we are limiting our scope to have one main user base, although we plan to identify where we can expand our system to cater to a wider group.
 
-**Other Constraints**: ??? 
+**New technologies to be learned:** Some of the technologies we plan to use are ones we have never used before. For that reason, there will be some difficulty when it comes to implementing the project, as time and effort will have to be put aside to familiarise ourselves with the new technologies. For example, neither of us have ever developed anything to do with graphical animations, so this will be a new frontier for both project partners. 
 
 ---
 
@@ -357,9 +355,17 @@ This will allow users to pinpoint which attributes have an impact on the colony 
 
 ## 4. System Architecture
 
+Due to the nature of this project, no outside services need to be communicated with, unless it is to post or store metrics. The entire project will mostly be a self contained unit. 
+
+We broke the project into two sections; the GUI and the backend. 
+
 ---
 
 ## 5. High-Level Design
+
+### 5.1 Object Diagram
+
+![A component diagram of our project, showing frontend and GUI.][./res/ant-simulation-object-diagram.png]
 
 ---
 
