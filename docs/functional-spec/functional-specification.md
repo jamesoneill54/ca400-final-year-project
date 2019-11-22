@@ -30,6 +30,8 @@ ___
 4. [System Architecture](#4-system-architecture)
 5. [High-Level Design](#5-high-level-design)
     - [5.1 Object Diagram](#51-object-diagram)
+    - [5.2 Context Diagram](#52-context-diagram)
+    - [5.3 Use Case Diagram](#53-use-case-diagram)
 6. [Preliminary Schedule](#6-preliminary-schedule)
 7. [Appendices](#7-appendices)
 
@@ -60,7 +62,7 @@ This will allow users to play around with different attributes of the ants to se
 
 ### 1.2 Business Context
 
-Business Context 1: Emergency Response
+#### Business Context 1: Emergency Response
 
 We want to use our ant colony simulation to be a basis for Emergency Response strategies. 
 In times of crisis, speed and safety are paramount, but in the wake of a natural disaster some important routes can be cut off. 
@@ -68,7 +70,7 @@ We want to use the behaviour of our trained ant colony to find the shortest rout
 
 This would need to be on the assumption that obstacles to routes are known in real time. Our project in it's current form requires the known routes/obstacles and will provide the simulation and results containing the best route for the rescue/evacuation teams.
  
-Business Context 2: Education
+#### Business Context 2: Education
 
 Although we are focusing on the context of Emergency Response, a lot of our work can be transferred into multiple other contexts.
 Our system will act as a resource for education around Genetic Algorithms and the theory behind our simulation.
@@ -78,7 +80,7 @@ Users will clearly be able to see what effect their changes have on any given si
 When dealing with this interaction-based learning feature of our project, we have to ensure that only the attributes changed by the user will differ between any two simulations. 
 This way, the user can clearly see the impact of their changes on the simulation, unaffected by any other external factors.
 
-Business Context 3: Autonomous Cars
+Other potential business contexts for this project include autonomous cars, designing traffic systems etc.
 
 ### 1.3 Glossary
 
