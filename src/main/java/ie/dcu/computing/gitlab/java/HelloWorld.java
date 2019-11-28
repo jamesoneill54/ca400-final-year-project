@@ -7,6 +7,13 @@ public class HelloWorld {
 
     public static void main(String[] args) {
         System.out.println(getHello());
+
+        System.out.println("Generating GUI...");
         new GUI();
+        
+        System.out.println("Running Ant Colony Optimisation Algorithm...");
+        AntColonyOptimisation myACO = new AntColonyOptimisation(40);
+        myACO.startOptimization();
+
     }
 }
