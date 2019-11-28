@@ -1,4 +1,4 @@
-image: maven:3.6.2, java:1.8
+image: maven:3.6.2
 
 stages:
   - build
