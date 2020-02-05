@@ -181,4 +181,24 @@ The algorithm sets the initial values of its trails to L<sub>max</sub> and stops
 
 Army Ants sometimes release different types of pheromones eg to warn other ants of prey (obstacles) ahead.
 
-Madeleine Beekman, University of Sydney, reports that it can be the _quality_ of a pheromone trail as well as the quantity that measures the fitness of a trail. Could mean that an ant trying
+Madeleine Beekman, University of Sydney, reports that it can be the _quality_ of a pheromone trail as well as the quantity that measures the fitness of a trail. Could mean that an ant trying. Possibly have two values associated with the pheromones at a given node; one for the quantity at that node and one for the combined quality of the present pheromones..
+
+### Differing Ant Roles within the Colony
+
+Some ant colonies delegate between different tasks depending on the number of ants already attending to said task. For example, a forager ant that discovers that there are very few active nest-maintaining ants will task-switch and attend to the nest instead. Defense, larvae care and attack are other possible tasks an ant can pick up, and while ACOs are solely based on foraging when traversing a construction graph, we could introduce new operations based on task switching. If we have two rival AI colonies in the one environment then we could have ants task switch between regular searches and attack/defense of the other colonies. This could be implemented within the ant class to release a different "style" of pheromone depending on their current task as well as a sense to monitor how much of each kind of pheromone exists around them. If there is a really low level of a certain style of pheromone in the vicinity, the ant would have a 0-1 chance of switching to that task.
+
+## Application to Problem
+
+Most implementations of Ant Colony Optimisation Algorithms have been used to solve specifically the Travelling Salesman Problem, a combinatorial problem in which the shortest route visiting every node in a construction graph is calculated. The problem we wish to tackle using our trained ants differs in a few ways. 
+
+- Our problem is, once again, a shortest route problem. However, we do not wish to visit every node in the graph but rather visit a few **goal nodes** (thought of as food sources) before returning to the starting point (the anthill/home).
+- As well as goal nodes being present in the construction matrix we also wish to include **obstruction nodes** which should not be included in any working solutions. The ants should find the shortest path to the goal nodes while simultaneously avoiding obstruction nodes.
+    - In the context of nature, ants can release both positive and negative-indicitave pheromones. In the context of our algorithm, this indicates the need for the algorithm to decrease the pheromone values on paths including obstruction nodes within the pheromone update rule. This could also mean keeping pheromone values of known obstruction nodes at 0.
+- As an extension to the problem above, we wish to add new obstructions in the middle of a run. This will be to test for how quickly the virtual ants can adapt to a change in the environment. Again once a new obstacle is introduced the best initial approach is to lower the pheromone values of the node and possibly those adjacent to it, leaving new ants trying to reconnect to the paths of higher pheromone levels.
+
+A proposed new algorithm would be as follows:
+
+    Initialise Ants
+    Initialise Node Weights (introduce obstructions)
+    Construct Solution
+    Update Pheromones (positive and negative changes)
