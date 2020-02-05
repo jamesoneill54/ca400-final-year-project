@@ -6,6 +6,8 @@ make use of the following
 
 http://www.scholarpedia.org/article/Ant_colony_optimization
 
+https://towardsdatascience.com/swarm-intelligence-inside-the-ant-colony-9ffbce22a736
+
 ## Swarm Intelligence
 
 The discipline that deals with natural and artificial systems composed of many individuals that coordinate using decentralized control and self organizaion. Focuses on the collective behaviours that result from the local interactions of the individuals with each other with their environment. As well as ants, termites, schools of fish, flocks of birds, herds of land animals and some human artifacts eg multi-robot systems.
@@ -198,7 +200,15 @@ Most implementations of Ant Colony Optimisation Algorithms have been used to sol
 
 A proposed new algorithm would be as follows:
 
-    Initialise Ants
-    Initialise Node Weights (introduce obstructions)
-    Construct Solution
-    Update Pheromones (positive and negative changes)
+    Set parameters, initialise pheromone trails (taking obstuctions in space into account)
+    SCHEDULE_ACTIVITIES
+        ConstructAntSolutions
+        DaemonActions {optional}
+            - determine which ants are close to a food source
+            - determine which ants are close to an obstruction
+            - determine which task type of ant are low in number //optional
+        UpdatePheromones
+            - positive for those en route to food source/home
+            - negative for those whose path includes an obstuction
+            - pheromone type update for task switching ants //optional
+    END_SCHEDULE_ACIVITIES
