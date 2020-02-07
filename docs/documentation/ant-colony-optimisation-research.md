@@ -81,7 +81,7 @@ The metaheuristic consists of an **initialisation** phase and three **activity**
         - η<sub>ij</sub> is the heuristic value associated with c<sub>ij</sub>
         - α and β are positive real parameter whose values determine the _relative importance_ of pheremone vs heuristic info
 
-    ![Dorigo's equation for the ConstructAntSolutions action](./res/construct-ant-solutions-dorigo.png)
+    ![Dorigo's equation for the ConstructAntSolutions action](./res/construct-ant-solutions-dorigo.PNG)
 
 2. DaemonActions
     - problem specific/centralised actions that cannot be performed by a single ant
@@ -91,7 +91,7 @@ The metaheuristic consists of an **initialisation** phase and three **activity**
     - the aim is to increase pheromone values associated with good solutions and to decrease pheromone values associated with bad solutions
     - A common approach is to _decrease all pheromone levels_ using pheromone **evaporation** and then _increasing pheromone levels associated with good solutions_ by using **_S_<sub>upd</sub>**
 
-    ![PheromoneUpdate action](./res/update-pheromones.png)
+    ![PheromoneUpdate action](./res/update-pheromones.PNG)
 
     - Where _S_<sub>upd</sub> is a set of solutions used for the update, ρ ∈ (0,1] is a parameter for the **evaporation rate** and F:S → R<sup>+</sup><sub>0</sub> is a function such that:
 
@@ -105,11 +105,11 @@ The metaheuristic consists of an **initialisation** phase and three **activity**
         - S<sub>bs</sub> is the best solution found since the first iteration AKA _best so far_
     - Example 1: the AS Update System
         
-    ![AS Update System](./res/as-update-system.png)
+    ![AS Update System](./res/as-update-system.PNG)
 
     - Example 2: the Iteration-Best (IB) Update System
 
-    ![IB Update System](./res/ib-update-system.png)
+    ![IB Update System](./res/ib-update-system.PNG)
 
     - The IB Update rule contains a much stronger bias towards good solutions than the AS update rule does. This increases the speed of finding a solution but also increases the probability of _premature convergence_.
     - An even stronger bias can be found in the BS update rule, where S<sub>upd</sub> is set to {S<sub>bs</sub>}
@@ -121,15 +121,15 @@ The metaheuristic consists of an **initialisation** phase and three **activity**
 
 The first Ant Colony Optimisation Algorithm to be proposed in literature. Pheromone values are updated for _all_ of the ants that have completed the tour. Solution components c<sub>ij</sub> are the edges of the graph and the pheromone update for τ<sub>ij</sub> (the pheromone joining nodes i and j) is as follows
 
-![Pheomone Update for AS](./res/as-pheromone-update.png)
+![Pheomone Update for AS](./res/as-pheromone-update.PNG)
 
 - ρ ∈ (0,1] is the evaporation rate of pheromone trails
 - _m_ is the number of ants
 - Δτ<sup>k</sup><sub>ij</sub> is the quantity of pheromones laid on edge (i, j) by ant k
-    - ![Pheromone Quantity](./res/as-pheromone-quantity.png)
+    - ![Pheromone Quantity](./res/as-pheromone-quantity.PNG)
     - where _L<sub>k</sub>_ is the tour length of the _k_-th ant 
 - When constructing their solutions, the ants traverse the construction graph making a probabilistic decision at each vertex. The **transition probability** of the k-th ant moving between nodes i and j is given by:
-    - ![Transition Probability](./res/as-transition-probability.png)
+    - ![Transition Probability](./res/as-transition-probability.PNG)
     - N(s<sup>p</sup><sub>k</sub>) is the set of components that do not yet belong to the partial solution s<sup>p</sup><sub>k</sub> of ant _k_
     - α and β are parameters that control the relative importance of the pheromone versus the heuristic information η<sub>ij</sub> = 1/d<sub>ij</sub>, where d<sub>ij</sub> is the length of the component c<sub>ij</sub> (ie of edge (i,j))
 
@@ -141,14 +141,14 @@ First major improvement over the original Ant System. First innovations made in 
 
 This is a **greedy rule** which favours exploitation of the pheromone information, and must be counterbalanced with the introduction of a diversifying component, the _local pheromone update_. Local pheromone update is performed by all ants after each construction step. Each ant only applies it to the last edge traversed
 
-- ![Local Pheromone Update](./res/acs-local-pheromone-update.png)
+- ![Local Pheromone Update](./res/acs-local-pheromone-update.PNG)
 - Where φ ∈ (0,1] is the _pheromone decay coefficient_ and τ<sub>0</sub> is the initial pheromone value.
 
 The main goal of LPU is to diversify the search performed by subsequent ants during one iteration. Decreasing the pheromone concentrations on traversed edges in an iteration encourages other following ants to choose different edges and form different solutions. Local Pheromone Update also means the minimum values of the pheromone are limited.
 
 An _offline pheromone update_ is perfomed at the end of the construction process, as in AS. This is performed only by the best ant -  only the edges visited by the best ant are updated according to the following equation
 
-- ![Offline Pheromone Update](./res/acs-offline-pheromone-update.png) 
+- ![Offline Pheromone Update](./res/acs-offline-pheromone-update.PNG) 
 - if the best ant used edge (i,j) in its tour, then Δτ<sup>best</sup><sub>ij</sub> = 1/L<sub>best</sub>
     - L<sub>best</sub> can be either the length of the iteration best or that of the best-so-far
 - otherwise, Δτ<sup>best</sup><sub>ij</sub> = 0
@@ -162,7 +162,7 @@ Differs from AS in that
 
 The pheromone update equation takes the form
 
-- ![Pheromone Update Equation](./res/mm-pheromone-update-rule.png)
+- ![Pheromone Update Equation](./res/mm-pheromone-update-rule.PNG)
 - if the best ant used edge (i,j) in its tour, then Δτ<sup>best</sup><sub>ij</sub> = 1/L<sub>best</sub>
     - L<sub>best</sub> can be either the length of the iteration best or that of the best-so-far
 - Pheromone values are _constrained_ between τ<sub>min</sub> and τ<sub>max</sub> by verifying that each pheromone value after being updated by the ant is within these constraints
