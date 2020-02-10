@@ -5,11 +5,21 @@ public class Ant {
     protected int trailSize;
     protected int trail[];
     protected boolean visited[];
+    protected String task;
 
     public Ant (int tourSize) {
         this.trailSize = tourSize;
         this.trail = new int[tourSize];
         this.visited = new boolean[tourSize];
+        this.task = "searcher";
+    }
+
+    protected int[] getTrail () {
+        return trail;
+    }
+
+    protected boolean[] getVisited () {
+        return visited;
     }
 
     protected void visitNode(int currentIndex, int node) {
@@ -33,5 +43,9 @@ public class Ant {
         for (int i = 0; i < trailSize; i++) {
             visited[i] = false;
         }
+    }
+
+    protected void switchTask(String newTask) {
+        task = newTask;
     }
 }
