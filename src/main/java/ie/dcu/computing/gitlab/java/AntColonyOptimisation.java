@@ -170,4 +170,11 @@ public class AntColonyOptimisation {
                             .forEach((j -> trails[i][j] = initialTrails));
                 });
     }
+
+    public static void main(String[] args) {
+        System.out.println("Running Ant Colony Optimisation Algorithm...");
+        AntColonyOptimisation myACO = new AntColonyOptimisation(40);
+        myACO.startOptimization();
+    }
+
 }
