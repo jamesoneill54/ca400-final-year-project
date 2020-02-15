@@ -17,6 +17,14 @@ public class TestAntEnvironment {
 
     @Test
     void testGetAnt() {
-        Assert.assertEquals(testAntEnvironment.getAnt().getClass(), AnimationAnt.class);
+        Assert.assertEquals(testAntEnvironment.getAnt().getClass(), Ant.class);
+    }
+
+    @Test
+    void testEnvironmentSize() {
+        Assert.assertEquals(testAntEnvironment.getPreferredSize().width,
+                testAntEnvironment.getEnvironmentWidth());
+        Assert.assertEquals(testAntEnvironment.getPreferredSize().height,
+                testAntEnvironment.getEnvironmentHeight());
     }
 }
