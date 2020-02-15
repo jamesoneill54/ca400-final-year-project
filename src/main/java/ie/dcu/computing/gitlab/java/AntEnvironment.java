@@ -12,6 +12,8 @@ public class AntEnvironment extends JPanel implements Runnable {
     private Thread animator;
     // Should be changed to an array of ants for future updates
     private Ant ant;
+    // Should be changed to an array of obstacles for future updates
+    private Obstacle obstacle;
 
     public AntEnvironment() {
         initEnvironment();
@@ -21,6 +23,7 @@ public class AntEnvironment extends JPanel implements Runnable {
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT));
         ant = new Ant(0);
+        obstacle = new Obstacle(100, 100, 50, 60);
     }
 
     @Override
@@ -36,6 +39,7 @@ public class AntEnvironment extends JPanel implements Runnable {
         super.paintComponent(graphics);
 
         ant.drawAnt(graphics);
+        obstacle.draw(graphics);
         Toolkit.getDefaultToolkit().sync();
     }
 
