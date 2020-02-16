@@ -2,23 +2,62 @@ package ie.dcu.computing.gitlab.java;
 
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
+import java.awt.*;
 
 public class TestAnt {
-    private Ant testInsect = new Ant(50);
+    private Ant testAnt = new Ant(50);
 
     @Test
     void trailSizeTest() {
-        Assert.assertTrue("Trail size is equal to tourSize", testInsect.trailSize == 50);
+        Assert.assertEquals("Trail size is equal to tourSize", testAnt.trailSize, 50);
     }
 
     @Test
     void initTaskTest() {
-        Assert.assertTrue("Task string initialised with 'searcher'", testInsect.task == "searcher");
+        Assert.assertEquals("Task string initialised with 'searcher'", testAnt.task, "searcher");
     }
 
     @Test
     void switchTaskTest() {
-        testInsect.switchTask("tester");
-        Assert.assertFalse("Task string no longer 'searcher' when switchTask() invoked", testInsect.task == "searcher");
+        testAnt.switchTask("tester");
+        Assert.assertNotEquals("Task string no longer 'searcher' when switchTask() invoked", testAnt.task, "searcher");
+    }
+
+    @Test
+    void testGetAndSetColor() {
+        Assert.assertEquals(testAnt.getColor(), Color.BLUE);
+        testAnt.setColor(Color.RED);
+        Assert.assertEquals(testAnt.getColor(), Color.RED);
+    }
+
+    @Test
+    void testGetAndSetX() {
+        Assert.assertEquals(testAnt.getX(), 0);
+        testAnt.setX(10);
+        Assert.assertEquals(testAnt.getX(), 10);
+    }
+
+    @Test
+    void testGetAndSetY() {
+        Assert.assertEquals(testAnt.getY(), 0);
+        testAnt.setY(20);
+        Assert.assertEquals(testAnt.getY(), 20);
+    }
+
+    @Test
+    void testGetWidth() {
+        Assert.assertEquals(testAnt.getWidth(), 7);
+    }
+
+    @Test
+    void testGetHeight() {
+        Assert.assertEquals(testAnt.getHeight(), 7);
+    }
+
+    @Test
+    void testUpdateLocation() {
+        testAnt.updateLocation(20, 30);
+        Assert.assertEquals(testAnt.getX(), 20);
+        Assert.assertEquals(testAnt.getY(), 30);
     }
 }
