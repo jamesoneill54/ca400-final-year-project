@@ -20,7 +20,9 @@ public class AntColonyOptimisation {
 
     private int numberOfNodes;
     private int numberOfAnts;
-    private double graph[][];
+    private Node graph[][];
+    private Node homeNode;
+    private Node goalNode;
     private double trails[][];
     private List<Ant> ants = new ArrayList<>();
     private Random random = new Random();
@@ -42,31 +44,47 @@ public class AntColonyOptimisation {
                 .forEach(i -> ants.add(new Ant(numberOfNodes)));
     }
 
-    public double[][] generateMatrixFromEnv(int height, int width) {
-        double[][] matrix = new double[height][width];
+    public Node[][] generateMatrixFromEnv(int height, int width) {
+        Node[][] matrix = new Node[height][width];
         IntStream.range(0, height)
                 .forEach(i -> IntStream.range(0, width)
-                        .forEach(j -> matrix[i][j] = i + (j * 0.1)));
+                        .forEach(j -> matrix[i][j] = new Node(i, j)));
         return matrix;
     }
 
-    public void printMatrix(double[][] m) {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 5; j++) {
-                System.out.print(m[i][j] + " ");
+    public void printMatrix(Node[][] m) {
+
+        for (int i = 0; i < m.length; i++) {
+            for (int j = 0; j < m[i].length; j++) {
+                if (m[i][j] == homeNode) {
+                    System.out.print("( HOME )");
+                } else if (m[i][j] == goalNode) {
+                    System.out.print("( GOAL )");
+                } else {
+                    m[i][j].printNode();
+                }
+                System.out.print(" ");
             }
             System.out.println(" ");
         }
     }
 
-//    public double[][] generateRandomMatrix(int n) {
-//        double[][] randomMatrix = new double[n][n];
-//        IntStream.range(0, n)
-//                .forEach(i -> IntStream.range(0, n)
-//                    .forEach(j -> randomMatrix[i][j] = Math.abs(random.nextInt(100) + 1)));
-//        return randomMatrix;
-//    }
-//
+    public Node setHome(int x, int y) {
+        if (x <= AntEnvironment.ENVIRONMENT_HEIGHT && y <= AntEnvironment.ENVIRONMENT_WIDTH) {
+            this.homeNode = graph[x][y];
+            return this.homeNode.getCoOrdinates();
+        }
+        return null;
+    }
+
+    public Node setGoal(int x, int y) {
+        if (x <= AntEnvironment.ENVIRONMENT_HEIGHT && y <= AntEnvironment.ENVIRONMENT_WIDTH) {
+            this.goalNode = graph[x][y];
+            return this.goalNode.getCoOrdinates();
+        }
+        return null;
+    }
+
 //    public void startOptimization() {
 //        IntStream.rangeClosed(1, 8)
 //                .forEach((i -> {
@@ -127,7 +145,6 @@ public class AntColonyOptimisation {
 //                return i;
 //            }
 //        }
-//
 //        throw new RuntimeException("There are no other nodes");
 //    }
 //
@@ -188,10 +205,22 @@ public class AntColonyOptimisation {
 //                });
 //    }
 
+
     public static void main(String[] args) {
         System.out.println("Running Ant Colony Optimisation Algorithm...");
-        AntColonyOptimisation myACO = new AntColonyOptimisation(4, 5);
-        myACO.printMatrix(myACO.graph);
+        AntColonyOptimisation myACO = new AntColonyOptimisation(AntEnvironment.ENVIRONMENT_HEIGHT, AntEnvironment.ENVIRONMENT_WIDTH);
+        try {
+            myACO.setHome(2,2);
+            myACO.setGoal(12, 20);
+            myACO.printMatrix(myACO.graph);
+            System.out.println("Goal is: ");
+            myACO.goalNode.printNode();
+            System.out.println();
+            System.out.println("Goal's X value is: " + myACO.goalNode.getX());
+            System.out.println("Goal's Y value is: " + myACO.goalNode.getY());
+        } catch (NullPointerException e) {
+            System.out.println("ERROR: Goal Node coordinates outside of environment scope. Respecify Goal Node value(s).");
+        }
     }
 
 }
