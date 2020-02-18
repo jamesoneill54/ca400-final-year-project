@@ -6,8 +6,6 @@ public interface EnvironmentObject {
 
     // For now, all EnvironmentObjects will be rectangular
 
-    void setLocation(int newX, int newY);
-
     void setX(int newX);
 
     int getX();
@@ -15,6 +13,8 @@ public interface EnvironmentObject {
     void setY(int newY);
 
     int getY();
+
+    void setLocation(int newX, int newY);
 
     void setWidth(int newWidth);
 
