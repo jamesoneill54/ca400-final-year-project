@@ -85,125 +85,125 @@ public class AntColonyOptimisation {
         return null;
     }
 
-//    public void startOptimization() {
-//        IntStream.rangeClosed(1, 8)
-//                .forEach((i -> {
-//                    System.out.println("Attempt #" + i);
-//                    solve();
-//                }));
-//    }
-//
-//    public int[] solve() {
-//        setupAnts();
-//        clearTrails();
-//        IntStream.range(0, maxIterations)
-//                .forEach(i -> {
-//                    moveAnts();
-//                    updateTrails();
-//                    updateBest();
-//                });
-//        System.out.println("Best tour length: " + (bestTourLength - numberOfNodes));
-//        System.out.println("Best tour order: " + Arrays.toString(bestTourOrder));
-//        return bestTourOrder.clone();
-//    }
-//
-//    public void setupAnts() {
-//        IntStream.range(0, numberOfAnts)
-//                .forEach(i -> {
-//                    ants.forEach(ant -> {
-//                        ant.clear();
-//                        ant.visitNode(-1, random.nextInt(numberOfNodes));
-//                    });
-//                });
-//        currentIndex = 0;
-//    }
-//
-//    public void moveAnts() {
-//        IntStream.range(currentIndex, numberOfNodes -1)
-//                .forEach(i -> {
-//                ants.forEach(ant -> ant.visitNode(currentIndex, selectNextNode(ant)));
-//            currentIndex ++;
-//        });
-//    }
-//
-//    private int selectNextNode(Ant ant) {
-//        int t = random.nextInt(numberOfNodes - currentIndex);
-//        if (random.nextDouble() < randomFactor) {
-//            OptionalInt nodeIndex = IntStream.range(0, numberOfNodes)
-//                    .filter(i -> i == t && !ant.visited(i))
-//                    .findFirst();
-//            if (nodeIndex.isPresent()) {
-//                return nodeIndex.getAsInt();
-//            }
-//        }
-//        calculateProbabilities(ant);
-//        double r = random.nextDouble();
-//        double total = 0;
-//        for (int i = 0; i < numberOfNodes; i++) {
-//            total += probabilities[i];
-//            if (total >= r) {
-//                return i;
-//            }
-//        }
-//        throw new RuntimeException("There are no other nodes");
-//    }
-//
-//    public void calculateProbabilities(Ant ant) {
-//        int i = ant.trail[currentIndex];
-//        double pheromone = 0.0;
-//        for (int l = 0; l < numberOfNodes; l++) {
-//            if (!ant.visited(l)) {
-//                pheromone += Math.pow(trails[i][l], pheromoneImportance) * Math.pow(1.0 / graph[i][l], distancePriority);
-//            }
-//        }
-//        for (int j = 0; j < numberOfNodes; j++) {
-//            if (ant.visited(j)) {
-//                probabilities[j] = 0.0;
-//            } else {
-//                double numerator =  Math.pow(trails[i][j], pheromoneImportance) * Math.pow(1.0 / graph[i][j], distancePriority);
-//                probabilities[j] = numerator / pheromone;
-//            }
-//        }
-//    }
-//
-//    private void updateTrails() {
-//        for (int i = 0; i < numberOfNodes; i++) {
-//            for (int j = 0; j < numberOfNodes; j++) {
-//                trails [i][j] *= evaporationRate;
-//            }
-//        }
-//        for (Ant a : ants) {
-//            double contribution = pheromonePerAnt / a.trailLength(graph);
-//            for (int i = 0; i < numberOfNodes - 1; i++) {
-//                trails[a.trail[i]][a.trail[i + 1]] += contribution;
-//            }
-//            trails[a.trail[numberOfNodes - 1]][a.trail[0]] += contribution;
-//        }
-//    }
-//
-//    private void updateBest() {
-//        if (bestTourOrder == null) {
-//            if (bestTourOrder == null) {
-//                bestTourOrder = ants.get(0).trail;
-//                bestTourLength = ants.get(0)
-//                        .trailLength(graph);
-//            }
-//            for (Ant a : ants) {
-//                if (a.trailLength(graph) < bestTourLength) {
-//                    bestTourLength = a.trailLength(graph);
-//                    bestTourOrder = a.trail.clone();
-//                }
-//            }
-//        }
-//    }
-//
-//    private void clearTrails() {
-//        IntStream.range(0, numberOfNodes)
-//                .forEach(i -> {
-//                    IntStream.range(0, numberOfNodes)
-//                            .forEach((j -> trails[i][j] = initialTrails));
-//                });
-//    }
+    public void startOptimization() {
+        IntStream.rangeClosed(1, 8)
+                .forEach((i -> {
+                    System.out.println("Attempt #" + i);
+                    solve();
+                }));
+    }
+
+    public int[] solve() {
+        setupAnts();
+        clearTrails();
+        IntStream.range(0, maxIterations)
+                .forEach(i -> {
+                    moveAnts();
+                    updateTrails();
+                    updateBest();
+                });
+        System.out.println("Best tour length: " + (bestTourLength - numberOfNodes));
+        System.out.println("Best tour order: " + Arrays.toString(bestTourOrder));
+        return bestTourOrder.clone();
+    }
+
+    public void setupAnts() {
+        IntStream.range(0, numberOfAnts)
+                .forEach(i -> {
+                    ants.forEach(ant -> {
+                        ant.clear();
+                        ant.visitNode(-1, random.nextInt(numberOfNodes));
+                    });
+                });
+        currentIndex = 0;
+    }
+
+    public void moveAnts() {
+        IntStream.range(currentIndex, numberOfNodes -1)
+                .forEach(i -> {
+                ants.forEach(ant -> ant.visitNode(currentIndex, selectNextNode(ant)));
+            currentIndex ++;
+        });
+    }
+
+    private int selectNextNode(Ant ant) {
+        int t = random.nextInt(numberOfNodes - currentIndex);
+        if (random.nextDouble() < randomFactor) {
+            OptionalInt nodeIndex = IntStream.range(0, numberOfNodes)
+                    .filter(i -> i == t && !ant.visited(i))
+                    .findFirst();
+            if (nodeIndex.isPresent()) {
+                return nodeIndex.getAsInt();
+            }
+        }
+        calculateProbabilities(ant);
+        double r = random.nextDouble();
+        double total = 0;
+        for (int i = 0; i < numberOfNodes; i++) {
+            total += probabilities[i];
+            if (total >= r) {
+                return i;
+            }
+        }
+        throw new RuntimeException("There are no other nodes");
+    }
+
+    public void calculateProbabilities(Ant ant) {
+        int i = ant.trail[currentIndex];
+        double pheromone = 0.0;
+        for (int l = 0; l < numberOfNodes; l++) {
+            if (!ant.visited(l)) {
+                pheromone += Math.pow(trails[i][l], pheromoneImportance) * Math.pow(1.0 / graph[i][l].getNodeNum(), distancePriority);
+            }
+        }
+        for (int j = 0; j < numberOfNodes; j++) {
+            if (ant.visited(j)) {
+                probabilities[j] = 0.0;
+            } else {
+                double numerator =  Math.pow(trails[i][j], pheromoneImportance) * Math.pow(1.0 / graph[i][j].getNodeNum(), distancePriority);
+                probabilities[j] = numerator / pheromone;
+            }
+        }
+    }
+
+    private void updateTrails() {
+        for (int i = 0; i < numberOfNodes; i++) {
+            for (int j = 0; j < numberOfNodes; j++) {
+                trails [i][j] *= evaporationRate;
+            }
+        }
+        for (Ant a : ants) {
+            double contribution = pheromonePerAnt / a.trailLength(graph);
+            for (int i = 0; i < numberOfNodes - 1; i++) {
+                trails[a.trail[i]][a.trail[i + 1]] += contribution;
+            }
+            trails[a.trail[numberOfNodes - 1]][a.trail[0]] += contribution;
+        }
+    }
+
+    private void updateBest() {
+        if (bestTourOrder == null) {
+            if (bestTourOrder == null) {
+                bestTourOrder = ants.get(0).trail;
+                bestTourLength = ants.get(0)
+                        .trailLength(graph);
+            }
+            for (Ant a : ants) {
+                if (a.trailLength(graph) < bestTourLength) {
+                    bestTourLength = a.trailLength(graph);
+                    bestTourOrder = a.trail.clone();
+                }
+            }
+        }
+    }
+
+    private void clearTrails() {
+        IntStream.range(0, numberOfNodes)
+                .forEach(i -> {
+                    IntStream.range(0, numberOfNodes)
+                            .forEach((j -> trails[i][j] = initialTrails));
+                });
+    }
 
 
     public static void main(String[] args) {

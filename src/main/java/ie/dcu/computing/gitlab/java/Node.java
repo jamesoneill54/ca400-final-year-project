@@ -26,6 +26,10 @@ public class Node {
         return this;
     }
 
+    public int getNodeNum() {
+        return (this.getX() * AntEnvironment.ENVIRONMENT_WIDTH) + this.getY();
+    }
+
     public void printNode() {
         System.out.print("(" + this.getX() + ", " + this.getY() + ")");
     }

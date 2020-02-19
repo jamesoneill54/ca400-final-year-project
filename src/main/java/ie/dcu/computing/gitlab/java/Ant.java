@@ -56,10 +56,10 @@ public class Ant {
         return visited[i];
     }
 
-    protected double trailLength(double graph[] []) {
-        double length = graph[trail[trailSize - 1]][trail[0]];
+    protected double trailLength(Node graph[][]) {
+        double length = graph[trail[trailSize - 1]][trail[0]].getNodeNum();
         for (int i = 0; i < trailSize - 1; i++) {
-            length += graph[trail[i]][trail[i + 1]];
+            length += graph[trail[i]][trail[i + 1]].getNodeNum();
         }
         return length;
     }
