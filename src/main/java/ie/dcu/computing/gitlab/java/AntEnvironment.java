@@ -5,11 +5,11 @@ import java.awt.*;
 
 public class AntEnvironment extends JPanel implements Runnable {
 
-    protected final int DELAY = 20;
-    private static final int ENVIRONMENT_WIDTH = 640;
-    private static final int ENVIRONMENT_HEIGHT = 480;
+    private final int DELAY = 20;
+    protected static final int ENVIRONMENT_WIDTH = 640;
+    protected static final int ENVIRONMENT_HEIGHT = 480;
 
-    protected Thread animator;
+    private Thread animator;
     // Should be changed to an array of ants for future updates
     private Ant ant;
     // Should be changed to an array of obstacles for future updates
