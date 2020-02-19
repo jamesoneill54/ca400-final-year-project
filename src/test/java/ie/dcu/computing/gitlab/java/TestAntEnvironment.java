@@ -21,6 +21,21 @@ public class TestAntEnvironment {
     }
 
     @Test
+    void testGetObstacle() {
+        Assert.assertEquals(testAntEnvironment.getObstacle().getClass(), Obstacle.class);
+    }
+
+    @Test
+    void testGetGoal() {
+        Assert.assertEquals(testAntEnvironment.getGoal().getClass(), Goal.class);
+    }
+
+    @Test
+    void testGetAnthill() {
+        Assert.assertEquals(testAntEnvironment.getAnthill().getClass(), Anthill.class);
+    }
+
+    @Test
     void testEnvironmentSize() {
         Assert.assertEquals(testAntEnvironment.getPreferredSize().width,
                 testAntEnvironment.getEnvironmentWidth());
