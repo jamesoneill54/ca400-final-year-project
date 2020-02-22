@@ -22,12 +22,12 @@ public class Node {
         this.y = b;
     }
 
-    public Node getCoOrdinates() {
+    public Node getNodeObj() {
         return this;
     }
 
     public int getNodeNum() {
-        return (this.getX() * AntEnvironment.ENVIRONMENT_WIDTH) + this.getY();
+        return (this.getY() * AntEnvironment.ENVIRONMENT_WIDTH) + this.getX() +1 ;
     }
 
     public void printNode() {

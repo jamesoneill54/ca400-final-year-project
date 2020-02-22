@@ -137,7 +137,7 @@ The first Ant Colony Optimisation Algorithm to be proposed in literature. Pherom
 
 First major improvement over the original Ant System. First innovations made in a system known as _Ant-Q_, by the same authors.
 
- New additions include the form of the decision rule used by ants during the construction process. Ants in ACS use the _psuedorandom porportional_ rule: the probability that an ant moves from node _i_ to _j_ depends on a random variable _q_ uniformly distributed over [0,1], and a parameter q<sub>0</sub>. If q <= q<sub>0</sub> then, among the feasible components, the component to maximise the product of τ<sub>il</sub>η<sup>β</sup><sub>il<sub> is chosen. Otherwise the same equation as AS is used.
+ New additions include the form of the decision rule used by ants during the construction process. Ants in ACS use the _psuedorandom porportional_ rule: the probability that an ant moves from node _i_ to _j_ depends on a random variable _q_ uniformly distributed over [0,1], and a parameter q<sub>0</sub>. If q <= q<sub>0</sub> then, among the feasible components, the component to maximise the product of τ<sub>il</sub>η<sup>β</sup><sub>il</sub> is chosen. Otherwise the same equation as AS is used.
 
 This is a **greedy rule** which favours exploitation of the pheromone information, and must be counterbalanced with the introduction of a diversifying component, the _local pheromone update_. Local pheromone update is performed by all ants after each construction step. Each ant only applies it to the last edge traversed
 
@@ -183,7 +183,7 @@ The algorithm sets the initial values of its trails to L<sub>max</sub> and stops
 
 Army Ants sometimes release different types of pheromones eg to warn other ants of prey (obstacles) ahead.
 
-Madeleine Beekman, University of Sydney, reports that it can be the _quality_ of a pheromone trail as well as the quantity that measures the fitness of a trail. Could mean that an ant trying. Possibly have two values associated with the pheromones at a given node; one for the quantity at that node and one for the combined quality of the present pheromones..
+Madeleine Beekman, University of Sydney, reports that it can be the _quality_ of a pheromone trail as well as the quantity that measures the fitness of a trail. Could mean that an ant trying to find the goal has a different pheromone quality than one who is returning from a successful journey. Possibly have two values associated with the pheromones at a given node; one for the quantity at that node and one for the combined quality of the present pheromones..
 
 ### Differing Ant Roles within the Colony
 

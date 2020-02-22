@@ -1,6 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
 import java.awt.*;
+import java.util.Arrays;
 
 public class Ant {
 
@@ -17,7 +18,7 @@ public class Ant {
 
     public Ant(int tourSize, Color antColor) {
         this.trailSize = tourSize;
-        this.trail = new int[tourSize];
+        this.trail = new int[0];
         this.visited = new boolean[tourSize];
         this.task = "searcher";
         this.color = antColor;
@@ -29,7 +30,7 @@ public class Ant {
 
     public Ant(int tourSize) {
         this.trailSize = tourSize;
-        this.trail = new int[tourSize];
+        this.trail = new int[0];
         this.visited = new boolean[tourSize];
         this.task = "searcher";
         this.color = Color.BLUE;
@@ -38,6 +39,8 @@ public class Ant {
         this.x = 0;
         this.y = 0;
     }
+
+    // ACO
 
     protected int[] getTrail() {
         return trail;
@@ -48,15 +51,15 @@ public class Ant {
     }
 
     protected void visitNode(int currentIndex, int node) {
-        trail[currentIndex + 1] = node;
-        visited[node] = true;
+        this.trail = Arrays.copyOf(this.trail, this.trail.length + 1);
+        this.trail[currentIndex + 1] = node;
     }
 
     protected boolean visited(int i) {
         return visited[i];
     }
 
-    protected double trailLength(Node graph[][]) {
+    protected double trailLength(Node[][] graph) {
         double length = graph[trail[trailSize - 1]][trail[0]].getNodeNum();
         for (int i = 0; i < trailSize - 1; i++) {
             length += graph[trail[i]][trail[i + 1]].getNodeNum();
