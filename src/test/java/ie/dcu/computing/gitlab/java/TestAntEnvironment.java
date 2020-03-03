@@ -12,7 +12,7 @@ public class TestAntEnvironment {
     @Test
     void testInitEnvironment() {
         Assert.assertEquals(testAntEnvironment.getBackground(), Color.WHITE);
-        Assert.assertEquals(testAntEnvironment.getPreferredSize(), new Dimension(640, 480));
+        Assert.assertEquals(testAntEnvironment.getPreferredSize(), new Dimension(6, 4));
     }
 
     @Test
