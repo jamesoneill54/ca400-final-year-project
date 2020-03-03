@@ -142,16 +142,16 @@ public class AntColonyOptimisation {
             while (ant.trail[currentIndex] != goalNode) {
                 int newNode = selectNextNode(ant);
                 ant.visitNode(currentIndex, getNodeFromIndex(graph, newNode));
-                System.out.println("NODE VISITED: " + newNode + " : (" + getNodeFromIndex(graph, newNode).getX() + ", " + getNodeFromIndex(graph, newNode).getY() + ")\n");
+                //System.out.println("NODE VISITED: " + newNode + " : (" + getNodeFromIndex(graph, newNode).getX() + ", " + getNodeFromIndex(graph, newNode).getY() + ")\n");
                 currentIndex ++;
             }
-            System.out.println("Goal node reached! Onto next ant..");
-            System.out.print("\n-----------------------------------------------\n\n");
+            //System.out.println("Goal node reached! Onto next ant..");
+            //System.out.print("\n-----------------------------------------------\n\n");
         });
     }
 
     private int selectNextNode(Ant ant) {
-        System.out.println("Node.java: Finding neighbour nodes for (" + ant.trail[currentIndex].getX() + ", " + ant.trail[currentIndex].getY() + ")..");
+        //System.out.println("Node.java: Finding neighbour nodes for (" + ant.trail[currentIndex].getX() + ", " + ant.trail[currentIndex].getY() + ")..");
         possibleMoves = ant.trail[currentIndex].getNeighbourNodes(graph, ant.trail[currentIndex]);
         int t = random.nextInt(possibleMoves.size());
         if (random.nextDouble() < randomFactor) {
@@ -167,7 +167,7 @@ public class AntColonyOptimisation {
         double total = 0;
         for (Node node : possibleMoves) {
             if (node == goalNode) {
-                System.out.println("goalNode is a neighbour, selecting that instead");
+                //System.out.println("goalNode is a neighbour, selecting that instead");
                 return goalNode.getNodeNum();
             }
             total += probabilities[node.getNodeNum()];
@@ -180,7 +180,7 @@ public class AntColonyOptimisation {
     }
 
     public void calculateProbabilities(Ant ant) {
-        System.out.println("Calculating probabilities for ant " + ants.indexOf(ant));
+        //System.out.println("Calculating probabilities for ant " + ants.indexOf(ant));
         possibleMoves = ant.trail[currentIndex].getNeighbourNodes(graph, ant.trail[currentIndex]);
         int i = ant.trail[currentIndex].getX();
         double pheromone = 0.0;
