@@ -13,14 +13,14 @@ public class TestAntColonyOptimisation {
 
     }
 
-//    @Test
-//    void preTourTest() {
-//        Assert.assertTrue("Best tour length is null", testACO.bestTourOrder == null);
-//    }
-//
-//    @Test
-//    void postTourTest() {
-//        testACO.startOptimization();
-//        Assert.assertFalse("Best tour length is not null",testACO.bestTourOrder == null);
-//    }
+    @Test
+    void preTourTest() {
+        Assert.assertTrue("Best tour length is null", testACO.bestTourOrder == null);
+    }
+
+    @Test
+    void postTourTest() {
+        testACO.startOptimization();
+        Assert.assertFalse("Best tour length is not null",testACO.bestTourOrder == null);
+    }
 }
