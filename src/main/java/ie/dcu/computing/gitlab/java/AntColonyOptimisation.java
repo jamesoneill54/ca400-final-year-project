@@ -43,15 +43,18 @@ public class AntColonyOptimisation {
         trails = new double[numberOfNodes][numberOfNodes];
         probabilities = new double [numberOfNodes + 1];
 
-        IntStream.range(0, numberOfAnts)
-                .forEach(i -> ants.add(new Ant(numberOfNodes)));
+        for (int antNumber = 0; antNumber < numberOfAnts; antNumber++) {
+            ants.add(new Ant(numberOfNodes));
+        }
     }
 
     public Node[][] generateMatrixFromEnv(int width, int height) {
         Node[][] matrix = new Node[width][height];
-        IntStream.range(0, width)
-                .forEach(i -> IntStream.range(0, height)
-                        .forEach(j -> matrix[i][j] = new Node(j, i)));
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < height; x++) {
+                matrix[y][x] = new Node(x, y);
+            }
+        }
         return matrix;
     }
 
@@ -100,32 +103,30 @@ public class AntColonyOptimisation {
     }
 
     public void startOptimization() {
-        IntStream.rangeClosed(1, 8)
-                .forEach((i -> {
-                    System.out.println("Attempt #" + i);
-                    solve();
-                }));
+        for (int attemptNum = 1; attemptNum < 9; attemptNum++) {
+            System.out.println("Attempt #" + attemptNum);
+            solve();
+        }
     }
 
     public List<Node> solve() {
         setupAnts();
         clearTrails();
-        IntStream.range(0, maxIterations)
-                .forEach(i -> {
-                    constructSolutions();
-                    //updateTrails();
-                    updateBest();
-                });
+        for (int i = 0; i < maxIterations; i++) {
+            constructSolutions();
+            //updateTrails();
+            updateBest();
+        }
         System.out.println("Best tour length: " + bestTourLength);
         System.out.println("Best tour order: " + bestTourOrder.toString());
         return bestTourOrder;
     }
 
     public void setupAnts() {
-            ants.forEach(ant -> {
-                ant.clear();
-                ant.visitNode(homeNode);
-            });
+        for (Ant ant: ants) {
+            ant.clear();
+            ant.visitNode(homeNode);
+        }
         currentIndex = 0;
     }
 
@@ -137,7 +138,7 @@ public class AntColonyOptimisation {
 
 
     public void constructSolutions() {
-        ants.forEach(ant -> {
+        for (Ant ant: ants) {
             currentIndex = 0;
             while (ant.trail.get(currentIndex) != goalNode) {
                 Node newNode = selectNextNode(ant);
@@ -147,7 +148,7 @@ public class AntColonyOptimisation {
             }
             //System.out.println("Goal node reached! Onto next ant..");
             //System.out.print("\n-----------------------------------------------\n\n");
-        });
+        }
     }
 
     private Node selectNextNode(Ant ant) {
@@ -165,7 +166,7 @@ public class AntColonyOptimisation {
         calculateProbabilities(ant);
         double r = random.nextDouble();
         double total = 0;
-        for (Node node : possibleMoves) {
+        for (Node node: possibleMoves) {
             if (node == goalNode) {
                 //System.out.println("goalNode is a neighbour, selecting that instead");
                 return goalNode;
@@ -226,23 +227,22 @@ public class AntColonyOptimisation {
             bestTourOrder = ants.get(0).trail;
             bestTourLength = ants.get(0)
                     .trail.size();
-            for (Ant a : ants) {
-                if (a.trail.size() < bestTourLength) {
-                    bestTourLength = a.trail.size();
-                    bestTourOrder = a.trail;
+            for (Ant ant: ants) {
+                if (ant.trail.size() < bestTourLength) {
+                    bestTourLength = ant.trail.size();
+                    bestTourOrder = ant.trail;
                 }
             }
         }
     }
 
     private void clearTrails() {
-        IntStream.range(0, numberOfNodes)
-                .forEach(i -> {
-                    IntStream.range(0, numberOfNodes)
-                            .forEach((j -> trails[i][j] = initialTrails));
-                });
+        for (int i = 0; i < numberOfNodes; i++) {
+            for (int j = 0; j < numberOfNodes; j++) {
+                trails[i][j] = initialTrails;
+            }
+        }
     }
-
 
     public static void main(String[] args) {
         System.out.println("Running Ant Colony Optimisation Algorithm...");
@@ -264,5 +264,4 @@ public class AntColonyOptimisation {
         System.out.println("\n---------------\nFINAL ANT POSITIONS:\n");
         myACO.printAntCurrentLoc();
     }
-
 }

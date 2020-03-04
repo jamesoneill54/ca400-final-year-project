@@ -40,19 +40,20 @@ public class Node {
 
     public List<Node> getNeighbourNodes(Node[][] matrix, Node currentNode) {
         List<Node> neighbours = new ArrayList<>();
-        IntStream.range(currentNode.getY() - 1, currentNode.getY() + 2)
-                .forEach(i -> {
-                    if (i >= 0 && i < matrix.length) {
-                        IntStream.range(currentNode.getX() - 1, currentNode.getX() + 2)
-                                .forEach(j -> {
-                                    if (j >= 0 && j < matrix[i].length) {
-                                        if (matrix[i][j] != currentNode) {
-                                            neighbours.add(matrix[i][j]);
-                                        }
-                                    }
-                                });
+        int startY = currentNode.getY() - 1;
+        int endY = currentNode.getY() + 1;
+        int startX = currentNode.getX() - 1;
+        int endX = currentNode.getX() + 1;
+
+        for (int y = startY; y <= endY; y++) {
+            if (y >= 0 && y < matrix.length) {
+                for (int x = startX; x <= endX; x++) {
+                    if (x >= 0 && x < matrix[y].length) {
+                        neighbours.add(matrix[y][x]);
                     }
-                });
+                }
+            }
+        }
         return neighbours;
     }
 }
