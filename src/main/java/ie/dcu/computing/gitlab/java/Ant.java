@@ -16,16 +16,6 @@ public class Ant {
     protected List<Node> trail = new ArrayList<>();
     protected String task;
 
-    public Ant(int tourSize, Color antColor) {
-        this.trailSize = tourSize;
-        this.task = "searcher";
-        this.color = antColor;
-        // X and Y should be equal to the anthill
-        // Need to derive X and Y from current node-type setup
-        this.x = 0;
-        this.y = 0;
-    }
-
     public Ant(int tourSize) {
         this.trailSize = tourSize;
         this.task = "searcher";

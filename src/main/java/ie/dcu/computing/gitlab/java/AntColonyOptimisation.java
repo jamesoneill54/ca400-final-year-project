@@ -1,5 +1,6 @@
 package ie.dcu.computing.gitlab.java;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -139,8 +140,8 @@ public class AntColonyOptimisation {
         ants.forEach(ant -> {
             currentIndex = 0;
             while (ant.trail.get(currentIndex) != goalNode) {
-                int newNode = selectNextNode(ant);
-                ant.visitNode(getNodeFromIndex(graph, newNode));
+                Node newNode = selectNextNode(ant);
+                ant.visitNode(newNode);
                 //System.out.println("NODE VISITED: " + newNode + " : (" + getNodeFromIndex(graph, newNode).getX() + ", " + getNodeFromIndex(graph, newNode).getY() + ")\n");
                 currentIndex ++;
             }
@@ -149,7 +150,7 @@ public class AntColonyOptimisation {
         });
     }
 
-    private int selectNextNode(Ant ant) {
+    private Node selectNextNode(Ant ant) {
         //System.out.println("Node.java: Finding neighbour nodes for (" + ant.trail[currentIndex].getX() + ", " + ant.trail[currentIndex].getY() + ")..");
         possibleMoves = ant.trail.get(currentIndex).getNeighbourNodes(graph, ant.trail.get(currentIndex));
         int t = random.nextInt(possibleMoves.size());
@@ -167,11 +168,11 @@ public class AntColonyOptimisation {
         for (Node node : possibleMoves) {
             if (node == goalNode) {
                 //System.out.println("goalNode is a neighbour, selecting that instead");
-                return goalNode.getNodeNum();
+                return goalNode;
             }
             total += probabilities[node.getNodeNum()];
             if (total >= r) {
-                return node.getNodeNum();
+                return node;
             }
         }
 
