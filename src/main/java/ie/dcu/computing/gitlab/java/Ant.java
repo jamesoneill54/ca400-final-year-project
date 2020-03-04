@@ -1,9 +1,8 @@
 package ie.dcu.computing.gitlab.java;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Arrays;
 
 public class Ant {
 
@@ -15,12 +14,10 @@ public class Ant {
 
     protected int trailSize;
     protected List<Node> trail = new ArrayList<>();
-    protected boolean[] visited;
     protected String task;
 
     public Ant(int tourSize, Color antColor) {
         this.trailSize = tourSize;
-        this.visited = new boolean[tourSize];
         this.task = "searcher";
         this.color = antColor;
         // X and Y should be equal to the anthill
@@ -31,7 +28,6 @@ public class Ant {
 
     public Ant(int tourSize) {
         this.trailSize = tourSize;
-        this.visited = new boolean[tourSize];
         this.task = "searcher";
         this.color = Color.BLUE;
         // X and Y should be equal to the anthill
@@ -46,18 +42,13 @@ public class Ant {
         return trail;
     }
 
-    protected boolean[] getVisited() {
-        return visited;
-    }
-
-    protected void visitNode(int currentIndex, Node node) {
+    protected void visitNode(Node node) {
         this.trail.add(node);
-        this.visited = Arrays.copyOf(this.visited, this.visited.length + 1);
-        this.visited[currentIndex + 1] = true;
+        // add pheromone to node?
     }
 
-    protected boolean visited(int i) {
-        return visited[i];
+    protected boolean visited(Node node) {
+        return (trail.contains(node));
     }
 
     protected double trailLength() {
@@ -65,9 +56,7 @@ public class Ant {
     }
 
     protected void clear() {
-        for (int i = 0; i < trailSize; i++) {
-            visited[i] = false;
-        }
+        trail.clear();
     }
 
     protected void switchTask(String newTask) {

@@ -123,16 +123,15 @@ public class AntColonyOptimisation {
     public void setupAnts() {
             ants.forEach(ant -> {
                 ant.clear();
-                ant.visitNode(-1, homeNode);
+                ant.visitNode(homeNode);
             });
         currentIndex = 0;
     }
 
     public void printAntCurrentLoc() {
-        IntStream.range(0, numberOfAnts)
-                .forEach(i -> {
-                    System.out.println("Ant " + i + ": " + ants.get(i).trail.get(currentIndex).getNodeNum());
-                });                                        
+        for (Ant ant : ants) {
+            System.out.println("Ant " + ants.indexOf(ant) + ": " + ant.trail.get(ant.trail.size() - 1).getNodeNum());
+        }
     }
 
 
@@ -141,7 +140,7 @@ public class AntColonyOptimisation {
             currentIndex = 0;
             while (ant.trail.get(currentIndex) != goalNode) {
                 int newNode = selectNextNode(ant);
-                ant.visitNode(currentIndex, getNodeFromIndex(graph, newNode));
+                ant.visitNode(getNodeFromIndex(graph, newNode));
                 //System.out.println("NODE VISITED: " + newNode + " : (" + getNodeFromIndex(graph, newNode).getX() + ", " + getNodeFromIndex(graph, newNode).getY() + ")\n");
                 currentIndex ++;
             }
@@ -154,14 +153,14 @@ public class AntColonyOptimisation {
         //System.out.println("Node.java: Finding neighbour nodes for (" + ant.trail[currentIndex].getX() + ", " + ant.trail[currentIndex].getY() + ")..");
         possibleMoves = ant.trail.get(currentIndex).getNeighbourNodes(graph, ant.trail.get(currentIndex));
         int t = random.nextInt(possibleMoves.size());
-        if (random.nextDouble() < randomFactor) {
-            OptionalInt nodeIndex = IntStream.range(0, possibleMoves.size())
-                    .filter(i -> i == t && !ant.visited(i))
-                    .findFirst();
-            if (nodeIndex.isPresent()) {
-                return nodeIndex.getAsInt();
-            }
-        }
+//        if (random.nextDouble() < randomFactor) {
+//            OptionalInt nodeIndex = IntStream.range(0, possibleMoves.size())
+//                    .filter(i -> i == t && !ant.visited(getNodeFromIndex(graph, i)))
+//                    .findFirst();
+//            if (nodeIndex.isPresent()) {
+//                return nodeIndex.getAsInt();
+//            }
+//        }
         calculateProbabilities(ant);
         double r = random.nextDouble();
         double total = 0;
@@ -182,16 +181,16 @@ public class AntColonyOptimisation {
     public void calculateProbabilities(Ant ant) {
         //System.out.println("Calculating probabilities for ant " + ants.indexOf(ant));
         possibleMoves = ant.trail.get(currentIndex).getNeighbourNodes(graph, ant.trail.get(currentIndex));
-        int i = ant.trail.get(currentIndex).getX();
         double pheromone = 0.0;
         for (Node node : possibleMoves) {
-            //if (!ant.visited(node.getNodeNum())) {
-                probabilities[node.getNodeNum()] = 1.0 / possibleMoves.size();
-           //}
+            double evenChances = possibleMoves.size();
+            //if (!ant.visited(node)) {
+                probabilities[node.getNodeNum()] = 1.0 / evenChances;
+            //}
         }
 //        for (int l = 0; l < possibleMoves.size(); l++) {
 //            int nodeYCoord = possibleMoves.get(l).getY();
-//            if (!ant.visited(nodeYCoord)) {
+//            if (!ant.visited(node)) {
 //                System.out.println("graph[i][l] = " + graph[nodeYCoord][i].getNodeNum());
 //                pheromone += Math.pow(trails[i][l], pheromoneImportance) * Math.pow(1.0 / graph[l][i].getNodeNum(), distancePriority);
 //            }
