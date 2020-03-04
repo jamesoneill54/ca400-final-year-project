@@ -1,6 +1,8 @@
 package ie.dcu.computing.gitlab.java;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Arrays;
 
 public class Ant {
@@ -12,13 +14,12 @@ public class Ant {
     protected static final int HEIGHT = 7;
 
     protected int trailSize;
-    protected Node[] trail;
+    protected List<Node> trail = new ArrayList<>();
     protected boolean[] visited;
     protected String task;
 
     public Ant(int tourSize, Color antColor) {
         this.trailSize = tourSize;
-        this.trail = new Node[0];
         this.visited = new boolean[tourSize];
         this.task = "searcher";
         this.color = antColor;
@@ -30,7 +31,6 @@ public class Ant {
 
     public Ant(int tourSize) {
         this.trailSize = tourSize;
-        this.trail = new Node[0];
         this.visited = new boolean[tourSize];
         this.task = "searcher";
         this.color = Color.BLUE;
@@ -42,7 +42,7 @@ public class Ant {
 
     // ACO
 
-    protected Node[] getTrail() {
+    protected List<Node> getTrail() {
         return trail;
     }
 
@@ -51,8 +51,7 @@ public class Ant {
     }
 
     protected void visitNode(int currentIndex, Node node) {
-        this.trail = Arrays.copyOf(this.trail, this.trail.length + 1);
-        this.trail[currentIndex + 1] = node;
+        this.trail.add(node);
         this.visited = Arrays.copyOf(this.visited, this.visited.length + 1);
         this.visited[currentIndex + 1] = true;
     }
@@ -61,12 +60,8 @@ public class Ant {
         return visited[i];
     }
 
-    protected double trailLength(Node[][] graph) {
-        double length = graph[trail[trailSize - 1].getNodeNum()][trail[0].getNodeNum()].getNodeNum();
-        for (int i = 0; i < trailSize - 1; i++) {
-            length += graph[trail[i].getNodeNum()][trail[i + 1].getNodeNum()].getNodeNum();
-        }
-        return length;
+    protected double trailLength() {
+        return this.trail.size();
     }
 
     protected void clear() {

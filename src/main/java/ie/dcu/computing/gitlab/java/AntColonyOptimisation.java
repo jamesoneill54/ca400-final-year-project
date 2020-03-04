@@ -31,7 +31,7 @@ public class AntColonyOptimisation {
     private int currentIndex;
     public List<Node> possibleMoves = new ArrayList<>();
 
-    public Node[] bestTourOrder;
+    public List<Node> bestTourOrder;
     private double bestTourLength;
 
     public AntColonyOptimisation(int w, int h) {
@@ -106,7 +106,7 @@ public class AntColonyOptimisation {
                 }));
     }
 
-    public Node[] solve() {
+    public List<Node> solve() {
         setupAnts();
         clearTrails();
         IntStream.range(0, maxIterations)
@@ -116,8 +116,8 @@ public class AntColonyOptimisation {
                     updateBest();
                 });
         System.out.println("Best tour length: " + bestTourLength);
-        System.out.println("Best tour order: " + Arrays.toString(bestTourOrder));
-        return bestTourOrder.clone();
+        System.out.println("Best tour order: " + bestTourOrder.toString());
+        return bestTourOrder;
     }
 
     public void setupAnts() {
@@ -131,7 +131,7 @@ public class AntColonyOptimisation {
     public void printAntCurrentLoc() {
         IntStream.range(0, numberOfAnts)
                 .forEach(i -> {
-                    System.out.println("Ant " + i + ": " + ants.get(i).trail[currentIndex].getNodeNum());
+                    System.out.println("Ant " + i + ": " + ants.get(i).trail.get(currentIndex).getNodeNum());
                 });                                        
     }
 
@@ -139,7 +139,7 @@ public class AntColonyOptimisation {
     public void constructSolutions() {
         ants.forEach(ant -> {
             currentIndex = 0;
-            while (ant.trail[currentIndex] != goalNode) {
+            while (ant.trail.get(currentIndex) != goalNode) {
                 int newNode = selectNextNode(ant);
                 ant.visitNode(currentIndex, getNodeFromIndex(graph, newNode));
                 //System.out.println("NODE VISITED: " + newNode + " : (" + getNodeFromIndex(graph, newNode).getX() + ", " + getNodeFromIndex(graph, newNode).getY() + ")\n");
@@ -152,7 +152,7 @@ public class AntColonyOptimisation {
 
     private int selectNextNode(Ant ant) {
         //System.out.println("Node.java: Finding neighbour nodes for (" + ant.trail[currentIndex].getX() + ", " + ant.trail[currentIndex].getY() + ")..");
-        possibleMoves = ant.trail[currentIndex].getNeighbourNodes(graph, ant.trail[currentIndex]);
+        possibleMoves = ant.trail.get(currentIndex).getNeighbourNodes(graph, ant.trail.get(currentIndex));
         int t = random.nextInt(possibleMoves.size());
         if (random.nextDouble() < randomFactor) {
             OptionalInt nodeIndex = IntStream.range(0, possibleMoves.size())
@@ -181,8 +181,8 @@ public class AntColonyOptimisation {
 
     public void calculateProbabilities(Ant ant) {
         //System.out.println("Calculating probabilities for ant " + ants.indexOf(ant));
-        possibleMoves = ant.trail[currentIndex].getNeighbourNodes(graph, ant.trail[currentIndex]);
-        int i = ant.trail[currentIndex].getX();
+        possibleMoves = ant.trail.get(currentIndex).getNeighbourNodes(graph, ant.trail.get(currentIndex));
+        int i = ant.trail.get(currentIndex).getX();
         double pheromone = 0.0;
         for (Node node : possibleMoves) {
             //if (!ant.visited(node.getNodeNum())) {
@@ -213,11 +213,11 @@ public class AntColonyOptimisation {
             }
         }
         for (Ant a : ants) {
-            double contribution = pheromonePerAnt / a.trailLength(graph);
+            double contribution = pheromonePerAnt / a.trailLength();
             for (int i = 0; i < numberOfNodes - 1; i++) {
-                trails[a.trail[i].getNodeNum()][a.trail[i + 1].getNodeNum()] += contribution;
+                trails[a.trail.get(i).getNodeNum()][a.trail.get(i + 1).getNodeNum()] += contribution;
             }
-            trails[a.trail[numberOfNodes - 1].getNodeNum()][a.trail[0].getNodeNum()] += contribution;
+            trails[a.trail.get(numberOfNodes - 1).getNodeNum()][a.trail.get(0).getNodeNum()] += contribution;
         }
     }
 
@@ -225,11 +225,11 @@ public class AntColonyOptimisation {
         if (bestTourOrder == null) {
             bestTourOrder = ants.get(0).trail;
             bestTourLength = ants.get(0)
-                    .trail.length;
+                    .trail.size();
             for (Ant a : ants) {
-                if (a.trail.length < bestTourLength) {
-                    bestTourLength = a.trail.length;
-                    bestTourOrder = a.trail.clone();
+                if (a.trail.size() < bestTourLength) {
+                    bestTourLength = a.trail.size();
+                    bestTourOrder = a.trail;
                 }
             }
         }
