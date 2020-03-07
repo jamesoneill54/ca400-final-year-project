@@ -1,12 +1,8 @@
 package ie.dcu.computing.gitlab.java;
 
-import java.awt.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.Random;
-import java.util.stream.IntStream;
 
 public class AntColonyOptimisation {
     private double initialTrails = 1.0;
@@ -27,10 +23,8 @@ public class AntColonyOptimisation {
     private double trails[][];
     private List<Ant> ants = new ArrayList<>();
     private Random random = new Random();
-    private double probabilities[];
 
     private int currentIndex;
-    public List<Node> possibleMoves = new ArrayList<>();
 
     public List<Node> bestTourOrder;
     private double bestTourLength;
@@ -41,7 +35,6 @@ public class AntColonyOptimisation {
         numberOfAnts = (int) (numberOfNodes * antPerNode);
 
         trails = new double[numberOfNodes][numberOfNodes];
-        probabilities = new double [numberOfNodes + 1];
 
         for (int antNumber = 0; antNumber < numberOfAnts; antNumber++) {
             ants.add(new Ant(numberOfNodes));
@@ -141,7 +134,7 @@ public class AntColonyOptimisation {
         for (Ant ant: ants) {
             currentIndex = 0;
             while (ant.trail.get(currentIndex) != goalNode) {
-                Node newNode = selectNextNode(ant);
+                Node newNode = ant.selectNextNode(currentIndex, graph);
                 ant.visitNode(newNode);
                 //System.out.println("NODE VISITED: " + newNode + " : (" + getNodeFromIndex(graph, newNode).getX() + ", " + getNodeFromIndex(graph, newNode).getY() + ")\n");
                 currentIndex ++;
@@ -149,62 +142,6 @@ public class AntColonyOptimisation {
             //System.out.println("Goal node reached! Onto next ant..");
             //System.out.print("\n-----------------------------------------------\n\n");
         }
-    }
-
-    private Node selectNextNode(Ant ant) {
-        //System.out.println("Node.java: Finding neighbour nodes for (" + ant.trail[currentIndex].getX() + ", " + ant.trail[currentIndex].getY() + ")..");
-        possibleMoves = ant.trail.get(currentIndex).getNeighbourNodes(graph, ant.trail.get(currentIndex));
-        int t = random.nextInt(possibleMoves.size());
-//        if (random.nextDouble() < randomFactor) {
-//            OptionalInt nodeIndex = IntStream.range(0, possibleMoves.size())
-//                    .filter(i -> i == t && !ant.visited(getNodeFromIndex(graph, i)))
-//                    .findFirst();
-//            if (nodeIndex.isPresent()) {
-//                return nodeIndex.getAsInt();
-//            }
-//        }
-        calculateProbabilities(ant);
-        double r = random.nextDouble();
-        double total = 0;
-        for (Node node: possibleMoves) {
-            if (node == goalNode) {
-                //System.out.println("goalNode is a neighbour, selecting that instead");
-                return goalNode;
-            }
-            total += probabilities[node.getNodeNum()];
-            if (total >= r) {
-                return node;
-            }
-        }
-
-        throw new RuntimeException("There are no other nodes");
-    }
-
-    public void calculateProbabilities(Ant ant) {
-        //System.out.println("Calculating probabilities for ant " + ants.indexOf(ant));
-        possibleMoves = ant.trail.get(currentIndex).getNeighbourNodes(graph, ant.trail.get(currentIndex));
-        double pheromone = 0.0;
-        for (Node node : possibleMoves) {
-            double evenChances = possibleMoves.size();
-            //if (!ant.visited(node)) {
-                probabilities[node.getNodeNum()] = 1.0 / evenChances;
-            //}
-        }
-//        for (int l = 0; l < possibleMoves.size(); l++) {
-//            int nodeYCoord = possibleMoves.get(l).getY();
-//            if (!ant.visited(node)) {
-//                System.out.println("graph[i][l] = " + graph[nodeYCoord][i].getNodeNum());
-//                pheromone += Math.pow(trails[i][l], pheromoneImportance) * Math.pow(1.0 / graph[l][i].getNodeNum(), distancePriority);
-//            }
-//        }
-//        for (int j = 0; j < possibleMoves.size(); j++) {
-//            if (ant.visited(j)) {
-//                probabilities[j] = 0.0;
-//            } else {
-//                double numerator =  Math.pow(trails[i][j], pheromoneImportance) * Math.pow(1.0 / graph[j][i].getNodeNum(), distancePriority);
-//                probabilities[j] = numerator / pheromone;
-//            }
-//        }
     }
 
     private void updateTrails() {
