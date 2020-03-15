@@ -12,9 +12,11 @@ public class TestNode {
 
     Node[][] generateTestMatrix(int width, int height) {
         Node[][] m = new Node[width][height];
-        IntStream.range(0, width)
-                .forEach(i -> IntStream.range(0, height)
-                        .forEach(j -> m[i][j] = new Node(j, i)));
+        for (int y = 0; y < width; y++) {
+            for (int x = 0; x < height; x++) {
+                m[y][x] = new Node(x, y);
+            }
+        }
         return m;
     }
 
