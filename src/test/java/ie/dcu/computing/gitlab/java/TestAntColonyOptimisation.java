@@ -5,22 +5,24 @@ import org.junit.jupiter.api.*;
 
 
 public class TestAntColonyOptimisation {
-    private AntColonyOptimisation testACO = new AntColonyOptimisation(50, 80);
+    private AntColonyOptimisation testACO = new AntColonyOptimisation(2, 1);
 
     @Test
     void generateMatrixTest() {
-        Node[][] graph = testACO.generateMatrixFromEnv(50, 80);
-
+        Node[][] graph = testACO.generateMatrixFromEnv(2, 1);
+        Assert.assertEquals(graph[0][0].getNodeNum(), 1);
     }
 
     @Test
     void preTourTest() {
-        Assert.assertTrue("Best tour length is null", testACO.bestTourOrder == null);
+        Assert.assertNull("Best tour length is null", testACO.bestTourOrder);
     }
 
     @Test
     void postTourTest() {
+        testACO.setHome(0, 0);
+        testACO.setGoal(1, 0);
         testACO.startOptimization();
-        Assert.assertFalse("Best tour length is not null",testACO.bestTourOrder == null);
+        Assert.assertNotNull("Best tour length is not null", testACO.bestTourOrder);
     }
 }

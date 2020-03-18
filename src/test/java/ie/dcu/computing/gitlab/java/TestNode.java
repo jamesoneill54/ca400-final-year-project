@@ -41,10 +41,36 @@ public class TestNode {
 
     @Test
     void neighbourTest() {
-        List<Node> neighbourList =testNode.getNeighbourNodes(matrix, testNode);
+        List<Node> neighbourList = testNode.getNeighbourNodes(matrix, testNode);
         Assert.assertEquals(neighbourList.get(0).getX(), 4);
         Assert.assertEquals(neighbourList.get(neighbourList.size()-1).getY(), 9);
         Assert.assertFalse(neighbourList.contains(testNode));
     }
 
+    @Test
+    void resetNumberOfNodesTest() {
+        Node testNode1 = new Node(0, 0);
+        Assert.assertNotEquals(1, testNode1.getNodeNum());
+        Node.resetNumberOfNodes();
+        Node testNode2 = new Node(0, 0);
+        Assert.assertEquals(1, testNode2.getNodeNum());
+    }
+
+    @Test
+    void setNodeAsHomeTest() {
+        testNode.setNodeAsHome();
+        Assert.assertEquals(testNode.getNodeType(), NodeType.HOME);
+    }
+
+    @Test
+    void setNodeAsGoalTest() {
+        testNode.setNodeAsGoal();
+        Assert.assertEquals(testNode.getNodeType(), NodeType.GOAL);
+    }
+
+    @Test
+    void nodeSetAsNormTest() {
+        Node testNode3 = new Node(10, 10);
+        Assert.assertEquals(testNode3.getNodeType(), NodeType.NORM);
+    }
 }

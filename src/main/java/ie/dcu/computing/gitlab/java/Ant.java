@@ -41,6 +41,7 @@ public class Ant {
 
     protected void visitNode(Node node) {
         this.trail.add(node);
+        updateLocation(node.getX(), node.getY());
         // add pheromone to node?
     }
 
@@ -156,6 +157,13 @@ public class Ant {
 
     public void drawAnt(Graphics graphics) {
         graphics.setColor(color);
+        graphics.drawRect(x, y, 1, 1);
+        graphics.fillRect(x, y, 1, 1);
+        /*
+
+        Not accurate enough for the simulation, now implemented where the ant is
+        one pixel tall and wide.
+
         // The ant's head.
         graphics.drawOval(x + 2, y, 3, 2);
         graphics.fillOval(x + 2, y, 3, 2);
@@ -170,5 +178,6 @@ public class Ant {
         graphics.drawLine(x + 5, y + 2, x + 7, y + 1);
         graphics.drawLine(x + 5, y + 4, x + 7, y + 4);
         graphics.drawLine(x + 5, y + 6, x + 7, y + 7);
+        */
     }
 }
