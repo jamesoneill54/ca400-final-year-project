@@ -15,6 +15,7 @@ public class AntColonyOptimisation {
 
     private int maxIterations = 10;
 
+    private boolean runningAsVisualSimulation = false;
     private int numberOfNodes;
     private int numberOfAnts;
     private Node graph[][];
@@ -42,9 +43,10 @@ public class AntColonyOptimisation {
     }
 
     public Node[][] generateMatrixFromEnv(int width, int height) {
-        Node[][] matrix = new Node[width][height];
-        for (int y = 0; y < width; y++) {
-            for (int x = 0; x < height; x++) {
+        Node.resetNumberOfNodes();
+        Node[][] matrix = new Node[height][width];
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
                 matrix[y][x] = new Node(x, y);
             }
         }
@@ -68,31 +70,34 @@ public class AntColonyOptimisation {
         }
     }
 
-    public Node getNodeFromIndex(Node[][] matrix, int nodeNum) {
-        for(int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j < matrix[i].length; j++) {
-                if (matrix[i][j].getNodeNum() == nodeNum) {
-                    return matrix[i][j];
-                }
-            }
-        }
-        return null;
+    public void setRunningAsVisualSimulation(boolean bool) {
+        runningAsVisualSimulation = bool;
     }
 
     public Node setHome(int x, int y) {
-        if (x <= AntEnvironment.ENVIRONMENT_HEIGHT && y <= AntEnvironment.ENVIRONMENT_WIDTH) {
+        if (x <= graph[0].length && y <= graph.length) {
+            graph[y][x].setNodeAsHome();
             this.homeNode = graph[y][x];
-            return this.homeNode.getNodeObj();
+            return this.homeNode;
         }
         return null;
     }
 
+    public Node getHome() {
+        return homeNode;
+    }
+
     public Node setGoal(int x, int y) {
-        if (x <= AntEnvironment.ENVIRONMENT_HEIGHT && y <= AntEnvironment.ENVIRONMENT_WIDTH) {
+        if (x <= graph[0].length && y <= graph.length) {
+            graph[y][x].setNodeAsGoal();
             this.goalNode = graph[y][x];
-            return this.goalNode.getNodeObj();
+            return this.goalNode;
         }
         return null;
+    }
+
+    public Node getGoal() {
+        return goalNode;
     }
 
     public void startOptimization() {
@@ -129,13 +134,20 @@ public class AntColonyOptimisation {
         }
     }
 
-
     public void constructSolutions() {
         for (Ant ant: ants) {
             currentIndex = 0;
             while (ant.trail.get(currentIndex) != goalNode) {
                 Node newNode = ant.selectNextNode(currentIndex, graph);
                 ant.visitNode(newNode);
+                if (runningAsVisualSimulation) {
+                    try {
+                        Thread.sleep(Simulation.getAnimationDelay());
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 //System.out.println("NODE VISITED: " + newNode + " : (" + getNodeFromIndex(graph, newNode).getX() + ", " + getNodeFromIndex(graph, newNode).getY() + ")\n");
                 currentIndex ++;
             }
@@ -181,9 +193,13 @@ public class AntColonyOptimisation {
         }
     }
 
+    public List<Ant> getAnts() {
+        return ants;
+    }
+
     public static void main(String[] args) {
         System.out.println("Running Ant Colony Optimisation Algorithm...");
-        AntColonyOptimisation myACO = new AntColonyOptimisation(AntEnvironment.ENVIRONMENT_HEIGHT, AntEnvironment.ENVIRONMENT_WIDTH);
+        AntColonyOptimisation myACO = new AntColonyOptimisation(6, 4);
         try {
             myACO.setHome(2,2);
             myACO.setGoal(4, 3);

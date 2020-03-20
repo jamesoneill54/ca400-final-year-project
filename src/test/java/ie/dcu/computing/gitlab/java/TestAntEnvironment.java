@@ -7,7 +7,7 @@ import java.awt.*;
 
 public class TestAntEnvironment {
 
-    AntEnvironment testAntEnvironment = new AntEnvironment();
+    AntEnvironment testAntEnvironment = new AntEnvironment(null, 6, 4);
 
     @Test
     void testInitEnvironment() {
@@ -16,23 +16,8 @@ public class TestAntEnvironment {
     }
 
     @Test
-    void testGetAnt() {
-        Assert.assertEquals(testAntEnvironment.getAnt().getClass(), Ant.class);
-    }
-
-    @Test
     void testGetObstacle() {
         Assert.assertEquals(testAntEnvironment.getObstacle().getClass(), Obstacle.class);
-    }
-
-    @Test
-    void testGetGoal() {
-        Assert.assertEquals(testAntEnvironment.getGoal().getClass(), Goal.class);
-    }
-
-    @Test
-    void testGetAnthill() {
-        Assert.assertEquals(testAntEnvironment.getAnthill().getClass(), Anthill.class);
     }
 
     @Test

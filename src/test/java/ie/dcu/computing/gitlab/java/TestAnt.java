@@ -57,7 +57,17 @@ public class TestAnt {
     @Test
     void testUpdateLocation() {
         testAnt.updateLocation(20, 30);
-        Assert.assertEquals(testAnt.getX(), 20);
-        Assert.assertEquals(testAnt.getY(), 30);
+        Assert.assertEquals(20, testAnt.getX());
+        Assert.assertEquals(30, testAnt.getY());
+    }
+
+    @Test
+    void visitNodeTest() {
+        Assert.assertEquals(0, testAnt.getTrail().size());
+        Node testNode = new Node(200, 300);
+        testAnt.visitNode(testNode);
+        Assert.assertEquals(200, testAnt.getX());
+        Assert.assertEquals(300, testAnt.getY());
+        Assert.assertEquals(testNode, testAnt.getTrail().get(0));
     }
 }

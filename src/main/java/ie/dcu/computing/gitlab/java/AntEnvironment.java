@@ -5,31 +5,23 @@ import java.awt.*;
 
 public class AntEnvironment extends JPanel implements Runnable {
 
-    private final int DELAY = 20;
-    protected static final int ENVIRONMENT_WIDTH = 6;
-    protected static final int ENVIRONMENT_HEIGHT = 4;
+    private int environmentWidth;
+    private int environmentHeight;
+    private AntColonyOptimisation acoAlgorithm;
 
     private Thread animator;
-    // Should be changed to an array of ants for future updates
-    private Ant ant;
+    private long beforeTime = System.currentTimeMillis();
     // Should be changed to an array of obstacles for future updates
     private Obstacle obstacle;
     // Should be changed to an array of goals for future updates
-    private Goal goal;
-    // Can be an array if we choose to implement multiple colonies
-    private Anthill anthill;
 
-    public AntEnvironment() {
-        initEnvironment();
-    }
-
-    private void initEnvironment() {
+    public AntEnvironment(AntColonyOptimisation acoAlgorithm, int environmentWidth, int environmentHeight) {
+        this.acoAlgorithm = acoAlgorithm;
+        this.environmentWidth = environmentWidth;
+        this.environmentHeight = environmentHeight;
         setBackground(Color.WHITE);
-        setPreferredSize(new Dimension(ENVIRONMENT_WIDTH, ENVIRONMENT_HEIGHT));
-        ant = new Ant(0);
+        setPreferredSize(new Dimension(environmentWidth, environmentHeight));
         obstacle = new Obstacle(100, 100, 50, 60);
-        goal = new Goal(500, 200, 10, 10);
-        anthill = new Anthill(200, 300, 10, 10);
     }
 
     @Override
@@ -44,30 +36,13 @@ public class AntEnvironment extends JPanel implements Runnable {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
-        ant.drawAnt(graphics);
-        obstacle.draw(graphics);
-        goal.draw(graphics);
-        anthill.draw(graphics);
-        Toolkit.getDefaultToolkit().sync();
-    }
-
-    private void step() {
-
-        // This is where the ant's x and y variables should be updated.
-        // For every ant, update x and y.
-
-        // The code present here should be removed once the ant's coordinates
-        // can be derived from the ACO algorithm.
-
-        int antX = ant.getX() + 2;
-        int antY = ant.getY() + 2;
-
-        if (antY > ENVIRONMENT_HEIGHT) {
-            antX = 0;
-            antY = 0;
+        for (Ant ant: acoAlgorithm.getAnts()) {
+            ant.drawAnt(graphics);
         }
-
-        ant.updateLocation(antX, antY);
+        //obstacle.draw(graphics);
+        acoAlgorithm.getGoal().drawNode(graphics);
+        acoAlgorithm.getHome().drawNode(graphics);
+        Toolkit.getDefaultToolkit().sync();
     }
 
     @Override
@@ -77,14 +52,13 @@ public class AntEnvironment extends JPanel implements Runnable {
         beforeTime = System.currentTimeMillis();
 
         while(true) {
-            step();
             repaint();
 
             timeDiff = System.currentTimeMillis() - beforeTime;
-            sleep = DELAY - timeDiff;
+            sleep = Simulation.getAnimationDelay() - timeDiff;
 
             if (sleep < 0) {
-                sleep = 2;
+                sleep = 0;
             }
 
             try {
@@ -101,27 +75,15 @@ public class AntEnvironment extends JPanel implements Runnable {
         }
     }
 
-    public Ant getAnt() {
-        return ant;
-    }
-
     public Obstacle getObstacle() {
         return obstacle;
     }
 
-    public Goal getGoal() {
-        return goal;
-    }
-
-    public Anthill getAnthill() {
-        return anthill;
-    }
-
     public int getEnvironmentWidth() {
-        return ENVIRONMENT_WIDTH;
+        return environmentWidth;
     }
 
     public int getEnvironmentHeight() {
-        return ENVIRONMENT_HEIGHT;
+        return environmentHeight;
     }
 }
