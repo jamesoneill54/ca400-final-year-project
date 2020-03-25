@@ -5,17 +5,21 @@ import javax.swing.*;
 public class Simulation {
 
     private static int animationDelay = 100;
+    private static int minimumSimulationWidth = 4;
+    private static int minimumSimulationHeight = 4;
     private AntColonyOptimisation acoAlgorithm;
     private AntEnvironment antEnvironment;
     private int environmentWidth;
     private int environmentHeight;
+    private int numberOfAnts;
 
     Simulation() {
-        // Menu displayed and asks user to set environmentWidth and
-        // environmentHeight.
-        environmentWidth = 64;
-        environmentHeight = 48;
-        acoAlgorithm = new AntColonyOptimisation(environmentWidth, environmentHeight);
+        // Menu displayed and asks user to set environmentWidth,
+        // environmentHeight, and numberOfAnts.
+        environmentWidth = 640;
+        environmentHeight = 480;
+        numberOfAnts = 50;
+        acoAlgorithm = new AntColonyOptimisation(environmentWidth, environmentHeight, numberOfAnts);
         acoAlgorithm.setRunningAsVisualSimulation(true);
         antEnvironment = new AntEnvironment(acoAlgorithm, environmentWidth, environmentHeight);
     }

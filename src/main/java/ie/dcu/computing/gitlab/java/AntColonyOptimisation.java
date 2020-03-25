@@ -21,7 +21,6 @@ public class AntColonyOptimisation {
     private Node graph[][];
     private Node homeNode;
     private Node goalNode;
-    private double trails[][];
     private List<Ant> ants = new ArrayList<>();
     private Random random = new Random();
 
@@ -30,12 +29,16 @@ public class AntColonyOptimisation {
     public List<Node> bestTourOrder;
     private double bestTourLength;
 
-    public AntColonyOptimisation(int w, int h) {
+    public AntColonyOptimisation(int w, int h, Integer numAnts) {
         graph = generateMatrixFromEnv(w, h);
         numberOfNodes = graph.length * graph[0].length;
-        numberOfAnts = (int) (numberOfNodes * antPerNode);
 
-        trails = new double[numberOfNodes][numberOfNodes];
+        if (numAnts == null) {
+            numberOfAnts = (int) (numberOfNodes * antPerNode);
+        }
+        else {
+            numberOfAnts = numAnts;
+        }
 
         for (int antNumber = 0; antNumber < numberOfAnts; antNumber++) {
             ants.add(new Ant(numberOfNodes));
@@ -159,15 +162,15 @@ public class AntColonyOptimisation {
     private void updateTrails() {
         for (int i = 0; i < numberOfNodes; i++) {
             for (int j = 0; j < numberOfNodes; j++) {
-                trails [i][j] *= evaporationRate;
+                //trails [i][j] *= evaporationRate;
             }
         }
         for (Ant a : ants) {
             double contribution = pheromonePerAnt / a.trailLength();
             for (int i = 0; i < numberOfNodes - 1; i++) {
-                trails[a.trail.get(i).getNodeNum()][a.trail.get(i + 1).getNodeNum()] += contribution;
+                //trails[a.trail.get(i).getNodeNum()][a.trail.get(i + 1).getNodeNum()] += contribution;
             }
-            trails[a.trail.get(numberOfNodes - 1).getNodeNum()][a.trail.get(0).getNodeNum()] += contribution;
+            //trails[a.trail.get(numberOfNodes - 1).getNodeNum()][a.trail.get(0).getNodeNum()] += contribution;
         }
     }
 
@@ -188,7 +191,7 @@ public class AntColonyOptimisation {
     private void clearTrails() {
         for (int i = 0; i < numberOfNodes; i++) {
             for (int j = 0; j < numberOfNodes; j++) {
-                trails[i][j] = initialTrails;
+                //trails[i][j] = initialTrails;
             }
         }
     }
@@ -199,7 +202,7 @@ public class AntColonyOptimisation {
 
     public static void main(String[] args) {
         System.out.println("Running Ant Colony Optimisation Algorithm...");
-        AntColonyOptimisation myACO = new AntColonyOptimisation(6, 4);
+        AntColonyOptimisation myACO = new AntColonyOptimisation(6, 4, null);
         try {
             myACO.setHome(2,2);
             myACO.setGoal(4, 3);
