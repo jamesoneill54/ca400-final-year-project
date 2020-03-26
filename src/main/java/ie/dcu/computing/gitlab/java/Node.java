@@ -7,20 +7,33 @@ import java.util.stream.IntStream;
 
 public class Node {
     private static int numberOfNodes = 0;
+    private static int size = 1;
     private int nodeNumber;
     private NodeType nodeType = NodeType.NORM;
+    private int matrixIndexX;
+    private int matrixIndexY;
     private int x;
     private int y;
 
     public Node(int x, int y) {
         numberOfNodes++;
         this.nodeNumber = numberOfNodes;
-        this.x = x;
-        this.y = y;
+        this.matrixIndexX = x;
+        this.matrixIndexY = y;
+        this.x = x * size;
+        this.y = y * size;
     }
 
     public static void resetNumberOfNodes() {
         Node.numberOfNodes = 0;
+    }
+
+    public static void setSize(int length) {
+        Node.size = length;
+    }
+
+    public static int getSize() {
+        return size;
     }
 
     public int getX() {
@@ -58,10 +71,10 @@ public class Node {
 
     public List<Node> getNeighbourNodes(Node[][] matrix) {
         List<Node> neighbours = new ArrayList<>();
-        int startY = y - 1;
-        int endY = y + 1;
-        int startX = x - 1;
-        int endX = x + 1;
+        int startY = matrixIndexY - 1;
+        int endY = matrixIndexY + 1;
+        int startX = matrixIndexX - 1;
+        int endX = matrixIndexX + 1;
 
         for (int y = startY; y <= endY; y++) {
             if (y >= 0 && y < matrix.length) {
@@ -94,7 +107,7 @@ public class Node {
 
     private void draw(Graphics graphics, Color nodeColor) {
         graphics.setColor(nodeColor);
-        graphics.drawRect(this.getX(), this.getY(), 1, 1);
-        graphics.fillRect(this.getX(), this.getY(), 1, 1);
+        graphics.drawRect(this.getX(), this.getY(), size, size);
+        graphics.fillRect(this.getX(), this.getY(), size, size);
     }
 }

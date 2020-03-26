@@ -43,11 +43,11 @@ public class AntColonyOptimisation {
         }
     }
 
-    public Node[][] generateMatrixFromEnv(int width, int height) {
+    public Node[][] generateMatrixFromEnv(int columns, int rows) {
         Node.resetNumberOfNodes();
-        Node[][] matrix = new Node[height][width];
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        Node[][] matrix = new Node[rows][columns];
+        for (int y = 0; y < rows; y++) {
+            for (int x = 0; x < columns; x++) {
                 matrix[y][x] = new Node(x, y);
             }
         }

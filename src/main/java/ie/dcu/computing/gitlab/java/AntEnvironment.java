@@ -5,6 +5,8 @@ import java.awt.*;
 
 public class AntEnvironment extends JPanel implements Runnable {
 
+    private int numColumns;
+    private int numRows;
     private int environmentWidth;
     private int environmentHeight;
     private AntColonyOptimisation acoAlgorithm;
@@ -14,10 +16,12 @@ public class AntEnvironment extends JPanel implements Runnable {
     private Obstacle obstacle;
     private boolean simulationRunning = false;
 
-    public AntEnvironment(AntColonyOptimisation acoAlgorithm, int environmentWidth, int environmentHeight) {
+    public AntEnvironment(AntColonyOptimisation acoAlgorithm, int numColumns, int numRows) {
         this.acoAlgorithm = acoAlgorithm;
-        this.environmentWidth = environmentWidth;
-        this.environmentHeight = environmentHeight;
+        this.numColumns = numColumns;
+        this.numRows = numRows;
+        this.environmentWidth = numColumns * Node.getSize();
+        this.environmentHeight = numRows * Node.getSize();
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(environmentWidth, environmentHeight));
         obstacle = new Obstacle(100, 100, 50, 60);
@@ -81,6 +85,14 @@ public class AntEnvironment extends JPanel implements Runnable {
 
     public Obstacle getObstacle() {
         return obstacle;
+    }
+
+    public int getNumColumns() {
+        return numColumns;
+    }
+
+    public int getNumRows() {
+        return numRows;
     }
 
     public int getEnvironmentWidth() {

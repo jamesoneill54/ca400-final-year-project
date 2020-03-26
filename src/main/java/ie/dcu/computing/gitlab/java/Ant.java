@@ -10,8 +10,6 @@ public class Ant {
     protected Color color;
     protected int x;
     protected int y;
-    protected static final int WIDTH = 7;
-    protected static final int HEIGHT = 7;
 
     protected int trailSize;
     protected List<Node> trail = new ArrayList<>();
@@ -150,14 +148,6 @@ public class Ant {
         y = newY;
     }
 
-    public int getWidth() {
-        return WIDTH;
-    }
-
-    public int getHeight() {
-        return HEIGHT;
-    }
-
     public void updateLocation(int newX, int newY) {
         this.setX(newX);
         this.setY(newY);
@@ -165,8 +155,8 @@ public class Ant {
 
     public void drawAnt(Graphics graphics) {
         graphics.setColor(color);
-        graphics.drawRect(x, y, 1, 1);
-        graphics.fillRect(x, y, 1, 1);
+        graphics.drawRect(x, y, Node.getSize(), Node.getSize());
+        graphics.fillRect(x, y, Node.getSize(), Node.getSize());
         /*
 
         Not accurate enough for the simulation, now implemented where the ant is

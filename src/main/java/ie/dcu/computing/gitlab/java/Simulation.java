@@ -17,9 +17,13 @@ public class Simulation {
     Simulation() {
         // Menu displayed and asks user to set environmentWidth,
         // environmentHeight, and numberOfAnts.
+
+        // environmentWidth and environmentHeight refers to the number of nodes
+        // in the environment, not the screen size.
         environmentWidth = 64;
         environmentHeight = 48;
         numberOfAnts = 20;
+        Node.setSize(10);
         acoAlgorithm = new AntColonyOptimisation(environmentWidth, environmentHeight, numberOfAnts);
         acoAlgorithm.setRunningAsVisualSimulation(true);
         antEnvironment = new AntEnvironment(acoAlgorithm, environmentWidth, environmentHeight);
