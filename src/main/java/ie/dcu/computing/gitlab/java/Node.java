@@ -56,12 +56,12 @@ public class Node {
         System.out.print("(" + this.getX() + ", " + this.getY() + ")");
     }
 
-    public List<Node> getNeighbourNodes(Node[][] matrix, Node currentNode) {
+    public List<Node> getNeighbourNodes(Node[][] matrix) {
         List<Node> neighbours = new ArrayList<>();
-        int startY = currentNode.getY() - 1;
-        int endY = currentNode.getY() + 1;
-        int startX = currentNode.getX() - 1;
-        int endX = currentNode.getX() + 1;
+        int startY = y - 1;
+        int endY = y + 1;
+        int startX = x - 1;
+        int endX = x + 1;
 
         for (int y = startY; y <= endY; y++) {
             if (y >= 0 && y < matrix.length) {
@@ -77,7 +77,7 @@ public class Node {
 
     public void drawNode(Graphics graphics) {
         if (nodeType == NodeType.HOME) {
-            draw(graphics, Color.ORANGE);
+            draw(graphics, Color.RED);
         }
         else if (nodeType == NodeType.GOAL) {
             draw(graphics, Color.GREEN);
@@ -85,6 +85,11 @@ public class Node {
         else {
             draw(graphics, Color.GRAY);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "(" + nodeType + ", " + x + ", " + y + ")";
     }
 
     private void draw(Graphics graphics, Color nodeColor) {

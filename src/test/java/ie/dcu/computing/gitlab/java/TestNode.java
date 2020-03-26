@@ -41,7 +41,7 @@ public class TestNode {
 
     @Test
     void neighbourTest() {
-        List<Node> neighbourList = testNode.getNeighbourNodes(matrix, testNode);
+        List<Node> neighbourList = testNode.getNeighbourNodes(matrix);
         Assert.assertEquals(neighbourList.get(0).getX(), 4);
         Assert.assertEquals(neighbourList.get(neighbourList.size()-1).getY(), 9);
         Assert.assertFalse(neighbourList.contains(testNode));

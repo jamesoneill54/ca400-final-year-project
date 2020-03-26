@@ -1,8 +1,6 @@
 package ie.dcu.computing.gitlab.java;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class AntColonyOptimisation {
     private double initialTrails = 1.0;
@@ -13,7 +11,7 @@ public class AntColonyOptimisation {
     private double antPerNode = 0.8;
     private double randomFactor = 0.01;
 
-    private int maxIterations = 10;
+    private int maxIterations = 3;
 
     private boolean runningAsVisualSimulation = false;
     private int numberOfNodes;
@@ -22,12 +20,12 @@ public class AntColonyOptimisation {
     private Node homeNode;
     private Node goalNode;
     private List<Ant> ants = new ArrayList<>();
+    private HashSet<Ant> successfulAnts = new HashSet<>();
     private Random random = new Random();
 
-    private int currentIndex;
+    private int stepsTravelled;
 
-    public List<Node> bestTourOrder;
-    private double bestTourLength;
+    public List<Node> bestTour;
 
     public AntColonyOptimisation(int w, int h, Integer numAnts) {
         graph = generateMatrixFromEnv(w, h);
@@ -77,26 +75,30 @@ public class AntColonyOptimisation {
         runningAsVisualSimulation = bool;
     }
 
-    public Node setHome(int x, int y) {
-        if (x <= graph[0].length && y <= graph.length) {
+    public void setHome(int x, int y) {
+        if (x < graph[0].length && y < graph.length) {
             graph[y][x].setNodeAsHome();
             this.homeNode = graph[y][x];
-            return this.homeNode;
         }
-        return null;
+        else {
+            throw new IndexOutOfBoundsException(
+                    "The coordinates of the home node are outside the environment boundaries.");
+        }
     }
 
     public Node getHome() {
         return homeNode;
     }
 
-    public Node setGoal(int x, int y) {
-        if (x <= graph[0].length && y <= graph.length) {
+    public void setGoal(int x, int y) {
+        if (x < graph[0].length && y < graph.length) {
             graph[y][x].setNodeAsGoal();
             this.goalNode = graph[y][x];
-            return this.goalNode;
         }
-        return null;
+        else {
+            throw new IndexOutOfBoundsException(
+                    "The coordinates of the goal node are outside the environment boundaries.");
+        }
     }
 
     public Node getGoal() {
@@ -111,24 +113,25 @@ public class AntColonyOptimisation {
     }
 
     public List<Node> solve() {
-        setupAnts();
         clearTrails();
         for (int i = 0; i < maxIterations; i++) {
+            setupAnts();
             constructSolutions();
             //updateTrails();
             updateBest();
         }
-        System.out.println("Best tour length: " + bestTourLength);
-        System.out.println("Best tour order: " + bestTourOrder.toString());
-        return bestTourOrder;
+        System.out.println("Best tour length: " + bestTour.size());
+        System.out.println("Best tour order: " + bestTour.toString());
+        return bestTour;
     }
 
     public void setupAnts() {
         for (Ant ant: ants) {
             ant.clear();
             ant.visitNode(homeNode);
+            ant.setGoalNode(goalNode);
         }
-        currentIndex = 0;
+        stepsTravelled = 0;
     }
 
     public void printAntCurrentLoc() {
@@ -138,24 +141,27 @@ public class AntColonyOptimisation {
     }
 
     public void constructSolutions() {
-        for (Ant ant: ants) {
-            currentIndex = 0;
-            while (ant.trail.get(currentIndex) != goalNode) {
-                Node newNode = ant.selectNextNode(currentIndex, graph);
-                ant.visitNode(newNode);
-                if (runningAsVisualSimulation) {
-                    try {
-                        Thread.sleep(Simulation.getAnimationDelay());
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        stepsTravelled = 0;
+        successfulAnts.clear();
+        while (successfulAnts.size() != ants.size()) {
+            for (Ant ant: ants) {
+                if (!ant.foundGoal()) {
+                    Node newNode = ant.selectNextNode(stepsTravelled, graph);
+                    ant.visitNode(newNode);
                 }
-
-                //System.out.println("NODE VISITED: " + newNode + " : (" + getNodeFromIndex(graph, newNode).getX() + ", " + getNodeFromIndex(graph, newNode).getY() + ")\n");
-                currentIndex ++;
+                else {
+                    successfulAnts.add(ant);
+                }
             }
-            //System.out.println("Goal node reached! Onto next ant..");
-            //System.out.print("\n-----------------------------------------------\n\n");
+
+            if (runningAsVisualSimulation) {
+                try {
+                    Thread.sleep(Simulation.getAnimationDelay());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            stepsTravelled += 1;
         }
     }
 
@@ -175,15 +181,12 @@ public class AntColonyOptimisation {
     }
 
     private void updateBest() {
-        if (bestTourOrder == null) {
-            bestTourOrder = ants.get(0).trail;
-            bestTourLength = ants.get(0)
-                    .trail.size();
-            for (Ant ant: ants) {
-                if (ant.trail.size() < bestTourLength) {
-                    bestTourLength = ant.trail.size();
-                    bestTourOrder = ant.trail;
-                }
+        if (bestTour == null) {
+            bestTour = ants.get(0).trail;
+        }
+        for (Ant ant: ants) {
+            if (ant.trail.size() < bestTour.size()) {
+                bestTour = ant.trail;
             }
         }
     }

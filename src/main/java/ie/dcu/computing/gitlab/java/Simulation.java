@@ -12,13 +12,14 @@ public class Simulation {
     private int environmentWidth;
     private int environmentHeight;
     private int numberOfAnts;
+    private JFrame simulationWindow;
 
     Simulation() {
         // Menu displayed and asks user to set environmentWidth,
         // environmentHeight, and numberOfAnts.
-        environmentWidth = 640;
-        environmentHeight = 480;
-        numberOfAnts = 50;
+        environmentWidth = 64;
+        environmentHeight = 48;
+        numberOfAnts = 20;
         acoAlgorithm = new AntColonyOptimisation(environmentWidth, environmentHeight, numberOfAnts);
         acoAlgorithm.setRunningAsVisualSimulation(true);
         antEnvironment = new AntEnvironment(acoAlgorithm, environmentWidth, environmentHeight);
@@ -35,10 +36,12 @@ public class Simulation {
     public void start() {
         displaySimulationWindow();
         acoAlgorithm.startOptimization();
+        antEnvironment.stopSimulation();
+        simulationWindow.dispose();
     }
 
     private void displaySimulationWindow() {
-        JFrame simulationWindow = new JFrame();
+        simulationWindow = new JFrame();
         simulationWindow.getContentPane().add(antEnvironment);
         simulationWindow.setResizable(false);
         simulationWindow.pack();
@@ -58,8 +61,8 @@ public class Simulation {
 
     public static void main(String[] args) {
         Simulation simulation = new Simulation();
-        simulation.setSimulationHome(2,2);
-        simulation.setSimulationGoal(4, 3);
+        simulation.setSimulationHome(20,20);
+        simulation.setSimulationGoal(40, 40);
         simulation.start();
     }
 }

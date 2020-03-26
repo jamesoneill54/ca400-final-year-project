@@ -15,7 +15,7 @@ public class TestAntColonyOptimisation {
 
     @Test
     void preTourTest() {
-        Assert.assertNull("Best tour length is null", testACO.bestTourOrder);
+        Assert.assertNull(testACO.bestTour);
     }
 
     @Test
@@ -23,7 +23,7 @@ public class TestAntColonyOptimisation {
         testACO.setHome(0, 0);
         testACO.setGoal(1, 0);
         testACO.startOptimization();
-        Assert.assertNotNull("Best tour length is not null", testACO.bestTourOrder);
+        Assert.assertNotNull(testACO.bestTour);
     }
 
     @Test

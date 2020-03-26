@@ -39,6 +39,14 @@ public class Ant {
         return trail;
     }
 
+    public void setGoalNode(Node node) {
+        goalNode = node;
+    }
+
+    public boolean foundGoal() {
+        return goalNode.getX() == x && goalNode.getY() == y;
+    }
+
     protected void visitNode(Node node) {
         this.trail.add(node);
         updateLocation(node.getX(), node.getY());
@@ -47,7 +55,7 @@ public class Ant {
 
     protected Node selectNextNode(int currentIndex, Node[][] graph) {
         //System.out.println("Node.java: Finding neighbour nodes for (" + ant.trail[currentIndex].getX() + ", " + ant.trail[currentIndex].getY() + ")..");
-        List<Node> possibleMoves = this.trail.get(currentIndex).getNeighbourNodes(graph, this.trail.get(currentIndex));
+        List<Node> possibleMoves = this.trail.get(currentIndex).getNeighbourNodes(graph);
         int t = random.nextInt(possibleMoves.size());
 //        if (random.nextDouble() < randomFactor) {
 //            OptionalInt nodeIndex = IntStream.range(0, possibleMoves.size())
