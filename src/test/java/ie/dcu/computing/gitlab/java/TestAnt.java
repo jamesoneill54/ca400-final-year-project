@@ -45,16 +45,6 @@ public class TestAnt {
     }
 
     @Test
-    void testGetWidth() {
-        Assert.assertEquals(testAnt.getWidth(), 7);
-    }
-
-    @Test
-    void testGetHeight() {
-        Assert.assertEquals(testAnt.getHeight(), 7);
-    }
-
-    @Test
     void testUpdateLocation() {
         testAnt.updateLocation(20, 30);
         Assert.assertEquals(20, testAnt.getX());

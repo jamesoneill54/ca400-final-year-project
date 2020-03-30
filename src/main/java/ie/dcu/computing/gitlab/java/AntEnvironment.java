@@ -5,20 +5,23 @@ import java.awt.*;
 
 public class AntEnvironment extends JPanel implements Runnable {
 
+    private int numColumns;
+    private int numRows;
     private int environmentWidth;
     private int environmentHeight;
     private AntColonyOptimisation acoAlgorithm;
 
     private Thread animator;
     private long beforeTime = System.currentTimeMillis();
-    // Should be changed to an array of obstacles for future updates
     private Obstacle obstacle;
-    // Should be changed to an array of goals for future updates
+    private boolean simulationRunning = false;
 
-    public AntEnvironment(AntColonyOptimisation acoAlgorithm, int environmentWidth, int environmentHeight) {
+    public AntEnvironment(AntColonyOptimisation acoAlgorithm, int numColumns, int numRows) {
         this.acoAlgorithm = acoAlgorithm;
-        this.environmentWidth = environmentWidth;
-        this.environmentHeight = environmentHeight;
+        this.numColumns = numColumns;
+        this.numRows = numRows;
+        this.environmentWidth = numColumns * Node.getSize();
+        this.environmentHeight = numRows * Node.getSize();
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(environmentWidth, environmentHeight));
         obstacle = new Obstacle(100, 100, 50, 60);
@@ -28,6 +31,7 @@ public class AntEnvironment extends JPanel implements Runnable {
     public void addNotify() {
         super.addNotify();
 
+        simulationRunning = true;
         animator = new Thread(this);
         animator.start();
     }
@@ -39,10 +43,13 @@ public class AntEnvironment extends JPanel implements Runnable {
         for (Ant ant: acoAlgorithm.getAnts()) {
             ant.drawAnt(graphics);
         }
-        //obstacle.draw(graphics);
         acoAlgorithm.getGoal().drawNode(graphics);
         acoAlgorithm.getHome().drawNode(graphics);
         Toolkit.getDefaultToolkit().sync();
+    }
+
+    public void stopSimulation() {
+        simulationRunning = false;
     }
 
     @Override
@@ -51,7 +58,7 @@ public class AntEnvironment extends JPanel implements Runnable {
 
         beforeTime = System.currentTimeMillis();
 
-        while(true) {
+        while (simulationRunning) {
             repaint();
 
             timeDiff = System.currentTimeMillis() - beforeTime;
@@ -73,10 +80,19 @@ public class AntEnvironment extends JPanel implements Runnable {
 
             beforeTime = System.currentTimeMillis();
         }
+        setVisible(false);
     }
 
     public Obstacle getObstacle() {
         return obstacle;
+    }
+
+    public int getNumColumns() {
+        return numColumns;
+    }
+
+    public int getNumRows() {
+        return numRows;
     }
 
     public int getEnvironmentWidth() {
