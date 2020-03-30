@@ -1,0 +1,4 @@
+# Project Expo Summary
+> Short summary of our project for the 2020 project expo. 
+
+A study of Machine Learning and Genetic Algorithms through the implementation and simulation of a Virtual Ant Colony. This simulation mimics the behaviour of ants traversing their environment to find food. In nature, ants are extremely efficient at finding a path from their home to a food source using chemical trails. This simulation models the interaction between the ants and these chemical trails in order to find the shortest path to a food source. Applies this behaviour to emergency response vehicles facing the same shortest route problem.
