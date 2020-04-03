@@ -12,7 +12,6 @@ public class AntEnvironment extends JPanel implements Runnable {
     private AntColonyOptimisation acoAlgorithm;
 
     private Thread animator;
-    private long beforeTime = System.currentTimeMillis();
     private Obstacle obstacle;
     private boolean simulationRunning = false;
 
