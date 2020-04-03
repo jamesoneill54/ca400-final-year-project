@@ -60,4 +60,15 @@ public class TestAnt {
         Assert.assertEquals(300, testAnt.getY());
         Assert.assertEquals(testNode, testAnt.getTrail().get(0));
     }
+
+    @Test
+    void getVisitedRecentlyTest() {
+        Node testHome = new Node(200, 300);
+        testAnt.visitNode(testHome);
+        Node testNode = new Node(201, 300);
+        Node testNode2 = new Node (300, 400);
+        testAnt.visitNode(testNode);
+        Assert.assertTrue(testAnt.visitedRecently(testHome));
+        Assert.assertFalse(testAnt.visitedRecently(testNode2));
+    }
 }

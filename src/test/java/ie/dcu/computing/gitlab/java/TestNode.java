@@ -41,7 +41,7 @@ public class TestNode {
 
     @Test
     void neighbourTest() {
-        List<Node> neighbourList = testNode.getNeighbourNodes(matrix);
+        List<Node> neighbourList = testNode.getNeighbourNodes(matrix, testNode);
         Assert.assertEquals(neighbourList.get(0).getX(), 4);
         Assert.assertEquals(neighbourList.get(neighbourList.size()-1).getY(), 9);
         Assert.assertFalse(neighbourList.contains(testNode));
@@ -72,5 +72,12 @@ public class TestNode {
     void nodeSetAsNormTest() {
         Node testNode3 = new Node(10, 10);
         Assert.assertEquals(testNode3.getNodeType(), NodeType.NORM);
+    }
+
+    @Test
+    void distanceValueTest() {
+        testNode.setNodeAsGoal();
+        Node testNode4 = new Node(2, 10);
+        Assert.assertEquals(testNode4.getDistanceValue(testNode), 5);
     }
 }

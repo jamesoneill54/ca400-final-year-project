@@ -5,7 +5,7 @@ import org.junit.jupiter.api.*;
 
 
 public class TestAntColonyOptimisation {
-    private AntColonyOptimisation testACO = new AntColonyOptimisation(2, 1, null);
+    private AntColonyOptimisation testACO = new AntColonyOptimisation(2, 5, null);
 
     @Test
     void generateMatrixTest() {
@@ -21,7 +21,7 @@ public class TestAntColonyOptimisation {
     @Test
     void postTourTest() {
         testACO.setHome(0, 0);
-        testACO.setGoal(1, 0);
+        testACO.setGoal(1, 2);
         testACO.startOptimization();
         Assert.assertNotNull(testACO.bestTour);
     }
@@ -35,6 +35,6 @@ public class TestAntColonyOptimisation {
     @Test
     void defaultNumberOfAntsTest() {
         AntColonyOptimisation testACO2 = new AntColonyOptimisation(10, 10, null);
-        Assert.assertEquals(80, testACO2.getAnts().size());
+        Assert.assertEquals(30, testACO2.getAnts().size());
     }
 }

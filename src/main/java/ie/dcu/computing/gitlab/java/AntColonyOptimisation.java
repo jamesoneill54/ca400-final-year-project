@@ -3,13 +3,10 @@ package ie.dcu.computing.gitlab.java;
 import java.util.*;
 
 public class AntColonyOptimisation {
-    private double initialTrails = 1.0;
-    private double pheromoneImportance = 1;
-    private double distancePriority = 5;
-    private double evaporationRate = 0.5;
+
+    private double pheromoneRetentionRate = 0.2;
     private double pheromonePerAnt = 500;
-    private double antPerNode = 0.8;
-    private double randomFactor = 0.01;
+    private double antPerNode = 0.3;
 
     private int maxIterations = 3;
 
@@ -18,10 +15,11 @@ public class AntColonyOptimisation {
     private int numberOfAnts;
     private Node graph[][];
     private Node homeNode;
-    private Node goalNode;
+    protected Node goalNode;
     private List<Ant> ants = new ArrayList<>();
-    private HashSet<Ant> successfulAnts = new HashSet<>();
-    private Random random = new Random();
+    private HashSet<Ant> stoppedAnts = new HashSet<>();
+    private static Set<Node> globalVisited = new HashSet<Node>() {
+    };
 
     private int stepsTravelled;
 
@@ -105,19 +103,24 @@ public class AntColonyOptimisation {
         return goalNode;
     }
 
+    public static void addToVisited(Node node) {
+        globalVisited.add(node);
+    }
+
     public void startOptimization() {
-        for (int attemptNum = 1; attemptNum < 9; attemptNum++) {
+        for (int attemptNum = 1; attemptNum < 2; attemptNum++) {
             System.out.println("Attempt #" + attemptNum);
             solve();
         }
     }
 
     public List<Node> solve() {
-        clearTrails();
+        setupAnts();
+
         for (int i = 0; i < maxIterations; i++) {
             setupAnts();
             constructSolutions();
-            //updateTrails();
+            updateTrails();
             updateBest();
         }
         System.out.println("Best tour length: " + bestTour.size());
@@ -142,15 +145,23 @@ public class AntColonyOptimisation {
 
     public void constructSolutions() {
         stepsTravelled = 0;
-        successfulAnts.clear();
-        while (successfulAnts.size() != ants.size()) {
+        stoppedAnts.clear();
+        while (stoppedAnts.size() != ants.size()) {
             for (Ant ant: ants) {
-                if (!ant.foundGoal()) {
-                    Node newNode = ant.selectNextNode(stepsTravelled, graph);
-                    ant.visitNode(newNode);
+                try {
+                    if (!stoppedAnts.contains(ant)) {
+                        Node newNode = ant.selectNextNode(stepsTravelled, graph);
+                        ant.visitNode(newNode);
+                        if (newNode == goalNode) {
+                            System.out.println("Goal node reached!");
+                            stoppedAnts.add(ant);
+                        }
+                    }
                 }
-                else {
-                    successfulAnts.add(ant);
+
+                catch(RuntimeException e) {
+                    System.out.println(e.getMessage());
+                    stoppedAnts.add(ant);
                 }
             }
 
@@ -166,17 +177,16 @@ public class AntColonyOptimisation {
     }
 
     private void updateTrails() {
-        for (int i = 0; i < numberOfNodes; i++) {
-            for (int j = 0; j < numberOfNodes; j++) {
-                //trails [i][j] *= evaporationRate;
-            }
+        for (Node node : globalVisited) {
+            node.pheromoneCount *= pheromoneRetentionRate;
         }
         for (Ant a : ants) {
-            double contribution = pheromonePerAnt / a.trailLength();
-            for (int i = 0; i < numberOfNodes - 1; i++) {
-                //trails[a.trail.get(i).getNodeNum()][a.trail.get(i + 1).getNodeNum()] += contribution;
+            if (a.trail.contains(a.goalNode)) {
+                double contribution = pheromonePerAnt / a.trail.size();
+                for (Node node : a.trail) {
+                    node.pheromoneCount += contribution;
+                }
             }
-            //trails[a.trail.get(numberOfNodes - 1).getNodeNum()][a.trail.get(0).getNodeNum()] += contribution;
         }
     }
 
@@ -184,17 +194,9 @@ public class AntColonyOptimisation {
         if (bestTour == null) {
             bestTour = ants.get(0).trail;
         }
-        for (Ant ant: ants) {
+        for (Ant ant : ants) {
             if (ant.trail.size() < bestTour.size()) {
                 bestTour = ant.trail;
-            }
-        }
-    }
-
-    private void clearTrails() {
-        for (int i = 0; i < numberOfNodes; i++) {
-            for (int j = 0; j < numberOfNodes; j++) {
-                //trails[i][j] = initialTrails;
             }
         }
     }

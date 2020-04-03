@@ -3,6 +3,7 @@ package ie.dcu.computing.gitlab.java;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import java.util.stream.IntStream;
 
 
 public class Ant {
@@ -16,8 +17,15 @@ public class Ant {
     protected String task;
     protected Node goalNode;
 
+    protected double antPheromones;
+
+    private double randomFactor = 0.1;
+
     private Random random = new Random();
     protected double probabilities[];
+
+    protected double pheromoneImportance = 7;
+    protected double distancePriority = 0.1;
 
     public Ant(int tourSize) {
         this.trailSize = tourSize;
@@ -29,6 +37,9 @@ public class Ant {
         this.y = 0;
 
         probabilities = new double [tourSize + 1];
+
+        this.antPheromones = 500;
+
     }
 
     // ACO
@@ -41,77 +52,75 @@ public class Ant {
         goalNode = node;
     }
 
-    public boolean foundGoal() {
-        return goalNode.getX() == x && goalNode.getY() == y;
-    }
 
     protected void visitNode(Node node) {
         this.trail.add(node);
+        AntColonyOptimisation.addToVisited(node);
         updateLocation(node.getX(), node.getY());
-        // add pheromone to node?
     }
 
     protected Node selectNextNode(int currentIndex, Node[][] graph) {
-        //System.out.println("Node.java: Finding neighbour nodes for (" + ant.trail[currentIndex].getX() + ", " + ant.trail[currentIndex].getY() + ")..");
-        List<Node> possibleMoves = this.trail.get(currentIndex).getNeighbourNodes(graph);
-        int t = random.nextInt(possibleMoves.size());
-//        if (random.nextDouble() < randomFactor) {
-//            OptionalInt nodeIndex = IntStream.range(0, possibleMoves.size())
-//                    .filter(i -> i == t && !ant.visited(getNodeFromIndex(graph, i)))
-//                    .findFirst();
-//            if (nodeIndex.isPresent()) {
-//                return nodeIndex.getAsInt();
-//            }
-//        }
+
+        List<Node> possibleMoves = trail.get(currentIndex).getNeighbourNodes(graph, trail.get(currentIndex));
+        int randomIndex = random.nextInt(possibleMoves.size());
+        if (random.nextDouble() < randomFactor) {
+            // pick random node
+            return possibleMoves.get(randomIndex);
+        }
         calculateProbabilities(possibleMoves);
-        double r = random.nextDouble();
-        double total = 0;
+        ArrayList<Node> chosenNodes = new ArrayList<>();
         for (Node node: possibleMoves) {
-            if (node == goalNode) {
-                //System.out.println("goalNode is a neighbour, selecting that instead");
+            if (node.getNodeType() == NodeType.GOAL) {
+                System.out.println("goalNode is a neighbour, selecting that instead");
                 return goalNode;
             }
-            total += probabilities[node.getNodeNum()];
-            if (total >= r) {
-                return node;
+
+            if (chosenNodes.size() > 0) {
+                if (probabilities[node.getNodeNum()] > probabilities[chosenNodes.get(0).getNodeNum()]
+                        && !visitedRecently(node)) {
+                    chosenNodes.clear();
+                    chosenNodes.add(node);
+                }
+                else if (probabilities[node.getNodeNum()] == probabilities[chosenNodes.get(0).getNodeNum()]
+                        && !visitedRecently(node)) {
+                    chosenNodes.add(node);
+                }
+            }
+
+            else if (!visitedRecently(node)) {
+                chosenNodes.add(node);
             }
         }
+        if (chosenNodes.size() > 0) {
+            return chosenNodes.get(random.nextInt(chosenNodes.size()));
+        }
 
-        throw new RuntimeException("There are no other nodes");
+        throw new RuntimeException("Unsuccessful ant: There are no other nodes");
     }
 
     public void calculateProbabilities(List<Node> possibleMoves) {
-        //System.out.println("Calculating probabilities for ant " + ants.indexOf(ant));
         double pheromone = 0.0;
         for (Node node : possibleMoves) {
-            double evenChances = possibleMoves.size();
-            //if (!ant.visited(node)) {
-            probabilities[node.getNodeNum()] = 1.0 / evenChances;
-            //}
+            if (!visitedRecently(node)) {
+                pheromone += Math.pow(node.pheromoneCount, pheromoneImportance);
+                // " * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority)" was removed from above formula
+            }
         }
-//        for (int l = 0; l < possibleMoves.size(); l++) {
-//            int nodeYCoord = possibleMoves.get(l).getY();
-//            if (!ant.visited(node)) {
-//                System.out.println("graph[i][l] = " + graph[nodeYCoord][i].getNodeNum());
-//                pheromone += Math.pow(trails[i][l], pheromoneImportance) * Math.pow(1.0 / graph[l][i].getNodeNum(), distancePriority);
-//            }
-//        }
-//        for (int j = 0; j < possibleMoves.size(); j++) {
-//            if (ant.visited(j)) {
-//                probabilities[j] = 0.0;
-//            } else {
-//                double numerator =  Math.pow(trails[i][j], pheromoneImportance) * Math.pow(1.0 / graph[j][i].getNodeNum(), distancePriority);
-//                probabilities[j] = numerator / pheromone;
-//            }
-//        }
+        for (Node node : possibleMoves) {
+            if (!visitedRecently(node)) {
+                double numerator = Math.pow(node.pheromoneCount, pheromoneImportance);
+                // " * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority)" was removed from above formula
+                probabilities[node.getNodeNum()] = numerator / pheromone;
+            }
+        }
     }
 
-    protected boolean visited(Node node) {
+    protected boolean visitedRecently(Node node) {
+        int s = trail.size();
+        if (s > 20) {
+            return(trail.subList(s-20, s).contains(node));
+        }
         return (trail.contains(node));
-    }
-
-    protected double trailLength() {
-        return this.trail.size();
     }
 
     protected void clear() {

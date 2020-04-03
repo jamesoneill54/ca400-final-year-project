@@ -15,6 +15,8 @@ public class Node {
     private int x;
     private int y;
 
+    protected double pheromoneCount;
+
     public Node(int x, int y) {
         numberOfNodes++;
         this.nodeNumber = numberOfNodes;
@@ -22,6 +24,7 @@ public class Node {
         this.matrixIndexY = y;
         this.x = x * size;
         this.y = y * size;
+        this.pheromoneCount = 1;
     }
 
     public static void resetNumberOfNodes() {
@@ -69,7 +72,7 @@ public class Node {
         System.out.print("(" + this.getX() + ", " + this.getY() + ")");
     }
 
-    public List<Node> getNeighbourNodes(Node[][] matrix) {
+    public List<Node> getNeighbourNodes(Node[][] matrix, Node currentNode) {
         List<Node> neighbours = new ArrayList<>();
         int startY = matrixIndexY - 1;
         int endY = matrixIndexY + 1;
@@ -80,12 +83,21 @@ public class Node {
             if (y >= 0 && y < matrix.length) {
                 for (int x = startX; x <= endX; x++) {
                     if (x >= 0 && x < matrix[y].length) {
-                        neighbours.add(matrix[y][x]);
+                        if (matrix[y][x] != currentNode) {
+                            neighbours.add(matrix[y][x]);
+                        }
                     }
                 }
             }
         }
         return neighbours;
+    }
+
+    public int getDistanceValue (Node goalNode) {
+        int distanceValue = 0;
+        distanceValue += Math.abs(this.getX() - goalNode.getX());
+        distanceValue += Math.abs(this.getY() - goalNode.getY());
+        return distanceValue;
     }
 
     public void drawNode(Graphics graphics) {
