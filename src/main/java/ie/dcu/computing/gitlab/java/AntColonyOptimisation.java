@@ -3,7 +3,6 @@ package ie.dcu.computing.gitlab.java;
 import java.util.*;
 
 public class AntColonyOptimisation {
-
     private double pheromoneRetentionRate = 0.2;
     private double pheromonePerAnt = 500;
     private double antPerNode = 0.3;
@@ -13,10 +12,12 @@ public class AntColonyOptimisation {
     private boolean runningAsVisualSimulation = false;
     private int numberOfNodes;
     private int numberOfAnts;
+    private int numberOfObstacles;
     private Node graph[][];
     private Node homeNode;
-    protected Node goalNode;
+    private Node goalNode;
     private List<Ant> ants = new ArrayList<>();
+    private List<NodeGroup> obstacles = new ArrayList<>();
     private HashSet<Ant> stoppedAnts = new HashSet<>();
     private static Set<Node> globalVisited = new HashSet<Node>() {
     };
@@ -69,6 +70,10 @@ public class AntColonyOptimisation {
         }
     }
 
+    public Node[][] getGraph() {
+        return graph;
+    }
+
     public void setRunningAsVisualSimulation(boolean bool) {
         runningAsVisualSimulation = bool;
     }
@@ -107,8 +112,23 @@ public class AntColonyOptimisation {
         globalVisited.add(node);
     }
 
+    public void setNumberOfObstacles(int number) {
+        this.numberOfObstacles = number;
+    }
+
+    public List<NodeGroup> getObstacles() {
+        return obstacles;
+    }
+
+    public void generateObstacles() {
+        for (int i = 0; i < numberOfObstacles; i++) {
+            obstacles.add(new NodeGroup(NodeType.OBSTACLE, homeNode, goalNode, graph));
+        }
+    }
+
     public void startOptimization() {
-        for (int attemptNum = 1; attemptNum < 2; attemptNum++) {
+        this.generateObstacles();
+        for (int attemptNum = 1; attemptNum < 9; attemptNum++) {
             System.out.println("Attempt #" + attemptNum);
             solve();
         }
@@ -194,7 +214,7 @@ public class AntColonyOptimisation {
         if (bestTour == null) {
             bestTour = ants.get(0).trail;
         }
-        for (Ant ant : ants) {
+        for (Ant ant: ants) {
             if (ant.trail.size() < bestTour.size()) {
                 bestTour = ant.trail;
             }

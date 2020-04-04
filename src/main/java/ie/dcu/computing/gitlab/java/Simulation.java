@@ -12,6 +12,7 @@ public class Simulation {
     private int environmentWidth;
     private int environmentHeight;
     private int numberOfAnts;
+    private int numberOfObstacles;
     private JFrame simulationWindow;
 
     Simulation() {
@@ -20,9 +21,10 @@ public class Simulation {
 
         // environmentWidth and environmentHeight refers to the number of nodes
         // in the environment, not the screen size.
-        environmentWidth = 64;
-        environmentHeight = 48;
+        environmentWidth = 40;
+        environmentHeight = 40;
         numberOfAnts = 20;
+        numberOfObstacles = 5;
         Node.setSize(10);
         acoAlgorithm = new AntColonyOptimisation(environmentWidth, environmentHeight, numberOfAnts);
         acoAlgorithm.setRunningAsVisualSimulation(true);
@@ -63,10 +65,15 @@ public class Simulation {
         acoAlgorithm.setGoal(x, y);
     }
 
+    public void setNumberOfObstacles(int number) {
+        acoAlgorithm.setNumberOfObstacles(number);
+    }
+
     public static void main(String[] args) {
         Simulation simulation = new Simulation();
         simulation.setSimulationHome(20,20);
-        simulation.setSimulationGoal(40, 40);
+        simulation.setSimulationGoal(35, 10);
+        simulation.setNumberOfObstacles(3);
         simulation.start();
     }
 }

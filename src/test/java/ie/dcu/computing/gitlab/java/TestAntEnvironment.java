@@ -16,11 +16,6 @@ public class TestAntEnvironment {
     }
 
     @Test
-    void testGetObstacle() {
-        Assert.assertEquals(testAntEnvironment.getObstacle().getClass(), Obstacle.class);
-    }
-
-    @Test
     void testEnvironmentSize() {
         Assert.assertEquals(testAntEnvironment.getPreferredSize().width,
                 testAntEnvironment.getEnvironmentWidth());

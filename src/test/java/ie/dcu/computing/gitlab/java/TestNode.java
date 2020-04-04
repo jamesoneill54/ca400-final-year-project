@@ -59,19 +59,25 @@ public class TestNode {
     @Test
     void setNodeAsHomeTest() {
         testNode.setNodeAsHome();
-        Assert.assertEquals(testNode.getNodeType(), NodeType.HOME);
+        Assert.assertEquals(NodeType.HOME, testNode.getNodeType());
     }
 
     @Test
     void setNodeAsGoalTest() {
         testNode.setNodeAsGoal();
-        Assert.assertEquals(testNode.getNodeType(), NodeType.GOAL);
+        Assert.assertEquals(NodeType.GOAL, testNode.getNodeType());
     }
 
     @Test
-    void nodeSetAsNormTest() {
+    void nodeSetAsStandardTest() {
         Node testNode3 = new Node(10, 10);
-        Assert.assertEquals(testNode3.getNodeType(), NodeType.NORM);
+        Assert.assertEquals(NodeType.STANDARD, testNode3.getNodeType());
+    }
+
+    @Test
+    void setNodeAsObstacleTest() {
+        testNode.setNodeAsObstacle();
+        Assert.assertEquals(NodeType.OBSTACLE, testNode.getNodeType());
     }
 
     @Test
