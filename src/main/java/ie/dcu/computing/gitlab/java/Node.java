@@ -9,7 +9,7 @@ public class Node {
     private static int numberOfNodes = 0;
     private static int size = 1;
     private int nodeNumber;
-    private NodeType nodeType = NodeType.NORM;
+    private NodeType nodeType = NodeType.STANDARD;
     private int matrixIndexX;
     private int matrixIndexY;
     private int x;
@@ -25,6 +25,14 @@ public class Node {
         this.x = x * size;
         this.y = y * size;
         this.pheromoneCount = 1;
+    }
+
+    public int getMatrixIndexX() {
+        return matrixIndexX;
+    }
+
+    public int getMatrixIndexY() {
+        return matrixIndexY;
     }
 
     public static void resetNumberOfNodes() {
@@ -64,6 +72,10 @@ public class Node {
         return nodeType;
     }
 
+    public void setNodeAsObstacle() {
+        nodeType = NodeType.OBSTACLE;
+    }
+
     public int getNodeNum() {
         return nodeNumber;
     }
@@ -83,7 +95,7 @@ public class Node {
             if (y >= 0 && y < matrix.length) {
                 for (int x = startX; x <= endX; x++) {
                     if (x >= 0 && x < matrix[y].length) {
-                        if (matrix[y][x] != currentNode) {
+                        if (matrix[y][x] != currentNode && matrix[y][x].getNodeType() != NodeType.OBSTACLE) {
                             neighbours.add(matrix[y][x]);
                         }
                     }
@@ -106,6 +118,9 @@ public class Node {
         }
         else if (nodeType == NodeType.GOAL) {
             draw(graphics, Color.GREEN);
+        }
+        else if (nodeType == NodeType.OBSTACLE) {
+            draw(graphics, Color.BLACK);
         }
         else {
             draw(graphics, Color.GRAY);

@@ -37,4 +37,14 @@ public class TestAntColonyOptimisation {
         AntColonyOptimisation testACO2 = new AntColonyOptimisation(10, 10, null);
         Assert.assertEquals(30, testACO2.getAnts().size());
     }
+
+    @Test
+    void obstacleGenerationTest() {
+        AntColonyOptimisation testACO3 = new AntColonyOptimisation(10, 10, null);
+        testACO3.setNumberOfObstacles(3);
+        testACO3.setGoal(3, 3);
+        testACO3.setHome(4, 4);
+        testACO3.generateObstacles();
+        Assert.assertEquals(3, testACO3.getObstacles().size());
+    }
 }

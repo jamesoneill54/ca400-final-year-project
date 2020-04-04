@@ -12,7 +12,6 @@ public class AntEnvironment extends JPanel implements Runnable {
     private AntColonyOptimisation acoAlgorithm;
 
     private Thread animator;
-    private Obstacle obstacle;
     private boolean simulationRunning = false;
 
     public AntEnvironment(AntColonyOptimisation acoAlgorithm, int numColumns, int numRows) {
@@ -23,7 +22,6 @@ public class AntEnvironment extends JPanel implements Runnable {
         this.environmentHeight = numRows * Node.getSize();
         setBackground(Color.WHITE);
         setPreferredSize(new Dimension(environmentWidth, environmentHeight));
-        obstacle = new Obstacle(100, 100, 50, 60);
     }
 
     @Override
@@ -44,6 +42,9 @@ public class AntEnvironment extends JPanel implements Runnable {
         }
         acoAlgorithm.getGoal().drawNode(graphics);
         acoAlgorithm.getHome().drawNode(graphics);
+        for (NodeGroup obstacle: acoAlgorithm.getObstacles()) {
+            obstacle.drawGroup(graphics);
+        }
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -80,10 +81,6 @@ public class AntEnvironment extends JPanel implements Runnable {
             beforeTime = System.currentTimeMillis();
         }
         setVisible(false);
-    }
-
-    public Obstacle getObstacle() {
-        return obstacle;
     }
 
     public int getNumColumns() {
