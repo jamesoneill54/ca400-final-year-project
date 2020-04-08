@@ -164,7 +164,6 @@ public class Ant {
 
     public void drawAnt(Graphics graphics) {
         graphics.setColor(color);
-        graphics.drawRect(x, y, Node.getSize(), Node.getSize());
         graphics.fillRect(x, y, Node.getSize(), Node.getSize());
         /*
 
