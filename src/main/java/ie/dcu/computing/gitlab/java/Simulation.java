@@ -1,6 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Simulation {
 
@@ -50,10 +51,10 @@ public class Simulation {
         simulationWindow = new JFrame();
         simulationWindow.getContentPane().add(antEnvironment);
         simulationWindow.setResizable(false);
-        simulationWindow.pack();
         simulationWindow.setTitle("Ants");
         simulationWindow.setLocationRelativeTo(null);
         simulationWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        simulationWindow.pack();
         simulationWindow.setVisible(true);
     }
 
@@ -67,6 +68,7 @@ public class Simulation {
 
     public void setNumberOfObstacles(int number) {
         acoAlgorithm.setNumberOfObstacles(number);
+        acoAlgorithm.generateObstacles();
     }
 
     public static void main(String[] args) {

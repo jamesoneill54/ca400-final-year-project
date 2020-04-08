@@ -2,6 +2,7 @@ package ie.dcu.computing.gitlab.java;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 public class AntEnvironment extends JPanel implements Runnable {
 
@@ -10,6 +11,8 @@ public class AntEnvironment extends JPanel implements Runnable {
     private int environmentWidth;
     private int environmentHeight;
     private AntColonyOptimisation acoAlgorithm;
+    private GroundPlane groundPlane;
+    private int currentIteration = -1;
 
     private Thread animator;
     private boolean simulationRunning = false;
@@ -20,8 +23,8 @@ public class AntEnvironment extends JPanel implements Runnable {
         this.numRows = numRows;
         this.environmentWidth = numColumns * Node.getSize();
         this.environmentHeight = numRows * Node.getSize();
-        setBackground(Color.WHITE);
         setPreferredSize(new Dimension(environmentWidth, environmentHeight));
+        groundPlane = new GroundPlane(environmentWidth, environmentHeight, acoAlgorithm);
     }
 
     @Override
@@ -37,14 +40,15 @@ public class AntEnvironment extends JPanel implements Runnable {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
 
+        BufferedImage environmentGround = groundPlane.getPlane();
+
+        Node goal = acoAlgorithm.getGoal();
         for (Ant ant: acoAlgorithm.getAnts()) {
-            ant.drawAnt(graphics);
+            if (ant.getX() != goal.getX() || ant.getY() != goal.getY()) {
+                ant.drawAnt(environmentGround.getGraphics());
+            }
         }
-        acoAlgorithm.getGoal().drawNode(graphics);
-        acoAlgorithm.getHome().drawNode(graphics);
-        for (NodeGroup obstacle: acoAlgorithm.getObstacles()) {
-            obstacle.drawGroup(graphics);
-        }
+        graphics.drawImage(environmentGround, 0, 0, Color.WHITE, null);
         Toolkit.getDefaultToolkit().sync();
     }
 
@@ -59,6 +63,10 @@ public class AntEnvironment extends JPanel implements Runnable {
         beforeTime = System.currentTimeMillis();
 
         while (simulationRunning) {
+            if (acoAlgorithm.getIterationNumber() != currentIteration) {
+                groundPlane.update();
+                currentIteration = acoAlgorithm.getIterationNumber();
+            }
             repaint();
 
             timeDiff = System.currentTimeMillis() - beforeTime;

@@ -1,6 +1,8 @@
 package ie.dcu.computing.gitlab.java;
 
+import java.awt.*;
 import java.util.*;
+import java.util.List;
 
 public class AntColonyOptimisation {
     private double pheromoneRetentionRate = 0.2;
@@ -8,6 +10,7 @@ public class AntColonyOptimisation {
     private double antPerNode = 0.3;
 
     private int maxIterations = 3;
+    private int iterationNumber = 0;
 
     private boolean runningAsVisualSimulation = false;
     private int numberOfNodes;
@@ -19,6 +22,7 @@ public class AntColonyOptimisation {
     private List<Ant> ants = new ArrayList<>();
     private List<NodeGroup> obstacles = new ArrayList<>();
     private HashSet<Ant> stoppedAnts = new HashSet<>();
+    private HashSet<Node> trailNodes = new HashSet<>();
     private static Set<Node> globalVisited = new HashSet<Node>() {
     };
 
@@ -127,7 +131,6 @@ public class AntColonyOptimisation {
     }
 
     public void startOptimization() {
-        this.generateObstacles();
         for (int attemptNum = 1; attemptNum < 9; attemptNum++) {
             System.out.println("Attempt #" + attemptNum);
             solve();
@@ -137,7 +140,7 @@ public class AntColonyOptimisation {
     public List<Node> solve() {
         setupAnts();
 
-        for (int i = 0; i < maxIterations; i++) {
+        for (iterationNumber = 0; iterationNumber < maxIterations; iterationNumber++) {
             setupAnts();
             constructSolutions();
             updateTrails();
@@ -170,11 +173,13 @@ public class AntColonyOptimisation {
             for (Ant ant: ants) {
                 try {
                     if (!stoppedAnts.contains(ant)) {
+                        ant.setColor(Color.BLUE);
                         Node newNode = ant.selectNextNode(stepsTravelled, graph);
                         ant.visitNode(newNode);
                         if (newNode == goalNode) {
                             System.out.println("Goal node reached!");
                             stoppedAnts.add(ant);
+                            ant.setColor(Color.GRAY);
                         }
                     }
                 }
@@ -182,6 +187,7 @@ public class AntColonyOptimisation {
                 catch(RuntimeException e) {
                     System.out.println(e.getMessage());
                     stoppedAnts.add(ant);
+                    ant.setColor(Color.GRAY);
                 }
             }
 
@@ -205,6 +211,7 @@ public class AntColonyOptimisation {
                 double contribution = pheromonePerAnt / a.trail.size();
                 for (Node node : a.trail) {
                     node.pheromoneCount += contribution;
+                    trailNodes.add(node);
                 }
             }
         }
@@ -223,6 +230,14 @@ public class AntColonyOptimisation {
 
     public List<Ant> getAnts() {
         return ants;
+    }
+
+    public HashSet<Node> getTrailNodes() {
+        return trailNodes;
+    }
+
+    public int getIterationNumber() {
+        return iterationNumber;
     }
 
     public static void main(String[] args) {

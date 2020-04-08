@@ -117,13 +117,18 @@ public class Node {
             draw(graphics, Color.RED);
         }
         else if (nodeType == NodeType.GOAL) {
-            draw(graphics, Color.GREEN);
+            draw(graphics, Color.MAGENTA);
         }
         else if (nodeType == NodeType.OBSTACLE) {
             draw(graphics, Color.BLACK);
         }
         else {
-            draw(graphics, Color.GRAY);
+            int redAndBlueValue = 255 - (int) (pheromoneCount);
+            if (redAndBlueValue < 0) {
+                redAndBlueValue = 0;
+            }
+            Color pheromoneColor = new Color(redAndBlueValue, 255, redAndBlueValue);
+            draw(graphics, pheromoneColor);
         }
     }
 
@@ -134,7 +139,6 @@ public class Node {
 
     private void draw(Graphics graphics, Color nodeColor) {
         graphics.setColor(nodeColor);
-        graphics.drawRect(this.getX(), this.getY(), size, size);
         graphics.fillRect(this.getX(), this.getY(), size, size);
     }
 }

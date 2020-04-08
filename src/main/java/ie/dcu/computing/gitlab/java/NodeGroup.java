@@ -75,7 +75,6 @@ public class NodeGroup {
 
     private void draw(Color groupColor, Graphics graphics) {
         graphics.setColor(groupColor);
-        graphics.drawRect(x * Node.getSize(), y * Node.getSize(), width * Node.getSize(), height * Node.getSize());
         graphics.fillRect(x * Node.getSize(), y * Node.getSize(), width * Node.getSize(), height * Node.getSize());
     }
 }
