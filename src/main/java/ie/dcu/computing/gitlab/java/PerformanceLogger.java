@@ -1,7 +1,5 @@
 package ie.dcu.computing.gitlab.java;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,12 +7,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PerformanceLogger{
+public class PerformanceLogger {
     private FileWriter fileWriter;
     private PrintWriter printWriter;
-    private int firstBestLength = 0;
+    protected int firstBestLength = 0;
     private HashMap<Integer, Integer[]> bestAntsPerIteration = new HashMap<>();
-    private int globalBestLength = 0;
+    protected int globalBestLength = 0;
 
     public PerformanceLogger(String fileName) throws IOException {
         fileWriter = new FileWriter(fileName, true);
