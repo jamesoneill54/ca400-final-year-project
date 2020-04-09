@@ -11,7 +11,7 @@ public class AntColonyOptimisation {
     private double antPerNode = 0.3;
 
     private int maxIterations = 5;
-    private int iterationNumber = 0;
+    private int iterationNumber = 1;
 
     private boolean runningAsVisualSimulation = false;
     private int numberOfNodes;

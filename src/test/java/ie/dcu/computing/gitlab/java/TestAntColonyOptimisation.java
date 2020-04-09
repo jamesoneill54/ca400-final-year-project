@@ -59,10 +59,10 @@ public class TestAntColonyOptimisation {
         testACO4.setGoal(1, 0);
         testACO4.setHome(0, 0);
         testACO4.startOptimization();
-        Assert.assertEquals(3, testACO4.getIterationNumber());
+        Assert.assertEquals(5, testACO4.getIterationNumber());
 
         AntColonyOptimisation testACO5 = new AntColonyOptimisation(2, 1, 1);
-        Assert.assertEquals(0, testACO5.getIterationNumber());
+        Assert.assertEquals(1, testACO5.getIterationNumber());
     }
 
     @Test
