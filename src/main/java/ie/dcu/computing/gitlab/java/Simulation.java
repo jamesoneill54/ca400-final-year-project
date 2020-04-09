@@ -2,6 +2,7 @@ package ie.dcu.computing.gitlab.java;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 
 public class Simulation {
 
@@ -16,7 +17,7 @@ public class Simulation {
     private int numberOfObstacles;
     private JFrame simulationWindow;
 
-    Simulation() {
+    Simulation() throws IOException {
         // Menu displayed and asks user to set environmentWidth,
         // environmentHeight, and numberOfAnts.
 
@@ -71,7 +72,7 @@ public class Simulation {
         acoAlgorithm.generateObstacles();
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Simulation simulation = new Simulation();
         simulation.setSimulationHome(20,20);
         simulation.setSimulationGoal(35, 10);

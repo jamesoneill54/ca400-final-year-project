@@ -8,6 +8,7 @@ import java.util.stream.IntStream;
 
 public class Ant {
 
+    protected AntType antType;
     protected Color color;
     protected int x;
     protected int y;
@@ -25,7 +26,7 @@ public class Ant {
     protected double probabilities[];
 
     protected double pheromoneImportance = 7;
-    protected double distancePriority = 0.1;
+    protected double distancePriority = 0.0000000000000000000000000000000000000000000000001;
 
     public Ant(int tourSize) {
         this.trailSize = tourSize;
@@ -102,13 +103,13 @@ public class Ant {
         double pheromone = 0.0;
         for (Node node : possibleMoves) {
             if (!visitedRecently(node)) {
-                pheromone += Math.pow(node.pheromoneCount, pheromoneImportance);
+                pheromone += Math.pow(node.pheromoneCount, pheromoneImportance) * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority);
                 // " * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority)" was removed from above formula
             }
         }
         for (Node node : possibleMoves) {
             if (!visitedRecently(node)) {
-                double numerator = Math.pow(node.pheromoneCount, pheromoneImportance);
+                double numerator = Math.pow(node.pheromoneCount, pheromoneImportance) * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority);
                 // " * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority)" was removed from above formula
                 probabilities[node.getNodeNum()] = numerator / pheromone;
             }

@@ -3,9 +3,14 @@ package ie.dcu.computing.gitlab.java;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 public class TestNodeGroup {
 
     AntColonyOptimisation testACO = new AntColonyOptimisation(10, 10, 1);
+
+    public TestNodeGroup() throws IOException {
+    }
 
     @Test
     void initialiseRandomNodeGroupTest() {
