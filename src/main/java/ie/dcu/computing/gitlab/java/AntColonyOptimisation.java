@@ -1,6 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
 import java.awt.*;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
@@ -9,8 +10,8 @@ public class AntColonyOptimisation {
     private double pheromonePerAnt = 500;
     private double antPerNode = 0.3;
 
-    private int maxIterations = 3;
-    private int iterationNumber = 0;
+    private int maxIterations = 5;
+    private int iterationNumber = 1;
 
     private boolean runningAsVisualSimulation = false;
     private int numberOfNodes;
@@ -27,10 +28,14 @@ public class AntColonyOptimisation {
     };
 
     private int stepsTravelled;
+    private int successes;
+    private int numberOfBests = 0;
 
     public List<Node> bestTour;
 
-    public AntColonyOptimisation(int w, int h, Integer numAnts) {
+    protected PerformanceLogger performanceLogger;
+
+    public AntColonyOptimisation(int w, int h, Integer numAnts) throws IOException {
         graph = generateMatrixFromEnv(w, h);
         numberOfNodes = graph.length * graph[0].length;
 
@@ -44,6 +49,8 @@ public class AntColonyOptimisation {
         for (int antNumber = 0; antNumber < numberOfAnts; antNumber++) {
             ants.add(new Ant(numberOfNodes));
         }
+
+        performanceLogger = new PerformanceLogger("./res/results/results.txt");
     }
 
     public Node[][] generateMatrixFromEnv(int columns, int rows) {
@@ -131,20 +138,24 @@ public class AntColonyOptimisation {
     }
 
     public void startOptimization() {
-        for (int attemptNum = 1; attemptNum < 9; attemptNum++) {
+        performanceLogger.initialPrint(homeNode, goalNode, numberOfObstacles);
+        for (int attemptNum = 1; attemptNum < 2; attemptNum++) {
             System.out.println("Attempt #" + attemptNum);
             solve();
         }
+        performanceLogger.finalPrint();
+        performanceLogger.close();
     }
 
     public List<Node> solve() {
         setupAnts();
-
-        for (iterationNumber = 0; iterationNumber < maxIterations; iterationNumber++) {
+        for (iterationNumber = 1; iterationNumber < maxIterations; iterationNumber++) {
             setupAnts();
             constructSolutions();
+            performanceLogger.formatResults(ants, iterationNumber);
             updateTrails();
             updateBest();
+            performanceLogger.formatResults(ants, iterationNumber, numberOfBests, bestTour, successes);
         }
         System.out.println("Best tour length: " + bestTour.size());
         System.out.println("Best tour order: " + bestTour.toString());
@@ -168,15 +179,19 @@ public class AntColonyOptimisation {
 
     public void constructSolutions() {
         stepsTravelled = 0;
+        successes = 0;
         stoppedAnts.clear();
         while (stoppedAnts.size() != ants.size()) {
             for (Ant ant: ants) {
+
                 try {
                     if (!stoppedAnts.contains(ant)) {
                         ant.setColor(Color.BLUE);
                         Node newNode = ant.selectNextNode(stepsTravelled, graph);
                         ant.visitNode(newNode);
                         if (newNode == goalNode) {
+                            ant.antType = AntType.SUCCESSFUL;
+                            successes +=  1;
                             System.out.println("Goal node reached!");
                             stoppedAnts.add(ant);
                             ant.setColor(Color.GRAY);
@@ -185,6 +200,7 @@ public class AntColonyOptimisation {
                 }
 
                 catch(RuntimeException e) {
+                    ant.antType = AntType.UNSUCCESSFUL;
                     System.out.println(e.getMessage());
                     stoppedAnts.add(ant);
                     ant.setColor(Color.GRAY);
@@ -222,8 +238,12 @@ public class AntColonyOptimisation {
             bestTour = ants.get(0).trail;
         }
         for (Ant ant: ants) {
+            if (ant.trail.size() == bestTour.size()) {
+                numberOfBests += 1;
+            }
             if (ant.trail.size() < bestTour.size()) {
                 bestTour = ant.trail;
+                numberOfBests = 1;
             }
         }
     }
@@ -231,6 +251,7 @@ public class AntColonyOptimisation {
     public List<Ant> getAnts() {
         return ants;
     }
+
 
     public HashSet<Node> getTrailNodes() {
         return trailNodes;
@@ -240,7 +261,7 @@ public class AntColonyOptimisation {
         return iterationNumber;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         System.out.println("Running Ant Colony Optimisation Algorithm...");
         AntColonyOptimisation myACO = new AntColonyOptimisation(6, 4, null);
         try {
