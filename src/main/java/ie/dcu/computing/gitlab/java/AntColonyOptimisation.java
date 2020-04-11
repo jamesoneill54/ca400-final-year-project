@@ -6,6 +6,9 @@ import java.util.*;
 import java.util.List;
 
 public class AntColonyOptimisation {
+    private double pheromoneImportance = 7;
+    private double distanceImportance = 0.00000000000000000000000000000001;
+
     private double pheromoneRetentionRate = 0.2;
     private double pheromonePerAnt = 500;
     private double antPerNode = 0.3;
@@ -32,6 +35,7 @@ public class AntColonyOptimisation {
     private int numberOfBests = 0;
 
     public List<Node> bestTour;
+    public List<Node> globalBestTour;
 
     protected PerformanceLogger performanceLogger;
 
@@ -138,12 +142,12 @@ public class AntColonyOptimisation {
     }
 
     public void startOptimization() {
-        performanceLogger.initialPrint(homeNode, goalNode, numberOfObstacles);
+        performanceLogger.initialPrint(homeNode, goalNode, numberOfObstacles, pheromoneImportance, distanceImportance);
         for (int attemptNum = 1; attemptNum < 2; attemptNum++) {
             System.out.println("Attempt #" + attemptNum);
             solve();
         }
-        performanceLogger.finalPrint();
+        performanceLogger.finalPrint(globalBestTour);
         performanceLogger.close();
     }
 
@@ -167,6 +171,7 @@ public class AntColonyOptimisation {
             ant.clear();
             ant.visitNode(homeNode);
             ant.setGoalNode(goalNode);
+            ant.setPheromoneImportance(pheromoneImportance);
         }
         stepsTravelled = 0;
     }
@@ -236,6 +241,7 @@ public class AntColonyOptimisation {
     private void updateBest() {
         if (bestTour == null) {
             bestTour = ants.get(0).trail;
+            globalBestTour = bestTour;
         }
         for (Ant ant: ants) {
             if (ant.trail.size() == bestTour.size()) {
@@ -244,6 +250,9 @@ public class AntColonyOptimisation {
             if (ant.trail.size() < bestTour.size()) {
                 bestTour = ant.trail;
                 numberOfBests = 1;
+                if (bestTour.size() < globalBestTour.size()) {
+                    globalBestTour = bestTour;
+                }
             }
         }
     }
