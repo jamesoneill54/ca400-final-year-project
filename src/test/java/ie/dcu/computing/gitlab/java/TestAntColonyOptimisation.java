@@ -27,7 +27,7 @@ public class TestAntColonyOptimisation {
     void postTourTest() throws IOException {
         testACO.setHome(0, 0);
         testACO.setGoal(1, 2);
-        testACO.startOptimization();
+        testACO.startOptimization(false);
         Assert.assertNotNull(testACO.bestTour);
     }
 
@@ -58,7 +58,7 @@ public class TestAntColonyOptimisation {
         AntColonyOptimisation testACO4 = new AntColonyOptimisation(2, 1, 1);
         testACO4.setGoal(1, 0);
         testACO4.setHome(0, 0);
-        testACO4.startOptimization();
+        testACO4.startOptimization(false);
         Assert.assertEquals(5, testACO4.getIterationNumber());
 
         AntColonyOptimisation testACO5 = new AntColonyOptimisation(2, 1, 1);
@@ -71,7 +71,7 @@ public class TestAntColonyOptimisation {
         testACO6.setGoal(1, 0);
         testACO6.setHome(0, 0);
         Assert.assertEquals(0, testACO6.getTrailNodes().size());
-        testACO6.startOptimization();
+        testACO6.startOptimization(false);
         Assert.assertEquals(2, testACO6.getTrailNodes().size());
     }
 }

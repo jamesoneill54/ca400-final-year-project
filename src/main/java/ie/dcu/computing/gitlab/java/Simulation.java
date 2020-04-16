@@ -43,7 +43,7 @@ public class Simulation {
 
     public void start() throws IOException {
         displaySimulationWindow();
-        acoAlgorithm.startOptimization();
+        acoAlgorithm.startOptimization(true);
         antEnvironment.stopSimulation();
         simulationWindow.dispose();
     }

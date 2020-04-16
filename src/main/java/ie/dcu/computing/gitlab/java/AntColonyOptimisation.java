@@ -147,26 +147,30 @@ public class AntColonyOptimisation {
         }
     }
 
-    public void startOptimization() throws IOException {
+    public void startOptimization(boolean createResults) throws IOException {
         for (int attemptNum = 1; attemptNum < 4; attemptNum++) {
-            performanceLogger = new PerformanceLogger(RESULTS_FOLDER + "ATTEMPT" + attemptNum + ".json");
-            performanceLogger.initialPrint(attemptNum, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
+            if (createResults) {
+                performanceLogger = new PerformanceLogger(RESULTS_FOLDER + "ATTEMPT" + attemptNum + ".json");
+                performanceLogger.initialPrint(attemptNum, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
+            }
             System.out.println("Attempt #" + attemptNum);
-            solve();
-            performanceLogger.finalPrint(globalBestTour);
-            performanceLogger.close();
+            solve(createResults);
+            if (createResults) {
+                performanceLogger.finalPrint(globalBestTour);
+                performanceLogger.close();
+            }
         }
     }
 
-    public List<Node> solve() {
+    public List<Node> solve(boolean createResults) {
         setupAnts();
         for (iterationNumber = 1; iterationNumber < maxIterations; iterationNumber++) {
             setupAnts();
             constructSolutions();
-            performanceLogger.formatResults(ants, iterationNumber);
+            if (createResults) { performanceLogger.formatResults(ants, iterationNumber); }
             updateTrails();
             updateBest();
-            performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, bestTour, successes);
+            if (createResults) { performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, bestTour, successes); }
         }
         System.out.println("Best tour length: " + bestTour.size());
         System.out.println("Best tour order: " + bestTour.toString());
@@ -293,7 +297,7 @@ public class AntColonyOptimisation {
         myACO.setupAnts();
         System.out.println("Number of Ants: " + myACO.numberOfAnts);
         myACO.printAntCurrentLoc();
-        myACO.startOptimization();
+        myACO.startOptimization(false);
         System.out.println("\n---------------\nFINAL ANT POSITIONS:\n");
         myACO.printAntCurrentLoc();
     }
