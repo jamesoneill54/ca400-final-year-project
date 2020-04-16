@@ -2,12 +2,13 @@ package ie.dcu.computing.gitlab.java;
 
 import java.awt.*;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
 
 public class AntColonyOptimisation {
     private double pheromoneImportance = 7;
-    private double distanceImportance = 0.00000000000000000000000000000001;
+    private double distancePriority = 0.0000000000000000000000000001;
 
     private double pheromoneRetentionRate = 0.2;
     private double pheromonePerAnt = 500;
@@ -37,9 +38,13 @@ public class AntColonyOptimisation {
     public List<Node> bestTour;
     public List<Node> globalBestTour;
 
+    private String RESULTS_FOLDER;
+
     protected PerformanceLogger performanceLogger;
 
     public AntColonyOptimisation(int w, int h, Integer numAnts) throws IOException {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String ts = timestamp.toString().replace(" ", "-").replace(".", "_").replace(":", "_");
         graph = generateMatrixFromEnv(w, h);
         numberOfNodes = graph.length * graph[0].length;
 
@@ -53,8 +58,9 @@ public class AntColonyOptimisation {
         for (int antNumber = 0; antNumber < numberOfAnts; antNumber++) {
             ants.add(new Ant(numberOfNodes));
         }
+        System.out.print(ts);
 
-        performanceLogger = new PerformanceLogger("./res/results/results.txt");
+        RESULTS_FOLDER = "./res/results/" + ts;
     }
 
     public Node[][] generateMatrixFromEnv(int columns, int rows) {
@@ -141,14 +147,15 @@ public class AntColonyOptimisation {
         }
     }
 
-    public void startOptimization() {
-        performanceLogger.initialPrint(homeNode, goalNode, numberOfObstacles, pheromoneImportance, distanceImportance);
-        for (int attemptNum = 1; attemptNum < 2; attemptNum++) {
+    public void startOptimization() throws IOException {
+        for (int attemptNum = 1; attemptNum < 4; attemptNum++) {
+            performanceLogger = new PerformanceLogger(RESULTS_FOLDER + "ATTEMPT" + attemptNum + ".json");
+            performanceLogger.initialPrint(attemptNum, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
             System.out.println("Attempt #" + attemptNum);
             solve();
+            performanceLogger.finalPrint(globalBestTour);
+            performanceLogger.close();
         }
-        performanceLogger.finalPrint(globalBestTour);
-        performanceLogger.close();
     }
 
     public List<Node> solve() {
@@ -159,7 +166,7 @@ public class AntColonyOptimisation {
             performanceLogger.formatResults(ants, iterationNumber);
             updateTrails();
             updateBest();
-            performanceLogger.formatResults(ants, iterationNumber, numberOfBests, bestTour, successes);
+            performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, bestTour, successes);
         }
         System.out.println("Best tour length: " + bestTour.size());
         System.out.println("Best tour order: " + bestTour.toString());

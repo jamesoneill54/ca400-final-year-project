@@ -41,7 +41,7 @@ public class Simulation {
         return animationDelay;
     }
 
-    public void start() {
+    public void start() throws IOException {
         displaySimulationWindow();
         acoAlgorithm.startOptimization();
         antEnvironment.stopSimulation();
