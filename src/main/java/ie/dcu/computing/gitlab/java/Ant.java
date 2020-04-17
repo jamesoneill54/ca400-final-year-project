@@ -8,7 +8,7 @@ import java.util.stream.IntStream;
 
 public class Ant {
 
-    protected AntType antType;
+    protected AntType antType = AntType.UNSUCCESSFUL;
     protected Color color;
     protected int x;
     protected int y;
@@ -16,7 +16,7 @@ public class Ant {
     protected int trailSize;
     protected List<Node> trail = new ArrayList<>();
     protected String task;
-    protected Node goalNode;
+    protected Node homeNode;
 
     protected double antPheromones;
 
@@ -26,7 +26,6 @@ public class Ant {
     protected double probabilities[];
 
     private double pheromoneImportance = 7;
-    private double distancePriority = 0.0000000000000000000000000001;
 
     public Ant(int tourSize) {
         this.trailSize = tourSize;
@@ -49,11 +48,17 @@ public class Ant {
         return trail;
     }
 
-    public void setGoalNode(Node node) {
-        goalNode = node;
+    public void setHomeNode(Node node) {
+        homeNode = node;
     }
 
-    public void setPheromoneImportance(double alpha) { pheromoneImportance = alpha; }
+    public void setPheromoneImportance(double alpha) {
+        pheromoneImportance = alpha;
+    }
+
+    public AntType getAntType() {
+        return antType;
+    }
 
     protected void visitNode(Node node) {
         this.trail.add(node);
@@ -61,7 +66,7 @@ public class Ant {
         updateLocation(node.getX(), node.getY());
     }
 
-    protected Node selectNextNode(int currentIndex, Node[][] graph) {
+    protected Node selectNextNode(int currentIndex, Node[][] graph, int distancePriority) {
 
         List<Node> possibleMoves = trail.get(currentIndex).getNeighbourNodes(graph, trail.get(currentIndex));
         int randomIndex = random.nextInt(possibleMoves.size());
@@ -69,12 +74,12 @@ public class Ant {
             // pick random node
             return possibleMoves.get(randomIndex);
         }
-        calculateProbabilities(possibleMoves);
+        calculateProbabilities(possibleMoves, distancePriority);
         ArrayList<Node> chosenNodes = new ArrayList<>();
         for (Node node: possibleMoves) {
             if (node.getNodeType() == NodeType.GOAL) {
                 System.out.println("goalNode is a neighbour, selecting that instead");
-                return goalNode;
+                return node;
             }
 
             if (chosenNodes.size() > 0) {
@@ -100,18 +105,17 @@ public class Ant {
         throw new RuntimeException("Unsuccessful ant: There are no other nodes");
     }
 
-    public void calculateProbabilities(List<Node> possibleMoves) {
+    public void calculateProbabilities(List<Node> possibleMoves, int distancePriority) {
         double pheromone = 0.0;
+        double normalisedDistancePriority = distancePriority * 0.00000000000000001;
         for (Node node : possibleMoves) {
             if (!visitedRecently(node)) {
-                pheromone += Math.pow(node.pheromoneCount, pheromoneImportance) * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority);
-                // " * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority)" was removed from above formula
+                pheromone += Math.pow(node.pheromoneCount, pheromoneImportance) * Math.pow(1.0 / node.getDistanceValue(homeNode), normalisedDistancePriority);
             }
         }
         for (Node node : possibleMoves) {
             if (!visitedRecently(node)) {
-                double numerator = Math.pow(node.pheromoneCount, pheromoneImportance) * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority);
-                // " * Math.pow(1.0 / node.getDistanceValue(goalNode), distancePriority)" was removed from above formula
+                double numerator = Math.pow(node.pheromoneCount, pheromoneImportance) * Math.pow(1.0 / node.getDistanceValue(homeNode), normalisedDistancePriority);
                 probabilities[node.getNodeNum()] = numerator / pheromone;
             }
         }
@@ -167,25 +171,5 @@ public class Ant {
     public void drawAnt(Graphics graphics) {
         graphics.setColor(color);
         graphics.fillRect(x, y, Node.getSize(), Node.getSize());
-        /*
-
-        Not accurate enough for the simulation, now implemented where the ant is
-        one pixel tall and wide.
-
-        // The ant's head.
-        graphics.drawOval(x + 2, y, 3, 2);
-        graphics.fillOval(x + 2, y, 3, 2);
-        // The ant's body.
-        graphics.drawOval(x + 2, y + 2, 3, 4);
-        graphics.fillOval(x + 2, y + 2, 3, 4);
-        // The ant's left three legs.
-        graphics.drawLine(x + 2, y + 2, x, y + 1);
-        graphics.drawLine(x + 2, y + 4, x, y + 4);
-        graphics.drawLine(x + 2, y + 6, x, y + 7);
-        // The ant's right three legs.
-        graphics.drawLine(x + 5, y + 2, x + 7, y + 1);
-        graphics.drawLine(x + 5, y + 4, x + 7, y + 4);
-        graphics.drawLine(x + 5, y + 6, x + 7, y + 7);
-        */
     }
 }

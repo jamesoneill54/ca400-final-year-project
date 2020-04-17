@@ -3,7 +3,6 @@ package ie.dcu.computing.gitlab.java;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.IntStream;
 
 public class Node {
     private static int numberOfNodes = 0;
@@ -68,6 +67,10 @@ public class Node {
         nodeType = NodeType.GOAL;
     }
 
+    public void setNodeAsStandard() {
+        nodeType = NodeType.STANDARD;
+    }
+
     public NodeType getNodeType() {
         return nodeType;
     }
@@ -105,10 +108,10 @@ public class Node {
         return neighbours;
     }
 
-    public int getDistanceValue (Node goalNode) {
-        int distanceValue = 0;
-        distanceValue += Math.abs(this.getX() - goalNode.getX());
-        distanceValue += Math.abs(this.getY() - goalNode.getY());
+    public int getDistanceValue(Node homeNode) {
+        int distanceValue = numberOfNodes;
+        distanceValue -= Math.abs(this.getX() - homeNode.getX());
+        distanceValue -= Math.abs(this.getY() - homeNode.getY());
         return distanceValue;
     }
 

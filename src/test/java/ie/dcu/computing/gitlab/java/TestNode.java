@@ -82,8 +82,10 @@ public class TestNode {
 
     @Test
     void distanceValueTest() {
-        testNode.setNodeAsGoal();
-        Node testNode4 = new Node(2, 10);
-        Assert.assertEquals(testNode4.getDistanceValue(testNode), 5);
+        Node.resetNumberOfNodes();
+        Node[][] matrix1 = generateTestMatrix(10, 15);
+        Node homeNode = matrix1[4][10];
+        Node testNode4 = matrix1[2][3];
+        Assert.assertEquals(141, testNode4.getDistanceValue(homeNode));
     }
 }

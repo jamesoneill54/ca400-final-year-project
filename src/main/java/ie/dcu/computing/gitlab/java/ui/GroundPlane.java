@@ -1,4 +1,8 @@
-package ie.dcu.computing.gitlab.java;
+package ie.dcu.computing.gitlab.java.ui;
+
+import ie.dcu.computing.gitlab.java.AntColonyOptimisation;
+import ie.dcu.computing.gitlab.java.Node;
+import ie.dcu.computing.gitlab.java.NodeGroup;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +26,6 @@ public class GroundPlane {
 
     public void update() {
         groundImage.flush();
-        System.out.println("Painting ground");
         groundImage.getGraphics().setColor(Color.WHITE);
         groundImage.getGraphics().fillRect(0, 0, width, height);
         acoAlgorithm.getHome().drawNode(groundImage.getGraphics());
@@ -31,7 +34,6 @@ public class GroundPlane {
             obstacle.drawGroup(groundImage.getGraphics());
         }
         for (Node node: acoAlgorithm.getTrailNodes()) {
-            System.out.println("Drawing pheromones");
             node.drawNode(groundImage.getGraphics());
         }
     }

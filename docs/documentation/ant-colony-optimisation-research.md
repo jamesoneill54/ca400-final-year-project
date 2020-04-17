@@ -26,9 +26,9 @@ Typical SI system has the following properties:
 
 Marco Dorigo, IRIDIA
 
-Ant Colony Optimisation is a population-based metaheuristic that can be used to find approximate solutions to difficult optimization problems.
+Ant Colony Optimisation is a population-based metaheuristic that can be used to find approximate solutions to difficult optimisation problems.
 
-In ACO, a set of software agents called artificial ants search for good solutions to a given optimization problem. To apply ACO, the optimization problem is transformed into the problem of finding the best path on a weighted graph. The artificial ants (hereafter ants) incrementally build solutions by moving on the graph. The solution construction process is stochastic and is biased by a pheromone model, that is, a set of parameters associated with graph components (either nodes or edges) whose values are modified at runtime by the ants.
+In ACO, a set of software agents called artificial ants search for good solutions to a given optimisation problem. To apply ACO, the optimisation problem is transformed into the problem of finding the best path on a weighted graph. The artificial ants (hereafter ants) incrementally build solutions by moving on the graph. The solution construction process is stochastic and is biased by a pheromone model, that is, a set of parameters associated with graph components (either nodes or edges) whose values are modified at runtime by the ants.
 
 Construction Graph: the virtual space in which the ants travel
 

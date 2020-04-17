@@ -1,5 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
+import ie.dcu.computing.gitlab.java.ui.UIContents;
+
 import java.awt.*;
 import java.io.IOException;
 import java.sql.Timestamp;
@@ -8,7 +10,7 @@ import java.util.List;
 
 public class AntColonyOptimisation {
     private double pheromoneImportance = 7;
-    private double distancePriority = 0.0000000000000000000000000001;
+    private int distancePriority = 10;
 
     private double pheromoneRetentionRate = 0.2;
     private double pheromonePerAnt = 500;
@@ -16,8 +18,14 @@ public class AntColonyOptimisation {
 
     private int maxIterations = 5;
     private int iterationNumber = 1;
+    private int maxAttempts = 4;
+    private int attemptNumber = 1;
 
     private boolean runningAsVisualSimulation = false;
+    private boolean processCancelled = false;
+    private boolean processPaused = false;
+    private boolean iterationSkipped = false;
+    private boolean createResults = true;
     private int numberOfNodes;
     private int numberOfAnts;
     private int numberOfObstacles;
@@ -32,6 +40,7 @@ public class AntColonyOptimisation {
     };
 
     private int stepsTravelled;
+    private int maxSteps;
     private int successes;
     private int numberOfBests = 0;
 
@@ -43,23 +52,16 @@ public class AntColonyOptimisation {
     protected Timestamp timestamp;
     protected PerformanceLogger performanceLogger;
 
-    public AntColonyOptimisation(int w, int h, Integer numAnts) throws IOException {
-        timestamp = new Timestamp(System.currentTimeMillis());
+    public AntColonyOptimisation(int w, int h, Integer numAnts) {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String ts = timestamp.toString().replace(" ", "-").replace(".", "_").replace(":", "_");
         graph = generateMatrixFromEnv(w, h);
         numberOfNodes = graph.length * graph[0].length;
-
-        if (numAnts == null) {
-            numberOfAnts = (int) (numberOfNodes * antPerNode);
-        }
-        else {
-            numberOfAnts = numAnts;
-        }
-
-        for (int antNumber = 0; antNumber < numberOfAnts; antNumber++) {
-            ants.add(new Ant(numberOfNodes));
-        }
-        System.out.print(ts);
+        generateAnts(numAnts);
+        setRandomHome();
+        setRandomGoal();
+        generateObstacles();
+        System.out.println(ts);
 
         RESULTS_FOLDER = "./res/results/" + ts;
     }
@@ -100,15 +102,71 @@ public class AntColonyOptimisation {
         runningAsVisualSimulation = bool;
     }
 
+    public void setRandomHome() {
+        Random random = new Random();
+        int homeX = random.nextInt(graph[0].length);
+        int homeY = random.nextInt(graph.length);
+        while (!validHomeGoalLocation(homeX, homeY)) {
+            homeX = random.nextInt(graph[0].length);
+            homeY = random.nextInt(graph.length);
+        }
+        setHome(homeX, homeY);
+    }
+
+    public void setRandomGoal() {
+        Random random = new Random();
+        int goalX = random.nextInt(graph[0].length);
+        int goalY = random.nextInt(graph.length);
+        while (!validHomeGoalLocation(goalX, goalY)) {
+            goalX = random.nextInt(graph[0].length);
+            goalY = random.nextInt(graph.length);
+        }
+        setGoal(goalX, goalY);
+    }
+
+    public void generateAnts(Integer numAnts) {
+        if (numAnts == null) {
+            numberOfAnts = (int) (numberOfNodes * antPerNode);
+        }
+        else {
+            numberOfAnts = numAnts;
+        }
+
+        ants.clear();
+        for (int antNumber = 0; antNumber < numberOfAnts; antNumber++) {
+            ants.add(new Ant(numberOfNodes));
+        }
+    }
+
+    public void setEnvironmentSize(int width, int height) {
+        graph = generateMatrixFromEnv(width, height);
+        numberOfNodes = graph.length * graph[0].length;
+        setRandomHome();
+        setRandomGoal();
+        generateAnts(null);
+    }
+
     public void setHome(int x, int y) {
         if (x < graph[0].length && y < graph.length) {
+            if (homeNode != null) {
+                homeNode.setNodeAsStandard();
+            }
             graph[y][x].setNodeAsHome();
             this.homeNode = graph[y][x];
         }
         else {
-            throw new IndexOutOfBoundsException(
-                    "The coordinates of the home node are outside the environment boundaries.");
+            if (runningAsVisualSimulation) {
+                Simulation.showDialog("Home coordinates are outside environment bounds. Randomising home node...");
+            }
+            else {
+                System.out.println("Home coordinates are outside environment bounds. Randomising home node...");
+            }
+            setRandomHome();
         }
+    }
+
+    public boolean validHomeGoalLocation(int x, int y) {
+        return graph[y][x].getNodeType() == NodeType.STANDARD;
     }
 
     public Node getHome() {
@@ -117,12 +175,20 @@ public class AntColonyOptimisation {
 
     public void setGoal(int x, int y) {
         if (x < graph[0].length && y < graph.length) {
+            if (goalNode != null) {
+                goalNode.setNodeAsStandard();
+            }
             graph[y][x].setNodeAsGoal();
             this.goalNode = graph[y][x];
         }
         else {
-            throw new IndexOutOfBoundsException(
-                    "The coordinates of the goal node are outside the environment boundaries.");
+            if (runningAsVisualSimulation) {
+                Simulation.showDialog("Goal coordinates are outside environment bounds. Randomising goal node...");
+            }
+            else {
+                System.out.println("Goal coordinates are outside environment bounds. Randomising goal node...");
+            }
+            setRandomGoal();
         }
     }
 
@@ -139,43 +205,132 @@ public class AntColonyOptimisation {
     }
 
     public List<NodeGroup> getObstacles() {
-        return obstacles;
+        return new ArrayList<>(obstacles);
+    }
+
+    public void updateObstacles(List<NodeGroup> newObstacles) {
+        obstacles = newObstacles;
+    }
+
+    public void setCreateResults(boolean createResults) {
+        this.createResults = createResults;
     }
 
     public void generateObstacles() {
+        obstacles.clear();
         for (int i = 0; i < numberOfObstacles; i++) {
             obstacles.add(new NodeGroup(NodeType.OBSTACLE, homeNode, goalNode, graph));
         }
     }
 
-    public void startOptimization(boolean createResults) throws IOException {
-        for (int attemptNum = 1; attemptNum < 4; attemptNum++) {
-            if (createResults) {
-                String fileName = RESULTS_FOLDER + "ATTEMPT" + attemptNum + ".json";
-                performanceLogger = new PerformanceLogger(fileName);
-                performanceLogger.initialPrint(timestamp, attemptNum, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
+    public double getPheromoneImportance() {
+        return pheromoneImportance;
+    }
+
+    public void setPheromoneImportance(double value) {
+        pheromoneImportance = value;
+    }
+
+    public int getDistancePriority() {
+        return distancePriority;
+    }
+
+    public void setDistancePriority(int value) {
+        distancePriority = value;
+    }
+
+    public void startOptimisation() throws IOException {
+        if (runningAsVisualSimulation) {
+            UIContents.lockVariableControls();
+        }
+        processCancelled = false;
+        clearTrails();
+        for (NodeGroup obstacle: obstacles) {
+            obstacle.setNodesToType(graph);
+        }
+        if (maxSteps == 0) {
+            maxSteps = (int) (numberOfNodes * 0.7);
+        }
+        for (attemptNumber = 1; attemptNumber <= maxAttempts; attemptNumber++) {
+            if (processCancelled) {
+                break;
             }
-            System.out.println("Attempt #" + attemptNum);
-            solve(createResults);
+            if (runningAsVisualSimulation) {
+                UIContents.updateAttemptNumber();
+            }
+            if (createResults) {
+                String fileName = RESULTS_FOLDER + "ATTEMPT" + attemptNumber + ".json";
+                performanceLogger = new PerformanceLogger(fileName);
+                performanceLogger.initialPrint(timestamp, attemptNumber, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
+            }
+            System.out.println("Attempt #" + attemptNumber);
+            solve();
             if (createResults) {
                 performanceLogger.finalPrint(globalBestTour);
                 performanceLogger.close();
             }
         }
+        if (runningAsVisualSimulation) {
+            UIContents.unlockVariableControls();
+        }
     }
 
-    public List<Node> solve(boolean createResults) {
-        setupAnts();
-        for (iterationNumber = 1; iterationNumber < maxIterations; iterationNumber++) {
+    public void stopOptimisation() {
+        System.out.println("Stopping AntColonyOptimisation...");
+        processCancelled = true;
+        resumeOptimisation();
+    }
+
+    public void pauseOptimisation() {
+        System.out.println("Pausing AntColonyOptimisation...");
+        processPaused = true;
+    }
+
+    public void resumeOptimisation() {
+        System.out.println("Resuming Optimisation...");
+        processPaused = false;
+    }
+
+    public boolean isPaused() {
+        return processPaused;
+    }
+
+    public void skipIteration() {
+        iterationSkipped = true;
+    }
+
+    public List<Node> solve() {
+        for (iterationNumber = 1; iterationNumber <= maxIterations; iterationNumber++) {
+            iterationSkipped = false;
+            if (processCancelled) {
+                break;
+            }
+            if (runningAsVisualSimulation) {
+                UIContents.updateIterationNumber();
+            }
             setupAnts();
             constructSolutions();
-            if (createResults) { performanceLogger.formatResults(ants, iterationNumber); }
+            if (createResults) {
+                performanceLogger.formatResults(ants, iterationNumber);
+            }
             updateTrails();
             updateBest();
-            if (createResults) { performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, bestTour, successes); }
+            if (createResults) {
+                if (bestTour != null) {
+                    performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, bestTour.size(), successes);
+                }
+                else {
+                    performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, Double.POSITIVE_INFINITY, successes);
+                }
+            }
         }
-        System.out.println("Best tour length: " + bestTour.size());
-        System.out.println("Best tour order: " + bestTour.toString());
+        if (bestTour != null) {
+            System.out.println("Best tour length: " + bestTour.size());
+            System.out.println("Best tour order: " + bestTour.toString());
+        }
+        else {
+            System.out.println("Goal never found.");
+        }
         return bestTour;
     }
 
@@ -183,10 +338,15 @@ public class AntColonyOptimisation {
         for (Ant ant: ants) {
             ant.clear();
             ant.visitNode(homeNode);
-            ant.setGoalNode(goalNode);
+            ant.setHomeNode(homeNode);
             ant.setPheromoneImportance(pheromoneImportance);
         }
+        stoppedAnts.clear();
+        successes = 0;
         stepsTravelled = 0;
+        if (runningAsVisualSimulation) {
+            UIContents.updateAntCounts();
+        }
     }
 
     public void printAntCurrentLoc() {
@@ -197,15 +357,21 @@ public class AntColonyOptimisation {
 
     public void constructSolutions() {
         stepsTravelled = 0;
-        successes = 0;
-        stoppedAnts.clear();
-        while (stoppedAnts.size() != ants.size()) {
+        while (stoppedAnts.size() != ants.size() && !processCancelled && stepsTravelled <= maxSteps) {
             for (Ant ant: ants) {
+                while (processPaused) {
+                    try {
+                        Thread.sleep(200);
+                    } catch (InterruptedException e) {
+                        System.out.println("AntColonyOptimisation stopped while paused");
+                        processPaused = false;
+                    }
+                }
 
                 try {
                     if (!stoppedAnts.contains(ant)) {
                         ant.setColor(Color.BLUE);
-                        Node newNode = ant.selectNextNode(stepsTravelled, graph);
+                        Node newNode = ant.selectNextNode(stepsTravelled, graph, distancePriority);
                         ant.visitNode(newNode);
                         if (newNode == goalNode) {
                             ant.antType = AntType.SUCCESSFUL;
@@ -213,23 +379,27 @@ public class AntColonyOptimisation {
                             System.out.println("Goal node reached!");
                             stoppedAnts.add(ant);
                             ant.setColor(Color.GRAY);
+                            if (runningAsVisualSimulation) {
+                                UIContents.updateAntCounts();
+                            }
                         }
                     }
                 }
-
                 catch(RuntimeException e) {
                     ant.antType = AntType.UNSUCCESSFUL;
-                    System.out.println(e.getMessage());
                     stoppedAnts.add(ant);
                     ant.setColor(Color.GRAY);
+                    if (runningAsVisualSimulation) {
+                        UIContents.updateAntCounts();
+                    }
                 }
             }
 
-            if (runningAsVisualSimulation) {
+            if (runningAsVisualSimulation && !iterationSkipped) {
                 try {
                     Thread.sleep(Simulation.getAnimationDelay());
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    System.out.println("Sleep Interrupted");
                 }
             }
             stepsTravelled += 1;
@@ -237,11 +407,11 @@ public class AntColonyOptimisation {
     }
 
     private void updateTrails() {
-        for (Node node : globalVisited) {
+        for (Node node: globalVisited) {
             node.pheromoneCount *= pheromoneRetentionRate;
         }
-        for (Ant a : ants) {
-            if (a.trail.contains(a.goalNode)) {
+        for (Ant a: ants) {
+            if (a.trail.contains(goalNode)) {
                 double contribution = pheromonePerAnt / a.trail.size();
                 for (Node node : a.trail) {
                     node.pheromoneCount += contribution;
@@ -251,22 +421,36 @@ public class AntColonyOptimisation {
         }
     }
 
-    private void updateBest() {
-        if (bestTour == null) {
-            bestTour = ants.get(0).trail;
-            globalBestTour = bestTour;
+    private void clearTrails() {
+        for (Node node: trailNodes) {
+            node.pheromoneCount = 1;
         }
+        trailNodes.clear();
+    }
+
+    private void updateBest() {
         for (Ant ant: ants) {
-            if (ant.trail.size() == bestTour.size()) {
-                numberOfBests += 1;
-            }
-            if (ant.trail.size() < bestTour.size()) {
-                bestTour = ant.trail;
-                numberOfBests = 1;
-                if (bestTour.size() < globalBestTour.size()) {
+            if (ant.getAntType() == AntType.SUCCESSFUL) {
+                if (bestTour == null) {
+                    bestTour = ant.getTrail();
+                }
+                if (globalBestTour == null) {
                     globalBestTour = bestTour;
                 }
+                if (ant.trail.size() == bestTour.size()) {
+                    numberOfBests += 1;
+                }
+                if (ant.trail.size() < bestTour.size()) {
+                    bestTour = ant.trail;
+                    numberOfBests = 1;
+                    if (bestTour.size() < globalBestTour.size()) {
+                        globalBestTour = bestTour;
+                    }
+                }
             }
+        }
+        if (runningAsVisualSimulation) {
+            UIContents.updateBestTour();
         }
     }
 
@@ -281,6 +465,38 @@ public class AntColonyOptimisation {
 
     public int getIterationNumber() {
         return iterationNumber;
+    }
+
+    public int getMaxIterations() {
+        return maxIterations;
+    }
+
+    public int getAttemptNumber() {
+        return attemptNumber;
+    }
+
+    public int getMaxAttempts() {
+        return maxAttempts;
+    }
+
+    public int getNumberOfAnts() {
+        return numberOfAnts;
+    }
+
+    public int getSuccesses() {
+        return successes;
+    }
+
+    public HashSet<Ant> getStoppedAnts() {
+        return stoppedAnts;
+    }
+
+    public List<Node> getBestTour() {
+        return bestTour;
+    }
+
+    public List<Node> getGlobalBestTour() {
+        return globalBestTour;
     }
 
     public static void main(String[] args) throws IOException {
@@ -299,7 +515,8 @@ public class AntColonyOptimisation {
         myACO.setupAnts();
         System.out.println("Number of Ants: " + myACO.numberOfAnts);
         myACO.printAntCurrentLoc();
-        myACO.startOptimization(false);
+        myACO.setCreateResults(false);
+        myACO.startOptimisation();
         System.out.println("\n---------------\nFINAL ANT POSITIONS:\n");
         myACO.printAntCurrentLoc();
     }

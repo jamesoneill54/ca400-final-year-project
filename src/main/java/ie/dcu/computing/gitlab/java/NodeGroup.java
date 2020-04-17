@@ -12,20 +12,21 @@ public class NodeGroup {
     private int xBounds;
     private int yBounds;
 
-    NodeGroup(NodeType type, Node home, Node goal, Node[][] graph) {
+    public NodeGroup(NodeType type, Node home, Node goal, Node[][] graph) {
         this.nodeTypes = type;
         this.xBounds = graph[0].length;
         this.yBounds = graph.length;
         generateRandomNodeGroup(home, goal);
-        setNodesToType(graph);
     }
 
-    NodeGroup(NodeType type, int x, int y, int width, int height) {
+    public NodeGroup(NodeType type, int x, int y, int width, int height, Node[][] graph) {
         this.nodeTypes = type;
         this.x = x;
         this.y = y;
         this.width = width;
         this.height = height;
+        this.xBounds = graph[0].length;
+        this.yBounds = graph.length;
     }
 
     private void generateRandomNodeGroup(Node home, Node goal) {
@@ -49,7 +50,7 @@ public class NodeGroup {
         height = 1 + random.nextInt(yBounds / 3);
     }
 
-    private void setNodesToType(Node[][] graph) {
+    public void setNodesToType(Node[][] graph) {
         for (int row = y; row < y + height; row++) {
             for (int column = x; column < x + width; column++) {
                 graph[row][column].setNodeAsObstacle();
@@ -58,11 +59,12 @@ public class NodeGroup {
     }
 
     public boolean isValid(Node home, Node goal) {
+        boolean withinBounds = x + width < xBounds && y + height < yBounds;
         boolean xValidWithHome = home.getMatrixIndexX() < x || home.getMatrixIndexX() >= x + width;
         boolean yValidWithHome = home.getMatrixIndexY() < y || home.getMatrixIndexY() >= y + height;
         boolean xValidWithGoal = goal.getMatrixIndexX() < x || goal.getMatrixIndexX() >= x + width;
         boolean yValidWithGoal = goal.getMatrixIndexY() < y || goal.getMatrixIndexY() >= y + height;
-        return (xValidWithHome || yValidWithHome) && (xValidWithGoal || yValidWithGoal);
+        return withinBounds && (xValidWithHome || yValidWithHome) && (xValidWithGoal || yValidWithGoal);
     }
 
     public void drawGroup(Graphics graphics) {
@@ -76,5 +78,25 @@ public class NodeGroup {
     private void draw(Color groupColor, Graphics graphics) {
         graphics.setColor(groupColor);
         graphics.fillRect(x * Node.getSize(), y * Node.getSize(), width * Node.getSize(), height * Node.getSize());
+    }
+
+    public NodeType getNodeTypes() {
+        return nodeTypes;
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }
