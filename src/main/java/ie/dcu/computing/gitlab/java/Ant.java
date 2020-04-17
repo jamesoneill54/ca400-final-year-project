@@ -25,8 +25,8 @@ public class Ant {
     private Random random = new Random();
     protected double probabilities[];
 
-    protected double pheromoneImportance = 7;
-    protected double distancePriority = 0.0000000000000000000000000000000000000000000000001;
+    private double pheromoneImportance = 7;
+    private double distancePriority = 0.0000000000000000000000000001;
 
     public Ant(int tourSize) {
         this.trailSize = tourSize;
@@ -53,6 +53,7 @@ public class Ant {
         goalNode = node;
     }
 
+    public void setPheromoneImportance(double alpha) { pheromoneImportance = alpha; }
 
     protected void visitNode(Node node) {
         this.trail.add(node);

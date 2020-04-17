@@ -2,10 +2,14 @@ package ie.dcu.computing.gitlab.java;
 
 import java.awt.*;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.*;
 import java.util.List;
 
 public class AntColonyOptimisation {
+    private double pheromoneImportance = 7;
+    private double distancePriority = 0.0000000000000000000000000001;
+
     private double pheromoneRetentionRate = 0.2;
     private double pheromonePerAnt = 500;
     private double antPerNode = 0.3;
@@ -32,10 +36,15 @@ public class AntColonyOptimisation {
     private int numberOfBests = 0;
 
     public List<Node> bestTour;
+    public List<Node> globalBestTour;
+
+    private String RESULTS_FOLDER;
 
     protected PerformanceLogger performanceLogger;
 
     public AntColonyOptimisation(int w, int h, Integer numAnts) throws IOException {
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String ts = timestamp.toString().replace(" ", "-").replace(".", "_").replace(":", "_");
         graph = generateMatrixFromEnv(w, h);
         numberOfNodes = graph.length * graph[0].length;
 
@@ -49,8 +58,9 @@ public class AntColonyOptimisation {
         for (int antNumber = 0; antNumber < numberOfAnts; antNumber++) {
             ants.add(new Ant(numberOfNodes));
         }
+        System.out.print(ts);
 
-        performanceLogger = new PerformanceLogger("./res/results/results.txt");
+        RESULTS_FOLDER = "./res/results/" + ts;
     }
 
     public Node[][] generateMatrixFromEnv(int columns, int rows) {
@@ -137,25 +147,30 @@ public class AntColonyOptimisation {
         }
     }
 
-    public void startOptimization() {
-        performanceLogger.initialPrint(homeNode, goalNode, numberOfObstacles);
-        for (int attemptNum = 1; attemptNum < 2; attemptNum++) {
+    public void startOptimization(boolean createResults) throws IOException {
+        for (int attemptNum = 1; attemptNum < 4; attemptNum++) {
+            if (createResults) {
+                performanceLogger = new PerformanceLogger(RESULTS_FOLDER + "ATTEMPT" + attemptNum + ".json");
+                performanceLogger.initialPrint(attemptNum, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
+            }
             System.out.println("Attempt #" + attemptNum);
-            solve();
+            solve(createResults);
+            if (createResults) {
+                performanceLogger.finalPrint(globalBestTour);
+                performanceLogger.close();
+            }
         }
-        performanceLogger.finalPrint();
-        performanceLogger.close();
     }
 
-    public List<Node> solve() {
+    public List<Node> solve(boolean createResults) {
         setupAnts();
         for (iterationNumber = 1; iterationNumber < maxIterations; iterationNumber++) {
             setupAnts();
             constructSolutions();
-            performanceLogger.formatResults(ants, iterationNumber);
+            if (createResults) { performanceLogger.formatResults(ants, iterationNumber); }
             updateTrails();
             updateBest();
-            performanceLogger.formatResults(ants, iterationNumber, numberOfBests, bestTour, successes);
+            if (createResults) { performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, bestTour, successes); }
         }
         System.out.println("Best tour length: " + bestTour.size());
         System.out.println("Best tour order: " + bestTour.toString());
@@ -167,6 +182,7 @@ public class AntColonyOptimisation {
             ant.clear();
             ant.visitNode(homeNode);
             ant.setGoalNode(goalNode);
+            ant.setPheromoneImportance(pheromoneImportance);
         }
         stepsTravelled = 0;
     }
@@ -236,6 +252,7 @@ public class AntColonyOptimisation {
     private void updateBest() {
         if (bestTour == null) {
             bestTour = ants.get(0).trail;
+            globalBestTour = bestTour;
         }
         for (Ant ant: ants) {
             if (ant.trail.size() == bestTour.size()) {
@@ -244,6 +261,9 @@ public class AntColonyOptimisation {
             if (ant.trail.size() < bestTour.size()) {
                 bestTour = ant.trail;
                 numberOfBests = 1;
+                if (bestTour.size() < globalBestTour.size()) {
+                    globalBestTour = bestTour;
+                }
             }
         }
     }
@@ -277,7 +297,7 @@ public class AntColonyOptimisation {
         myACO.setupAnts();
         System.out.println("Number of Ants: " + myACO.numberOfAnts);
         myACO.printAntCurrentLoc();
-        myACO.startOptimization();
+        myACO.startOptimization(false);
         System.out.println("\n---------------\nFINAL ANT POSITIONS:\n");
         myACO.printAntCurrentLoc();
     }
