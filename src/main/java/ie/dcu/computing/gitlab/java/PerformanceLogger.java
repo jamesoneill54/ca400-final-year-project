@@ -1,7 +1,5 @@
 package ie.dcu.computing.gitlab.java;
 
-import javafx.scene.control.cell.ProgressBarTreeTableCell;
-
 import java.io.*;
 import java.sql.Timestamp;
 import java.util.HashMap;
