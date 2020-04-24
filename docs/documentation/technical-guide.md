@@ -17,7 +17,7 @@ ___
     - [Swarm Intelligence](#21-swarm-intelligence)
     - [Ant Colony Optimisation Algorithm Overview](#22-ant-colony-optimisation-algorithm-overview)
     - [Ant Colony Optimisation Algorithm Metaheuristic](#23-ant-colony-optimisation-algorithm-metaheuristic)
-        - [ConstrucAntSolutions](#231-constructantsolutions)
+        - [ConstructAntSolutions](#231-constructantsolutions)
         - [DaemonActions](#232-daemonactions)
         - [PheromoneUpdate](#233-pheromoneupdate)
     - [History of popular ACO Algorithms](#24-history-of-popular-aco-algorithms)
@@ -26,6 +26,8 @@ ___
         - [MAXMIN Ant System](#243-maxmin-ant-system)
     - [Adaptions to Ant Colony Optimisation Algorithm](#25-adaptions-to-ant-colony-optimisation-algorithm)
 3. [Design](#3-design)
+    - [Ant Colony Optimisation](#31-ant-colony-optimisation)
+    - [Visual Simulation](#32-visual-simulation)
 4. [Implementation](#4-implementation)
 5. [Sample Code](#5-sample-code)
 6. [Problems Solved](#6-problems-solved)
@@ -39,9 +41,9 @@ ___
 
 Our work on this project was inspired by previous explorations into genetic algorithms and the use of biomimicry in technology. 
 
-In the past, Ant Colony Optimisation (ACO) algorithms have been utilised to solve defined shortest route problems, most notably the Travelling Salesman problem. This has been relayed and reflected in real world applications such as the design of traffic systems. We wanted to adapt this use case and explore the capabilities of an Ant Colony Optimisation in an environment where not every destination had to be visited, but rather find the shortest path between two locations. This would require a deep understanding of previous ACO algorithms to see where changes could be made to optimise a new alorithm specific to this environmnet.
+In the past, Ant Colony Optimisation (ACO) algorithms have been utilised to solve defined shortest route problems, most notably the Travelling Salesman problem. This has been relayed and reflected in real world applications such as the design of traffic systems. We wanted to adapt this use case and explore the capabilities of an Ant Colony Optimisation in an environment where not every destination had to be visited, but rather find the shortest path between two locations. This would require a deep understanding of previous ACO algorithms to see where changes could be made to optimise a new algorithm specific to this environment.
 
-We were motivated by a real life ant colony's ability to use pheromones to find their food sources, and adapt their routes quickly when an obstacle would block their original route. We explored how to make our alorithm 'recalibrate' and create a new shortest path if an obstacle blocked the initial path.
+We were motivated by a real life ant colony's ability to use pheromones to find their food sources, and adapt their routes quickly when an obstacle would block their original route. We explored how to make our algorithm 'recalibrate' and create a new shortest path if an obstacle blocked the initial path.
 
 This project allowed us to gain a deeper understanding of the process behind developing a genetic optimisation algorithm -  a field we had an interest in. We put into practice the use of a defined test case where we knew what the optimum length was in order to test the quality of our algorithm. We researched previous probabilistic equations that such algorithms use to learn and choose paths to their benefit, what constants should be used in such equations and the values of these constants.
 
@@ -256,6 +258,42 @@ Using the Travelling Salesman Problem (TSP) as a reference for a typical Combina
 ___
 
 ## 3. Design
+
+Our main tasks from the beginning were to (i) create an algorithm that modelled an ant colony's path-finding abilities, and (ii) display how the algorithm works visually. These two tasks defined how the project would be designed, ie. in two parts; the Ant Colony Optimisation, and the Visual Simulation. 
+
+### Ant Colony Optimisation
+
+This part of the project was responsible for defining:
+- how the ants move around the given environment, 
+- how they leave scent trails on the environment, 
+- how they avoid obstacles. 
+
+Once all of these are defined, the ants would be able to find the goal from their starting position. 
+
+#### Moving Around the Given Environment
+
+In our project, unlike other path-finding algorithms, the ants have no prior knowledge of the environment they inhabit. The ants can only see their immediate surroundings, and the pheromone trails present in their immediate surroundings. Similar to simulated annealing, the ants have a certain probability that they will move in a random direction without considering the state of their immediate surroundings. This allows ants to find newer, possibly better paths. 
+
+If the probability of moving in a random direction is not satisfied, then the ant uses their immediate surroundings to determine which direction they will move in. The direction of the next move is influenced by two factors: 
+
+1. The ant's distance from its home, and
+2. The amount of pheromones that are present.
+
+If the ant is close to its home, then the direction that leads away from its home is more likely to be chosen. This prevents the ants from doing too much backtracking, and encourages further exploration of the environment. 
+
+If a direction contains a lot of pheromones, then that direction is more likely to be chosen by the ant. This allows ants to learn from other, successful ants. 
+
+In the beginning, there are no pheromones present in the environment, so the distance from the goal is the only influence on the ants' movement. It is only when there are successful ants that pheromone trails become a factor for choosing a direction. This causes the ants to move in a mostly random way for the first iteration of the algorithm. 
+
+#### Leaving Scent Trails (Pheromones) 
+
+Scent trails or pheromone trails are only present when there has been a successful ant; ie. an ant has reached the goal. Once an ant reaches the goal, the ant colony optimisation algorithm propagates pheromones along the trail of the successful ant. If an ant is unsuccessful in finding the goal by the end of the iteration, then no pheromones get distributed along its trail. 
+
+Each ant starts an iteration with the same number of pheromones, and once an ant reaches the goal, these pheromones get distributed evenly along the trail. This means that the longer the trail, the weaker the pheromones. This ensures that shorter trails receive higher amounts of pheromones, and as a result, are more preferred by subsequent ants. 
+
+#### Avoiding Obstacles 
+
+The obstacles represent an impasse in the environment. The ants are unable to pass through the obstacles, and this adds another layer of complexity to the simulation. This is where the random movements and pheromones really come into play. If no obstacles existed in the simulation, then ants would be able to find the shortest path to the goal with no issue, as it would just be a beeline from their home to the goal. 
 
 ___
 
