@@ -40,10 +40,11 @@ public class AntColonyOptimisation {
 
     private String RESULTS_FOLDER;
 
+    protected Timestamp timestamp;
     protected PerformanceLogger performanceLogger;
 
     public AntColonyOptimisation(int w, int h, Integer numAnts) throws IOException {
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        timestamp = new Timestamp(System.currentTimeMillis());
         String ts = timestamp.toString().replace(" ", "-").replace(".", "_").replace(":", "_");
         graph = generateMatrixFromEnv(w, h);
         numberOfNodes = graph.length * graph[0].length;
@@ -150,8 +151,9 @@ public class AntColonyOptimisation {
     public void startOptimization(boolean createResults) throws IOException {
         for (int attemptNum = 1; attemptNum < 4; attemptNum++) {
             if (createResults) {
-                performanceLogger = new PerformanceLogger(RESULTS_FOLDER + "ATTEMPT" + attemptNum + ".json");
-                performanceLogger.initialPrint(attemptNum, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
+                String fileName = RESULTS_FOLDER + "ATTEMPT" + attemptNum + ".json";
+                performanceLogger = new PerformanceLogger(fileName);
+                performanceLogger.initialPrint(timestamp, attemptNum, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
             }
             System.out.println("Attempt #" + attemptNum);
             solve(createResults);

@@ -1,8 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
+import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,50 +41,43 @@ public class PerformanceLogger {
 
     private void printAsJson(String string, String value, boolean last) {
         if (value.equals("[") || value.equals("{")) {
-            printWriter.println(indent + "\""+string+"\": "+ value);
-            indentSize += 1;
-            indent = new String(new char[indentSize]).replace("\0", "    ");
+            printWriter.print(" \""+string+"\": "+ value);
         }
         else if (value.equals("]") || value.equals("}")) {
-            indentSize -= 1;
-            indent = new String(new char[indentSize]).replace("\0", "    ");
-            printWriter.println(indent + "\""+string+"\": "+ value + ",");
+            printWriter.print(indent + "\""+string+"\": "+ value + ",");
         }
-        else if (last) { printWriter.println(indent + "\""+string+"\": \""+value+"\""); }
-        else { printWriter.println(indent + "\""+string+"\": \""+value+"\"," ); }
+        else if (last) { printWriter.print(" \""+string+"\": \""+value+"\""); }
+        else { printWriter.print(" \""+string+"\": \""+value+"\"," ); }
     }
 
     private void printAsJson(String string, int value, boolean last) {
-        if (last) { printWriter.println(indent + "\""+string+"\": " + value ); }
-        else { printWriter.println(indent + "\""+string+"\": "+ value + ","); }
+        if (last) { printWriter.print(" \""+string+"\": " + value ); }
+        else { printWriter.print(" \""+string+"\": "+ value + ","); }
     }
 
     private void printAsJson(String string, double value, boolean last) {
-        if (last) { printWriter.println(indent + "\""+string+"\": " + value ); }
-        else { printWriter.println(indent + "\""+string+"\": "+ value + ","); }
+        if (last) { printWriter.print(" \""+string+"\": " + value ); }
+        else { printWriter.print(" \""+string+"\": "+ value + ","); }
     }
 
     public void formatResults(List<Ant> ants, int iterationNum) {
-        printWriter.println(indent + "{");
+        printWriter.print("{ ");
         printAsJson("IterationNum", iterationNum, false);
         printAsJson("ants", "[", false);
         for (Ant ant : ants) {
-            printWriter.println(indent +  "{");
+            printWriter.print("{ ");
             printAsJson("Ant Number", ants.indexOf(ant), false);
             printAsJson("Successful/Unsuccessful", ant.antType.toString(), false);
             printAsJson("Trail length", ant.trail.size(), false);
             printAsJson("Trail", ant.trail.toString(), true);
             if (ants.indexOf(ant) == ants.size() - 1) {
-                printWriter.println(indent + "}");
-            } else { printWriter.println(indent + "},"); };
+                printWriter.print(indent + "} ");
+            } else { printWriter.print("}, "); };
         }
-        indentSize -= 1;
-        indent = new String(new char[indentSize]).replace("\0", "    ");
-        printWriter.println(indent + "],");
+        printWriter.print("], ");
     }
 
     public void formatResults(List<Ant> ants, int iterationNum, int maxIterations, int numberOfBests, List<Node> bestTrail, int successes) {
-        printWriter.println();
         printAsJson("BEST TRAIL LENGTH" , bestTrail.size(), false);
         setGlobalBestLength(bestTrail.size(), iterationNum);
         printAsJson("Number of ants with the best trail", numberOfBests, false);
@@ -98,46 +90,40 @@ public class PerformanceLogger {
         bestAntsPerIteration.put(iterationNum, iterBests);
         printAsJson("Number of successful ants", successes, false);
         printAsJson("Number of unsuccessful ants", (ants.size() - successes), true);
-        if (iterationNum == maxIterations - 1) { printWriter.println(indent + "}"); }
-        else { printWriter.println(indent + "},"); }
-        printWriter.println();
+        if (iterationNum == maxIterations - 1) { printWriter.print("} "); }
+        else { printWriter.print("}, "); }
     }
 
-    public void initialPrint(int attemptNum, Node homeNode, Node goalNode, int numberOfObstacles, double pheromoneImportance, double distancePriority) {
-        printWriter.println("{");
+    public void initialPrint(Timestamp timestamp, int attemptNum, Node homeNode, Node goalNode, int numberOfObstacles, double pheromoneImportance, double distancePriority) {
+        printWriter.println("{ \"index\" : { \"_index\" :  \"testresult\", \"_id\" : \"" + timestamp + "-" + attemptNum + "\" } }");
+        printWriter.print("{");
+        printWriter.print("\"timeStamp\" : \"" + timestamp + "\", ");
         printAsJson("AttemptNumber", attemptNum, false);
-        printWriter.println();
         printAsJson("HOME NODE", homeNode.toString(), false);
         printAsJson("GOAL NODE", goalNode.toString(), false);
         printAsJson("OPTIMUM LENGTH", optimumLength, false);
         printAsJson("OBSTACLES", numberOfObstacles, false);
         printAsJson("Pheromone Importance", pheromoneImportance, false);
         printAsJson("Distance Priority", distancePriority, false);
-        printWriter.println();
         printAsJson("Iterations", "[", false);
     }
 
     public void finalPrint(List<Node> globalBestTour) {
-        indentSize -= 1;
-        indent = new String(new char[indentSize]).replace("\0", "    ");
-        printWriter.println(indent + "],");
+        printWriter.print("], ");
         printAsJson("Best tour length",  globalBestLength, false);
         printAsJson("Best tour order: ", globalBestTour.toString(), false);
         printAsJson("Iteration when best reached: ", firstBestLength, false);
         printAsJson("Number of ants with the best trail per iteration:", "[", false);
         for (Map.Entry<Integer, Integer[]> entry : bestAntsPerIteration.entrySet()) {
             if (entry.getValue()[0] == globalBestLength) {
-                printWriter.print(indent + entry.getValue()[1]);
+                printWriter.print(" " + entry.getValue()[1]);
             } else {
-                printWriter.print(indent + 0);
+                printWriter.print(" " + 0);
             }
-            if (entry.getKey() == bestAntsPerIteration.entrySet().size()) { printWriter.print("\n"); }
-            else { printWriter.print(",\n"); }
+            if (entry.getKey() < bestAntsPerIteration.entrySet().size()) { printWriter.print(","); }
         }
-        indentSize -= 1;
-        indent = new String(new char[indentSize]).replace("\0", "    ");
-        printWriter.println(indent + "]");
-        printWriter.println("}");
+        printWriter.print(" ] ");
+        printWriter.print("}\n");
     }
 
     public void close() {
