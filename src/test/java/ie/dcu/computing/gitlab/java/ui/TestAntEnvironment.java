@@ -1,5 +1,7 @@
-package ie.dcu.computing.gitlab.java;
+package ie.dcu.computing.gitlab.java.ui;
 
+import ie.dcu.computing.gitlab.java.AntColonyOptimisation;
+import ie.dcu.computing.gitlab.java.ui.AntEnvironment;
 import org.junit.Assert;
 import org.junit.jupiter.api.*;
 
@@ -7,7 +9,8 @@ import java.awt.*;
 
 public class TestAntEnvironment {
 
-    AntEnvironment testAntEnvironment = new AntEnvironment(null, 6, 4);
+    AntColonyOptimisation acoAlgorithm = new AntColonyOptimisation(6, 4, 1);
+    AntEnvironment testAntEnvironment = new AntEnvironment(acoAlgorithm);
 
     @Test
     void testInitEnvironment() {

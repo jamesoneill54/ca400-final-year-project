@@ -9,9 +9,6 @@ public class TestNodeGroup {
 
     AntColonyOptimisation testACO = new AntColonyOptimisation(10, 10, 1);
 
-    public TestNodeGroup() throws IOException {
-    }
-
     @Test
     void initialiseRandomNodeGroupTest() {
         testACO.setHome(2, 2);
@@ -24,7 +21,7 @@ public class TestNodeGroup {
     void isValidTest() {
         testACO.setHome(2, 2);
         testACO.setGoal(4, 4);
-        NodeGroup testNodeGroup0 = new NodeGroup(NodeType.OBSTACLE, 2, 2, 1, 2);
+        NodeGroup testNodeGroup0 = new NodeGroup(NodeType.OBSTACLE, 2, 2, 1, 2, testACO.getGraph());
         Assert.assertFalse(testNodeGroup0.isValid(testACO.getHome(), testACO.getGoal()));
         testACO.setHome(3, 2);
         Assert.assertTrue(testNodeGroup0.isValid(testACO.getHome(), testACO.getGoal()));

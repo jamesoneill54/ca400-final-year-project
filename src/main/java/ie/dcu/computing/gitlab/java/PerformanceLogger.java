@@ -77,16 +77,18 @@ public class PerformanceLogger {
         printWriter.print("], ");
     }
 
-    public void formatResults(List<Ant> ants, int iterationNum, int maxIterations, int numberOfBests, List<Node> bestTrail, int successes) {
-        printAsJson("BEST TRAIL LENGTH" , bestTrail.size(), false);
-        setGlobalBestLength(bestTrail.size(), iterationNum);
+    public void formatResults(List<Ant> ants, int iterationNum, int maxIterations, int numberOfBests, double bestTrailSize, int successes) {
+        printAsJson("BEST TRAIL LENGTH" , bestTrailSize, false);
+        setGlobalBestLength((int) bestTrailSize, iterationNum);
         printAsJson("Number of ants with the best trail", numberOfBests, false);
-        if (bestTrail.size() < globalBestLength) {
+        if (bestTrailSize < globalBestLength) {
             firstBestLength = iterationNum;
         }
         Integer[] iterBests = new Integer[2];
-        iterBests[0] = bestTrail.size();
-        iterBests[1] = numberOfBests;
+        if (bestTrailSize != Double.POSITIVE_INFINITY) {
+            iterBests[0] = (int) bestTrailSize;
+            iterBests[1] = numberOfBests;
+        }
         bestAntsPerIteration.put(iterationNum, iterBests);
         printAsJson("Number of successful ants", successes, false);
         printAsJson("Number of unsuccessful ants", (ants.size() - successes), true);
@@ -109,13 +111,21 @@ public class PerformanceLogger {
     }
 
     public void finalPrint(List<Node> globalBestTour) {
-        printWriter.print("], ");
-        printAsJson("Best tour length",  globalBestLength, false);
-        printAsJson("Best tour order: ", globalBestTour.toString(), false);
-        printAsJson("Iteration when best reached: ", firstBestLength, false);
-        printAsJson("Number of ants with the best trail per iteration:", "[", false);
+        printWriter.println("],");
+        if (globalBestTour != null) {
+            printAsJson("Best tour length",  globalBestLength, false);
+            printAsJson("Best tour order: ", globalBestTour.toString(), false);
+            printAsJson("Iteration when best reached: ", firstBestLength, false);
+            printAsJson("Number of ants with the best trail per iteration:", "[", false);
+        }
+        else {
+            printAsJson("Best tour length",  "Not found", false);
+            printAsJson("Best tour order: ", "Not found", false);
+            printAsJson("Iteration when best reached: ", "Not found", false);
+            printAsJson("Number of ants with the best trail per iteration:", "[", false);
+        }
         for (Map.Entry<Integer, Integer[]> entry : bestAntsPerIteration.entrySet()) {
-            if (entry.getValue()[0] == globalBestLength) {
+            if (entry.getValue()[0] != null && entry.getValue()[0] == globalBestLength) {
                 printWriter.print(" " + entry.getValue()[1]);
             } else {
                 printWriter.print(" " + 0);

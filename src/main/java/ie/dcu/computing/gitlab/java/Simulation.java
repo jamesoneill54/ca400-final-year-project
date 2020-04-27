@@ -1,7 +1,13 @@
 package ie.dcu.computing.gitlab.java;
 
+import ie.dcu.computing.gitlab.java.ui.AntEnvironment;
+import ie.dcu.computing.gitlab.java.ui.UIContents;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 
 public class Simulation {
@@ -15,7 +21,8 @@ public class Simulation {
     private int environmentHeight;
     private int numberOfAnts;
     private int numberOfObstacles;
-    private JFrame simulationWindow;
+    private static JFrame simulationWindow;
+    private JPanel contentPanel;
 
     Simulation() throws IOException {
         // Menu displayed and asks user to set environmentWidth,
@@ -30,7 +37,7 @@ public class Simulation {
         Node.setSize(10);
         acoAlgorithm = new AntColonyOptimisation(environmentWidth, environmentHeight, numberOfAnts);
         acoAlgorithm.setRunningAsVisualSimulation(true);
-        antEnvironment = new AntEnvironment(acoAlgorithm, environmentWidth, environmentHeight);
+        antEnvironment = new AntEnvironment(acoAlgorithm);
     }
 
     public static void setAnimationDelay(int delay) {
@@ -41,42 +48,40 @@ public class Simulation {
         return animationDelay;
     }
 
-    public void start() throws IOException {
-        displaySimulationWindow();
-        acoAlgorithm.startOptimization(true);
-        antEnvironment.stopSimulation();
-        simulationWindow.dispose();
-    }
-
-    private void displaySimulationWindow() {
+    private void displaySimulationWindow() throws IOException {
         simulationWindow = new JFrame();
-        simulationWindow.getContentPane().add(antEnvironment);
-        simulationWindow.setResizable(false);
-        simulationWindow.setTitle("Ants");
+        simulationWindow.add(new UIContents(acoAlgorithm, antEnvironment));
+        simulationWindow.setResizable(true);
+        simulationWindow.setMinimumSize(new Dimension(250, 250));
+        simulationWindow.setTitle("ACO Simulation");
+        BufferedImage image = ImageIO.read(new File("./res/ui-icons/favicon-ant.png"));
+        simulationWindow.setIconImage(image);
         simulationWindow.setLocationRelativeTo(null);
         simulationWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        simulationWindow.pack();
         simulationWindow.setVisible(true);
+        simulationWindow.pack();
+        int width = (int) simulationWindow.getSize().getWidth();
+        int height = (int) simulationWindow.getSize().getHeight();
+        simulationWindow.setMinimumSize(new Dimension(width + 5, height + 5));
     }
 
-    public void setSimulationHome(int x, int y) {
-        acoAlgorithm.setHome(x, y);
+    public static void showDialog(String message) {
+        JOptionPane.showMessageDialog(simulationWindow, message, "Warning", JOptionPane.WARNING_MESSAGE);
     }
 
-    public void setSimulationGoal(int x, int y) {
-        acoAlgorithm.setGoal(x, y);
-    }
-
-    public void setNumberOfObstacles(int number) {
-        acoAlgorithm.setNumberOfObstacles(number);
-        acoAlgorithm.generateObstacles();
+    public static void updateWindowSize() {
+        int initialWidth = (int) simulationWindow.getSize().getWidth();
+        int initialHeight = (int) simulationWindow.getSize().getHeight();
+        simulationWindow.pack();
+        int width = (int) simulationWindow.getSize().getWidth();
+        int height = (int) simulationWindow.getSize().getHeight();
+        if (initialWidth != width || initialHeight != height) {
+            simulationWindow.setMinimumSize(new Dimension(width + 5, height + 5));
+        }
     }
 
     public static void main(String[] args) throws IOException {
         Simulation simulation = new Simulation();
-        simulation.setSimulationHome(20,20);
-        simulation.setSimulationGoal(35, 10);
-        simulation.setNumberOfObstacles(3);
-        simulation.start();
+        simulation.displaySimulationWindow();
     }
 }

@@ -1,5 +1,6 @@
-package ie.dcu.computing.gitlab.java;
+package ie.dcu.computing.gitlab.java.ui;
 
+import ie.dcu.computing.gitlab.java.ui.GroundPlane;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
