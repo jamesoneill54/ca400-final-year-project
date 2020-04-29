@@ -36,8 +36,7 @@ public class AntColonyOptimisation {
     private List<NodeGroup> obstacles = new ArrayList<>();
     private HashSet<Ant> stoppedAnts = new HashSet<>();
     private HashSet<Node> trailNodes = new HashSet<>();
-    private static Set<Node> globalVisited = new HashSet<Node>() {
-    };
+    private static Set<Node> globalVisited = new HashSet<>();
 
     private int stepsTravelled;
     private int maxSteps;
@@ -299,7 +298,7 @@ public class AntColonyOptimisation {
         iterationSkipped = true;
     }
 
-    public List<Node> solve() {
+    public void solve() {
         for (iterationNumber = 1; iterationNumber <= maxIterations; iterationNumber++) {
             iterationSkipped = false;
             if (processCancelled) {
@@ -331,7 +330,6 @@ public class AntColonyOptimisation {
         else {
             System.out.println("Goal never found.");
         }
-        return bestTour;
     }
 
     public void setupAnts() {
@@ -457,7 +455,6 @@ public class AntColonyOptimisation {
     public List<Ant> getAnts() {
         return ants;
     }
-
 
     public HashSet<Node> getTrailNodes() {
         return trailNodes;

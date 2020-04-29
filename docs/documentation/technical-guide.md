@@ -27,7 +27,10 @@ ___
     - [Adaptions to Ant Colony Optimisation Algorithm](#25-adaptions-to-ant-colony-optimisation-algorithm)
 3. [Design](#3-design)
     - [Ant Colony Optimisation](#31-ant-colony-optimisation)
-    - [Visual Simulation](#32-visual-simulation)
+        - [Moving Around The Given Environment](#311-moving-around-the-given-environment)
+        - [Leaving Scent Trails (Pheromones)](#312-leaving-scent-trails-pheromones)
+        - [Avoiding Obstacles](#313-avoiding-obstacles)
+    - [Visual Display of the Algorithm](#32-visual-display-of-the-algorithm)
 4. [Implementation](#4-implementation)
 5. [Sample Code](#5-sample-code)
 6. [Problems Solved](#6-problems-solved)
@@ -261,7 +264,7 @@ ___
 
 Our main tasks from the beginning were to (i) create an algorithm that modelled an ant colony's path-finding abilities, and (ii) display how the algorithm works visually. These two tasks defined how the project would be designed, ie. in two parts; the Ant Colony Optimisation, and the Visual Simulation. 
 
-### Ant Colony Optimisation
+### 3.1 Ant Colony Optimisation
 
 This part of the project was responsible for defining:
 - how the ants move around the given environment, 
@@ -270,7 +273,7 @@ This part of the project was responsible for defining:
 
 Once all of these are defined, the ants would be able to find the goal from their starting position. 
 
-#### Moving Around the Given Environment
+#### 3.1.1 Moving Around the Given Environment
 
 In our project, unlike other path-finding algorithms, the ants have no prior knowledge of the environment they inhabit. The ants can only see their immediate surroundings, and the pheromone trails present in their immediate surroundings. Similar to simulated annealing, the ants have a certain probability that they will move in a random direction without considering the state of their immediate surroundings. This allows ants to find newer, possibly better paths. 
 
@@ -285,19 +288,44 @@ If a direction contains a lot of pheromones, then that direction is more likely 
 
 In the beginning, there are no pheromones present in the environment, so the distance from the goal is the only influence on the ants' movement. It is only when there are successful ants that pheromone trails become a factor for choosing a direction. This causes the ants to move in a mostly random way for the first iteration of the algorithm. 
 
-#### Leaving Scent Trails (Pheromones) 
+#### 3.1.2 Leaving Scent Trails (Pheromones) 
 
 Scent trails or pheromone trails are only present when there has been a successful ant; ie. an ant has reached the goal. Once an ant reaches the goal, the ant colony optimisation algorithm propagates pheromones along the trail of the successful ant. If an ant is unsuccessful in finding the goal by the end of the iteration, then no pheromones get distributed along its trail. 
 
 Each ant starts an iteration with the same number of pheromones, and once an ant reaches the goal, these pheromones get distributed evenly along the trail. This means that the longer the trail, the weaker the pheromones. This ensures that shorter trails receive higher amounts of pheromones, and as a result, are more preferred by subsequent ants. 
 
-#### Avoiding Obstacles 
+#### 3.1.3 Avoiding Obstacles 
 
-The obstacles represent an impasse in the environment. The ants are unable to pass through the obstacles, and this adds another layer of complexity to the simulation. This is where the random movements and pheromones really come into play. If no obstacles existed in the simulation, then ants would be able to find the shortest path to the goal with no issue, as it would just be a beeline from their home to the goal. 
+The obstacles represent an impasse in the environment. The ants are unable to pass through the obstacles, and this adds another layer of complexity to the simulation. This is where the random movements and pheromones really come into play. If no obstacles existed in the simulation, then ants would be able to find the shortest path to the goal with no issue, as it would just be a beeline from their home to the goal. Instead, they must use random movement to find new paths, or use pheromone trails to guide them in the correct direction. 
+
+### 3.2 Visual Display of the Algorithm
+
+The second part of our project was to visually display the algorithm to the user. The visual display of the algorithm is broken down into the following features: 
+1. Display the environment,
+2. Display the ants' movements throughout the simulation,
+3. Allow the user to start, stop, pause, and skip an iteration, and
+4. Allow the user to specify various variables in the algorithm for the next time the simulation is run. 
+5. Allow the user to add obstacles to the environment. 
+
+These features are useful for understanding how the algorithm works, to test the algorithm, or to use the algorithm to find paths through a given environment. 
 
 ___
 
 ## 4. Implementation
+
+All of the source code for this project is written in [Java 8](https://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html). We thought that an object oriented design would be the best way to implement both the algorithm and the visual display, having classes for the environment, each ant, etc. Each component of the algorithm needs to hold state throughout the running of the algorithm, so an object oriented implementation seemed the best choice.  
+
+The implementation of our project follows the design, and is broken into two main components: 
+1. Ant Colony Optimisation
+2. Visual Display of the Algorithm
+
+### 4.1 Ant Colony Optimisation (ACO)
+
+The Ant Colony Optimisation (ACO) algorithm manages the movements of the ants on their journey from the home node, around the environment, and to the goal node. It manages their interactions with the environment, obstacles and scent trails, among many other things. 
+
+The composition of the ACO algorithm can be described using this class diagram:
+
+![Ant Colony Optimisation Class Diagram](res/technical-guide/aco-class-diagram.png)
 
 ___
 

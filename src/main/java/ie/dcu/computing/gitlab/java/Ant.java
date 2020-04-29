@@ -31,8 +31,6 @@ public class Ant {
         this.trailSize = tourSize;
         this.task = "searcher";
         this.color = Color.BLUE;
-        // X and Y should be equal to the anthill
-        // Need to derive X and Y from current node-type setup
         this.x = 0;
         this.y = 0;
 
@@ -68,7 +66,7 @@ public class Ant {
 
     protected Node selectNextNode(int currentIndex, Node[][] graph, int distancePriority) {
 
-        List<Node> possibleMoves = trail.get(currentIndex).getNeighbourNodes(graph, trail.get(currentIndex));
+        List<Node> possibleMoves = trail.get(currentIndex).getNeighbourNodes(graph);
         int randomIndex = random.nextInt(possibleMoves.size());
         if (random.nextDouble() < randomFactor) {
             // pick random node
