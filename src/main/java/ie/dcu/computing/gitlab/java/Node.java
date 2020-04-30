@@ -87,7 +87,7 @@ public class Node {
         System.out.print("(" + this.getX() + ", " + this.getY() + ")");
     }
 
-    public List<Node> getNeighbourNodes(Node[][] matrix, Node currentNode) {
+    public List<Node> getNeighbourNodes(Node[][] matrix) {
         List<Node> neighbours = new ArrayList<>();
         int startY = matrixIndexY - 1;
         int endY = matrixIndexY + 1;
@@ -98,7 +98,7 @@ public class Node {
             if (y >= 0 && y < matrix.length) {
                 for (int x = startX; x <= endX; x++) {
                     if (x >= 0 && x < matrix[y].length) {
-                        if (matrix[y][x] != currentNode && matrix[y][x].getNodeType() != NodeType.OBSTACLE) {
+                        if (matrix[y][x] != this && matrix[y][x].getNodeType() != NodeType.OBSTACLE) {
                             neighbours.add(matrix[y][x]);
                         }
                     }
