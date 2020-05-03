@@ -30,8 +30,15 @@ ___
         - [Moving Around The Given Environment](#311-moving-around-the-given-environment)
         - [Leaving Scent Trails (Pheromones)](#312-leaving-scent-trails-pheromones)
         - [Avoiding Obstacles](#313-avoiding-obstacles)
-    - [Visual Display of the Algorithm](#32-visual-display-of-the-algorithm)
+    - [Visual Display of the Algorithm (GUI)](#32-visual-display-of-the-algorithm-gui)
 4. [Implementation](#4-implementation)
+    - [Ant Colony Optimisation (ACO) Algorithm](#41-ant-colony-optimisation-aco-algorithm)
+        - [`AntColonyOptimisation` Class](#411-antcolonyoptimisation-class)
+        - [`Node` Class](#412-node-class)
+        - [`NodeGroup` Class](#413-nodegroup-class)
+        - [`Ant` Class](#414-ant-class)
+        - [`PerformanceLogger` Class](#415-performancelogger-class)
+    - [Visual Display of the Algorithm (GUI)](#42-visual-display-of-the-algorithm-gui)
 5. [Sample Code](#5-sample-code)
 6. [Problems Solved](#6-problems-solved)
 7. [Results](#7-results)
@@ -298,7 +305,7 @@ Each ant starts an iteration with the same number of pheromones, and once an ant
 
 The obstacles represent an impasse in the environment. The ants are unable to pass through the obstacles, and this adds another layer of complexity to the simulation. This is where the random movements and pheromones really come into play. If no obstacles existed in the simulation, then ants would be able to find the shortest path to the goal with no issue, as it would just be a beeline from their home to the goal. Instead, they must use random movement to find new paths, or use pheromone trails to guide them in the correct direction. 
 
-### 3.2 Visual Display of the Algorithm
+### 3.2 Visual Display of the Algorithm (GUI)
 
 The second part of our project was to visually display the algorithm to the user. The visual display of the algorithm is broken down into the following features: 
 1. Display the environment,
@@ -316,16 +323,82 @@ ___
 All of the source code for this project is written in [Java 8](https://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html). We thought that an object oriented design would be the best way to implement both the algorithm and the visual display, having classes for the environment, each ant, etc. Each component of the algorithm needs to hold state throughout the running of the algorithm, so an object oriented implementation seemed the best choice.  
 
 The implementation of our project follows the design, and is broken into two main components: 
-1. Ant Colony Optimisation
+1. Ant Colony Optimisation Algorithm
 2. Visual Display of the Algorithm
 
-### 4.1 Ant Colony Optimisation (ACO)
+### 4.1 Ant Colony Optimisation (ACO) Algorithm
 
 The Ant Colony Optimisation (ACO) algorithm manages the movements of the ants on their journey from the home node, around the environment, and to the goal node. It manages their interactions with the environment, obstacles and scent trails, among many other things. 
 
 The composition of the ACO algorithm can be described using this class diagram:
 
 ![Ant Colony Optimisation Class Diagram](res/technical-guide/aco-class-diagram.png)
+
+#### 4.1.1 `AntColonyOptimisation` Class
+
+The entirety of the path-finding algorithm is centred around the `AntColonyOptimisation` class, and this class controls and uses the other classes. The algorithm begins by calling `startOptimisation()`, but some initialisation takes place before that. The size, number of ants, home node, goal node and obstacles are all set either randomly or by the user. The environment is created using `generateMatrixFromEnv()`, obstacles are created using `updateObstacles()`, and ants are initialised using `setupAnts()`. The environment consists of a matrix of nodes defined by the `Node` class, and is [explained in more detail below.](#412-node-class) 
+
+After this initialisation, the algorithm is ready to start by calling `startOptimisation()`, as mentioned above. The running of the program is a set of attempts, which are in turn comprised of a number of iterations. The `startOptimisation()` method sets up the environment and the ants for the beginning of each attempt, and contains a `for` loop containing the `solve()` method which runs each attempt. 
+
+The `solve()` method is responsible for running each of the iterations, and setting up the ants for the beginning of each iteration. For each iteration, the `constructSolutions()` method is run, and it utilises the classes `Ant`, `Node` and `NodeGroup` in order to find the shortest path from the home to the goal. As mentioned in [section 3](#3-design), the `constructSolutions()` method calculates the next position for each of the ants in the simulation using (i) the distance from the home node, and (ii) the pheromones present on the nodes surrounding the current node. This process continues until all the ants either find the goal, reach the maximum number of steps that they can take, or run out of nodes to visit. 
+
+Once all the ants have stopped and the `constructSolutions()` method has ended, the pheromones of the ants are dropped onto all the successful ants' trails. All ants have the same amount of pheromones that it can distribute along its trail, and these pheromones are divided evenly among the nodes in the ant's trail. This means that the shorter the trail, the more pheromones are present on that trail, and thus the shorter trail will be more favourable to ants in the next iteration than a longer trail. 
+
+The ants are then reset, and the ants run again on the updated environment containing the pheromones of the successful ants from the previous iteration. 
+
+Between each iteration, each node's pheromones dissipate somewhat. This means that the nodes which are travelled on less often eventually lose all of their pheromones. Only nodes that are travelled on often manage to retain their pheromones, and thus are the only ones that influence the ants over a number of iterations. 
+
+#### 4.1.2 `Node` Class
+
+The `Node` class is responsible for storing information of the environment. As mentioned above, the environment consists of a matrix of instances of the `Node` class. Each instance of `Node` contains information about the current state of that part of the environment, and this information is used to calculate the movements of the ants during the running of the ACO algorithm. Using the `NodeType` enumeration, instances of `Node` can take multiple forms or types, and are treated differently by the algorithm depending on their type. The available types are `HOME`, `GOAL`, `STANDARD` and `OBSTACLE`, and these different types influence how the ants move in the environment. 
+
+During the `constructSolutions()` method of the `AntColonyOptimisation` class, the ants need to know what their neighbour nodes are in order to choose their next move. The `getNeighbourNodes` method is called on the node that the ant is standing on, and it returns all nodes surrounding the current node that are not of type `OBSTACLE`. So in actuality, the ants do not "avoid" the obstacles in the environment, they just aren't given them as an option to move onto. 
+
+The ants also make use of the `getDistanceValue()` method in the `Node` class, which returns the distance from the current node to the home node using the Manhattan Distance formula. This distance value is then used by the ant to choose the next node to move to, with lower distance values being preferred over higher distance values. For a 7x7 matrix of nodes with the home node in the centre, the distance values of the nodes are:
+
+![getDistanceValue method diagram](res/technical-guide/getDistanceValue-method-diagram.png)
+
+The `getDistanceValue()` method begins with the distance value being the number of nodes in the matrix (in this case it is a 7x7 matrix, so there are 49 nodes), and then it subtracts the Manhattan distance of the current node to the home node from the number of nodes in the matrix to give the distance value. 
+
+#### 4.1.3 `NodeGroup` Class
+
+Just like the `String` type is a collection of instances of `char` in Java, the `NodeGroup` is a collection of instances of `Node`. The exception is that each node in a `NodeGroup` is of the same type. This is how we implemented obstacles in our simulation, as they are a collection of instances of `Node` that are of the `NodeType` `OBSTACLE`.
+
+Grouping instances of `Node` together into one class makes it easier to manage these nodes, as multiple instances of `NodeGroup` can exist, and all the nodes contained in a `NodeGroup` instance can be changed at once if an obstacle is deleted or added. 
+
+When designing the `NodeGroup` class, we decided to make it universal for all node types. This way, if we were to continue our work on this project, we could expand the functionality to contain `NodeGroup` instances of type `GOAL` or `HOME` to further investigate the abilities of our algorithm. 
+
+#### 4.1.4 `Ant` Class
+
+The `Ant` class is responsible for containing the information about each ant in the simulation and for calculating the ant's movements. Each instance of `Ant` represents a single ant, and contains information like the ant's position on the environment, how many pheromones the ant has to spread over the environment, and the nodes that the ant has visited (the ant's trail). 
+
+The ant's movements are calculated using the `selectNextNode()` method. As mentioned before, the selection of the next node is influenced by the ant's distance from the home node, and the pheromones present on the nodes that are surrounding the node the ant is standing on. There is also a small probability that the ant will choose a random node. This is to make sure new routes are found instead of ants being solely influenced by the pheromones and the distance from the home node. 
+
+If the probability of choosing a random node is not fulfilled, then `calculateProbabilities()` method is called within the `selectNextNode()` method. `calculateProbabilites()` returns a list of values for the surrounding nodes. These values are balanced between the ant's distance from the home node, and the number of pheromones present on the nodes they are referring to. Each of these values represents the probability of the ant choosing each respective node surrounding it. The node with the highest value associated with it after running the `calculateProbabilities()` method is chosen as the next node for the ant to visit. 
+
+Once a node is chosen using the `selectNextNode()` method, the ant moves to that node using the `visitNode()` method, which updates the ant's position. 
+
+Each ant, like the nodes, has a type. These types are implemented using the Enumeration class `AntType`, and contains the types `SUCCESSFUL` and `UNSUCCESSFUL`. Each ant starts with the type `UNSUCCESSFUL`, and once an ant reaches the goal node, it's type is changed from `UNSUCCESSFUL` to `SUCCESSFUL`. This type is used by the `AntColonyOptimisation` class to choose which ant trails to drop pheromones onto. 
+
+#### 4.1.5 `PerformanceLogger` Class
+
+PerformanceLogger description.
+
+### 4.2 Visual Display of the Algorithm (GUI)
+
+The component of the project is responsible for displaying the algorithm's progress throughout the running of the algorithm. It queries the ACO algorithm at regular intervals and displays them to the user. The main components of the GUI are represented in the following class diagram: 
+
+![GUI class diagram](res/technical-guide/gui-class-diagram.png)
+
+The layout of the GUI is shown below, where the coloured boxes represent the different components found in the class diagram above. 
+
+![GUI Screenshot](res/technical-guide/gui-screenshot.png)
+
+- Red Box: The `AntEnvironment` panel
+- Green Box: The `RunnerControlPanel`
+- Blue Box: The `StatusPanel`
+- Pink Box: The `VariableControlPanel`
+- Brown Box: The `ObstaclePanel`
 
 ___
 

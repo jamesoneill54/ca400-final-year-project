@@ -82,14 +82,6 @@ public class RunnerControlPanel extends JPanel {
         pauseButton.setVisible(false);
     }
 
-    public void updateIterationNumber() {
-        statusPanel.updateIterationCount();
-    }
-
-    public void updateAttemptNumber() {
-        statusPanel.updateAttemptCount();
-    }
-
     public void finishSimulation() {
         pauseButton.setVisible(false);
         startButton.setVisible(true);

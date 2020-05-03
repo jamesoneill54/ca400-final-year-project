@@ -24,12 +24,7 @@ public class Simulation {
     private static JFrame simulationWindow;
     private JPanel contentPanel;
 
-    Simulation() throws IOException {
-        // Menu displayed and asks user to set environmentWidth,
-        // environmentHeight, and numberOfAnts.
-
-        // environmentWidth and environmentHeight refers to the number of nodes
-        // in the environment, not the screen size.
+    Simulation() {
         environmentWidth = 40;
         environmentHeight = 40;
         numberOfAnts = 20;
