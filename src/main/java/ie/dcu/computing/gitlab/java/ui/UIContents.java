@@ -38,11 +38,11 @@ public class UIContents extends JPanel {
     }
 
     public static void updateIterationNumber() {
-        runnerControlPanel.updateIterationNumber();
+        statusPanel.updateIterationCount();
     }
 
     public static void updateAttemptNumber() {
-        runnerControlPanel.updateAttemptNumber();
+        statusPanel.updateAttemptCount();
     }
 
     public static void updateAntCounts() {
