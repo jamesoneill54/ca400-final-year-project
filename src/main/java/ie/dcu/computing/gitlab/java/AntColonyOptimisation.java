@@ -202,7 +202,7 @@ public class AntColonyOptimisation {
     public void setNumberOfObstacles(int number) {
         this.numberOfObstacles = number;
     }
-
+    
     public List<NodeGroup> getObstacles() {
         return new ArrayList<>(obstacles);
     }
