@@ -2,7 +2,7 @@ package ie.dcu.computing.gitlab.java;
 
 import java.io.*;
 import java.sql.Timestamp;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +10,7 @@ import java.util.Map;
 public class PerformanceLogger {
     private PrintWriter printWriter;
     protected int firstBestLength = 0;
-    private HashMap<Integer, Integer[]> bestAntsPerIteration = new HashMap<>();
+    private LinkedHashMap<Integer, Integer[]> bestAntsPerIteration = new LinkedHashMap<>();
     protected int globalBestLength = 0;
     // Dummy value for optimumLength
     private int optimumLength = 10;
@@ -35,7 +35,12 @@ public class PerformanceLogger {
         if (bestCandidate < globalBestLength) {
             globalBestLength = bestCandidate;
             setFirstBestLength(iterationNumber);
-            bestAntsPerIteration.clear();
+            for (Map.Entry<Integer, Integer[]> entry : bestAntsPerIteration.entrySet()) {
+                Integer[] n = new Integer[2];
+                n[0] = entry.getKey();
+                n[1] = 0;
+                entry.setValue(n);
+            }
         }
     }
 
@@ -92,7 +97,7 @@ public class PerformanceLogger {
         bestAntsPerIteration.put(iterationNum, iterBests);
         printAsJson("Number of successful ants", successes, false);
         printAsJson("Number of unsuccessful ants", (ants.size() - successes), true);
-        if (iterationNum == maxIterations - 1) { printWriter.print("} "); }
+        if (iterationNum == maxIterations) { printWriter.print("} "); }
         else { printWriter.print("}, "); }
     }
 
@@ -111,7 +116,7 @@ public class PerformanceLogger {
     }
 
     public void finalPrint(List<Node> globalBestTour) {
-        printWriter.println("],");
+        printWriter.print("],");
         if (globalBestTour != null) {
             printAsJson("Best tour length",  globalBestLength, false);
             printAsJson("Best tour order: ", globalBestTour.toString(), false);
