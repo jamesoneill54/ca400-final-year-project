@@ -39,6 +39,7 @@ ___
         - [`Ant` Class](#414-ant-class)
         - [`PerformanceLogger` Class](#415-performancelogger-class)
     - [Visual Display of the Algorithm (GUI)](#42-visual-display-of-the-algorithm-gui)
+    - [Displaying Test Results using the Elastic Stack](#43-displaying-test-results-using-the-elastic-stack)
 5. [Sample Code](#5-sample-code)
 6. [Problems Solved](#6-problems-solved)
 7. [Results](#7-results)
@@ -382,7 +383,22 @@ Each ant, like the nodes, has a type. These types are implemented using the Enum
 
 #### 4.1.5 `PerformanceLogger` Class
 
-PerformanceLogger description.
+The `PerformanceLogger` class was created to gather necessary test data while an instance of `AntColonyOptimisation` is running, format this data and send it to a results file in `res\testresults`. This class makes use of the Java IO `FileWriter` and `PrintWriter` classes.
+
+An instance of `PerformanceLogger` is created upon each Attempt within an `AntColonyOptimisation`, and is passed a `filename` which is comprised of the timestamp of the Algorithm's initialisation and the current attempt number.
+
+When initialised, the `PerfomanceLogger` creates a `FileWriter` with the corresponding `fileName` (as well as setting the `append` argument to `true`) and a `printWriter` taking the `fileWriter` as its argument.
+
+The `PerformanceLogger` class has several methods dedicated to appending data to the `printWriter` at various stages in the ACO Algorithm lifecycle. Each one is passed a number of arguments from the `AntColonyOptimisation` class and arranges them into key: value pairs in a JSON format; designed to be read by the AWS Elasticsearch cluster we are using to aggregate our test data.
+
+The main method included in `PerformanceLogger` is an overloaded method `formatResults()`, which allows different arguments to be passed at each stage in any attempt.
+
+- The initialising `formatResults()` formats data upon initialisation of an `AntColonyOptimisation` instance, including the Attempt Number, Home node, Goal node and Obstacle Co-Ordinates, Pheromone Importance and Distance Priority. This also includes metadata for sending this data to elasticsearch
+- During each iteration, `formatResults()` is called with data specific to each ant throughout an iteration, its `SUCCESSFUL` or `UNSUCCESSFUL` type, its trail length and its trail
+- At the end of each iteration, `formatResults()` is called with an overview of all ants at the end of that iteration; the number of `SUCCESSFUL` or `UNSUCCESSFUL` ants, the iteration `bestTrail` and its length.
+- Once all iterations within an attempt have taken place, `formatResults()` is called with attempt-wide data, including the overall `globalBestTour`, the iteration at which this global best was reached as well as the number of ants which found this globalBestTour.
+
+Once the attempt is complete, the `close()` method is called from `ÀntColonyOptimisation`, and the `printWriter` within the `performanceLogger` instance is closed, with all the data formatted in the newly created JSON results file.
 
 ### 4.2 Visual Display of the Algorithm (GUI)
 
@@ -399,6 +415,22 @@ The layout of the GUI is shown below, where the coloured boxes represent the dif
 - Blue Box: The `StatusPanel`
 - Pink Box: The `VariableControlPanel`
 - Brown Box: The `ObstaclePanel`
+
+### 4.3 Displaying Test Results using the Elastic Stack
+
+We made use of the Elastic Stack for aggregating, displaying and analysing the data gathered while testing our algorithm, in particular the following tools;
+
+- An AWS Elasticsearch cluster to contain, search through and analyse our data
+- Kibana plugin to organise and visualise our data
+- Filebeat to automate the uploading of our results file to the AWS Elasticsearch cluster
+
+For more information on the elastic stack, visit their documentation [here](https://www.elastic.co/guide/index.html)
+
+Our process for working with this data was as follows:
+
+- Create a results file for every attempt using the `PerformanceLogger` class.
+- Configure a locally installed filebeat service to harvest the data from our `./res/results` folder. This would periodically scan this folder and look for any new JSON files present to send to our AWS Elasticsearch cluster.
+- Create  
 
 ___
 

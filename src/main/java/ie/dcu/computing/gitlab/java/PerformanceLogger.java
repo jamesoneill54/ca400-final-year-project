@@ -65,69 +65,103 @@ public class PerformanceLogger {
         else { printWriter.print(" \""+string+"\": "+ value + ","); }
     }
 
-    public void formatResults(List<Ant> ants, int iterationNum) {
-        printWriter.print("{ ");
-        printAsJson("IterationNum", iterationNum, false);
-        printAsJson("ants", "[", false);
-        for (Ant ant : ants) {
+    public void formatResults(String timestamp, int attemptNum, Node homeNode, Node goalNode, double pheromoneImportance, double distancePriority, List<NodeGroup> obstacles) {
+        /*
+        Initial format; run before start of attempt
+        */
+        printWriter.println("{ \"index\" : { \"_index\" :  \"testresult\", \"_id\" : \"" + timestamp + "-" + attemptNum + "\" } }");
+        printWriter.print("{");
+        printAsJson("Attempt_Number", attemptNum, false);
+        printAsJson("HOME_NODE", homeNode.toString(), false);
+        printAsJson("GOAL_NODE", goalNode.toString(), false);
+        printAsJson("Calculated_Optimum_Length", optimumLength, false);
+        printAsJson("Pheromone_Importance", pheromoneImportance, false);
+        printAsJson("Distance_Priority", distancePriority, false);
+        printAsJson("Number_of_Obstacles", obstacles.size(), false);
+        if (obstacles.size() > 0) {
+            formatObstacles(obstacles);
+        }
+        printAsJson("Iterations", "[", false);
+    }
+
+    public void formatObstacles(List<NodeGroup> obstacles) {
+        /*
+        Objects format; run before start of attempt
+        */
+        printAsJson("Obstacles", "[", false);
+        for (NodeGroup obstacle : obstacles) {
             printWriter.print("{ ");
-            printAsJson("Ant Number", ants.indexOf(ant), false);
-            printAsJson("Successful/Unsuccessful", ant.antType.toString(), false);
-            printAsJson("Trail length", ant.trail.size(), false);
-            printAsJson("Trail", ant.trail.toString(), true);
-            if (ants.indexOf(ant) == ants.size() - 1) {
-                printWriter.print(indent + "} ");
-            } else { printWriter.print("}, "); };
+            printAsJson("Obstacle_Number", obstacles.indexOf(obstacle), false);
+            printAsJson("Obstacle_X", obstacle.getX(), false);
+            printAsJson("Obstacle_Y", obstacle.getY(), false);
+            printAsJson("Obstacle_Width", obstacle.getWidth(), false);
+            printAsJson("Obstacle_Height", obstacle.getHeight(), true);
+            if (obstacles.indexOf(obstacle) == obstacles.size() - 1) {
+                printWriter.print("} ");
+            } else { printWriter.print("}, "); }
         }
         printWriter.print("], ");
     }
 
-    public void formatResults(List<Ant> ants, int iterationNum, int maxIterations, int numberOfBests, double bestTrailSize, int successes) {
-        printAsJson("BEST TRAIL LENGTH" , bestTrailSize, false);
-        setGlobalBestLength((int) bestTrailSize, iterationNum);
-        printAsJson("Number of ants with the best trail", numberOfBests, false);
-        if (bestTrailSize < globalBestLength) {
+    public void formatResults(List<Ant> ants, int iterationNum) {
+        /*
+        Ants format; run throughout each iteration
+        */
+        printWriter.print("{");
+        printAsJson("Iteration_Number", iterationNum, false);
+//        printAsJson("Ants", "[", false);
+//        for (Ant ant : ants) {
+//            printWriter.print("{ ");
+//            printAsJson("Ant_Number", ants.indexOf(ant), false);
+//            printAsJson("Ant_Status", ant.antType.toString(), false);
+//            printAsJson("Trail_Length", ant.trail.size(), false);
+//            printAsJson("Trail_Order", ant.trail.toString(), true);
+//            if (ants.indexOf(ant) == ants.size() - 1) {
+//                printWriter.print(indent + "} ");
+//            } else { printWriter.print("}, "); };
+//        }
+//        printWriter.print("], ");
+    }
+
+    public void formatResults(List<Ant> ants, int iterationNum, int maxIterations, int numberOfBests, List<Node> bestTrail, int successes) {
+        /*
+        Iteration format; run at end of an iteration
+        */
+        printAsJson("Iteration_Best_Trail_Order", bestTrail.toString(), false);
+        printAsJson("Iteration_Best_Trail_Size" , bestTrail.size(), false);
+        setGlobalBestLength((int) bestTrail.size(), iterationNum);
+        printAsJson("Number_Of_Best_Trails_Found", numberOfBests, false);
+        if (bestTrail.size() < globalBestLength) {
             firstBestLength = iterationNum;
         }
         Integer[] iterBests = new Integer[2];
-        if (bestTrailSize != Double.POSITIVE_INFINITY) {
-            iterBests[0] = (int) bestTrailSize;
+        if (bestTrail.size() != Double.POSITIVE_INFINITY) {
+            iterBests[0] = (int) bestTrail.size();
             iterBests[1] = numberOfBests;
         }
         bestAntsPerIteration.put(iterationNum, iterBests);
-        printAsJson("Number of successful ants", successes, false);
-        printAsJson("Number of unsuccessful ants", (ants.size() - successes), true);
+        printAsJson("Successful_Ants", successes, false);
+        printAsJson("Unsuccessful_Ants", (ants.size() - successes), true);
         if (iterationNum == maxIterations) { printWriter.print("} "); }
         else { printWriter.print("}, "); }
     }
 
-    public void initialPrint(Timestamp timestamp, int attemptNum, Node homeNode, Node goalNode, int numberOfObstacles, double pheromoneImportance, double distancePriority) {
-        printWriter.println("{ \"index\" : { \"_index\" :  \"testresult\", \"_id\" : \"" + timestamp + "-" + attemptNum + "\" } }");
-        printWriter.print("{");
-        printWriter.print("\"timeStamp\" : \"" + timestamp + "\", ");
-        printAsJson("AttemptNumber", attemptNum, false);
-        printAsJson("HOME NODE", homeNode.toString(), false);
-        printAsJson("GOAL NODE", goalNode.toString(), false);
-        printAsJson("OPTIMUM LENGTH", optimumLength, false);
-        printAsJson("OBSTACLES", numberOfObstacles, false);
-        printAsJson("Pheromone Importance", pheromoneImportance, false);
-        printAsJson("Distance Priority", distancePriority, false);
-        printAsJson("Iterations", "[", false);
-    }
-
-    public void finalPrint(List<Node> globalBestTour) {
+    public void formatResults(List<Node> globalBestTour) {
+        /*
+        Final format; run at end of an attempt, after last iteration complete
+        */
         printWriter.print("],");
         if (globalBestTour != null) {
-            printAsJson("Best tour length",  globalBestLength, false);
-            printAsJson("Best tour order: ", globalBestTour.toString(), false);
-            printAsJson("Iteration when best reached: ", firstBestLength, false);
-            printAsJson("Number of ants with the best trail per iteration:", "[", false);
+            printAsJson("Global_Best_Tour_Order: ", globalBestTour.toString(), false);
+            printAsJson("Global_Best_Tour_Length",  globalBestLength, false);
+            printAsJson("Iteration_When_Global_Best_Reached: ", firstBestLength, false);
+            printAsJson("Global_Best_Tours_Per_Iteration:", "[", false);
         }
         else {
-            printAsJson("Best tour length",  "Not found", false);
-            printAsJson("Best tour order: ", "Not found", false);
-            printAsJson("Iteration when best reached: ", "Not found", false);
-            printAsJson("Number of ants with the best trail per iteration:", "[", false);
+            printAsJson("Global_Best_Tour_Order: ", "Not found", false);
+            printAsJson("Global_Best_Tour_Length",  "Not found", false);
+            printAsJson("Iteration_When_Global_Best_Reached: ", "Not found", false);
+            printAsJson("Global_Best_Tours_Per_Iteration:", "[", false);
         }
         for (Map.Entry<Integer, Integer[]> entry : bestAntsPerIteration.entrySet()) {
             if (entry.getValue()[0] != null && entry.getValue()[0] == globalBestLength) {
@@ -137,7 +171,8 @@ public class PerformanceLogger {
             }
             if (entry.getKey() < bestAntsPerIteration.entrySet().size()) { printWriter.print(","); }
         }
-        printWriter.print(" ] ");
+        printWriter.print(" ], ");
+        printAsJson("Proximity_To_Calculated_Optimum", Math.abs(globalBestLength - optimumLength), true);
         printWriter.print("}\n");
     }
 

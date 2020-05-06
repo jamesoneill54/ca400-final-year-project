@@ -46,6 +46,7 @@ public class AntColonyOptimisation {
     public List<Node> bestTour;
     public List<Node> globalBestTour;
 
+    private String ts;
     private String RESULTS_FOLDER;
 
     protected Timestamp timestamp;
@@ -260,12 +261,12 @@ public class AntColonyOptimisation {
             if (createResults) {
                 String fileName = RESULTS_FOLDER + "ATTEMPT" + attemptNumber + ".json";
                 performanceLogger = new PerformanceLogger(fileName);
-                performanceLogger.initialPrint(timestamp, attemptNumber, homeNode, goalNode, numberOfObstacles, pheromoneImportance, distancePriority);
+                performanceLogger.formatResults(ts, attemptNumber, homeNode, goalNode, pheromoneImportance, distancePriority, obstacles);
             }
             System.out.println("Attempt #" + attemptNumber);
             solve();
             if (createResults) {
-                performanceLogger.finalPrint(globalBestTour);
+                performanceLogger.formatResults(globalBestTour);
                 performanceLogger.close();
             }
         }
@@ -316,10 +317,10 @@ public class AntColonyOptimisation {
             updateBest();
             if (createResults) {
                 if (bestTour != null) {
-                    performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, bestTour.size(), successes);
+                    performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, bestTour, successes);
                 }
                 else {
-                    performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, Double.POSITIVE_INFINITY, successes);
+                    performanceLogger.formatResults(ants, iterationNumber, maxIterations, numberOfBests, null, successes);
                 }
             }
         }
