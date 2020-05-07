@@ -137,7 +137,7 @@ public class Node {
 
     @Override
     public String toString() {
-        return "(" + nodeType + ", " + x + ", " + y + ")";
+        return "(" + this.getMatrixIndexX() + ", " + this.getMatrixIndexY() + ")";
     }
 
     private void draw(Graphics graphics, Color nodeColor) {
