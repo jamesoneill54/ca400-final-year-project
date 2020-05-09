@@ -1,7 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
 
 public class Node {
@@ -13,6 +13,9 @@ public class Node {
     private int matrixIndexY;
     private int x;
     private int y;
+    private ArrayList<Node> children;
+    private Node parent;
+    private LinkedHashSet<Node> descendants;
 
     protected double pheromoneCount;
 
@@ -24,6 +27,10 @@ public class Node {
         this.x = x * size;
         this.y = y * size;
         this.pheromoneCount = 1;
+        this.children = new ArrayList<>();
+        this.parent = null;
+        this.descendants = new LinkedHashSet<>();
+        this.descendants.add(this);
     }
 
     public int getMatrixIndexX() {
@@ -84,11 +91,11 @@ public class Node {
     }
 
     public void printNode() {
-        System.out.print("(" + this.getX() + ", " + this.getY() + ")");
+        System.out.print("(" + this.getMatrixIndexX() + ", " + this.getMatrixIndexY() + ")");
     }
 
     public List<Node> getNeighbourNodes(Node[][] matrix) {
-        List<Node> neighbours = new ArrayList<>();
+        List<Node> neighbours = new ArrayList<Node>(){};
         int startY = matrixIndexY - 1;
         int endY = matrixIndexY + 1;
         int startX = matrixIndexX - 1;
@@ -106,6 +113,26 @@ public class Node {
             }
         }
         return neighbours;
+    }
+
+    public void addChild(Node child) {
+        this.children.add(child);
+        child.parent = this;
+    }
+
+    public LinkedHashSet<Node> getDescendants(Node home) {
+        if (this == home) {
+            return this.descendants;
+        }
+        this.descendants.add(parent);
+        this.descendants.addAll(parent.getDescendants(home));
+        return this.descendants;
+    }
+
+    public void printDescendants() {
+        for (Node desc : this.descendants) {
+            desc.printNode();
+        }
     }
 
     public int getDistanceValue(Node homeNode) {
