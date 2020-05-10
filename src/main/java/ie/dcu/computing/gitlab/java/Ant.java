@@ -14,7 +14,7 @@ public class Ant {
     protected int y;
 
     protected int trailSize;
-    protected List<Node> trail = new ArrayList<>();
+    private List<Node> trail = new ArrayList<>();
     protected String task;
     protected Node homeNode;
 
@@ -43,7 +43,7 @@ public class Ant {
     // ACO
 
     protected List<Node> getTrail() {
-        return trail;
+        return new ArrayList<>(trail);
     }
 
     public void setHomeNode(Node node) {
@@ -76,7 +76,6 @@ public class Ant {
         ArrayList<Node> chosenNodes = new ArrayList<>();
         for (Node node: possibleMoves) {
             if (node.getNodeType() == NodeType.GOAL) {
-                System.out.println("goalNode is a neighbour, selecting that instead");
                 return node;
             }
 
