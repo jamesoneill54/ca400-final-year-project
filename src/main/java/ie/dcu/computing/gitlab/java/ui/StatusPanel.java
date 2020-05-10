@@ -89,10 +89,14 @@ public class StatusPanel extends JPanel {
     public void updateBestRouteLengths() {
         if (acoAlgorithm.getBestTour() != null) {
             bestRouteLength.setText(String.valueOf(acoAlgorithm.getBestTour().size()));
-            globalBestRouteLength.setText(String.valueOf(acoAlgorithm.getGlobalBestTour().size()));
         }
         else {
             bestRouteLength.setText("Not found");
+        }
+        if (acoAlgorithm.getGlobalBestTour() != null) {
+            globalBestRouteLength.setText(String.valueOf(acoAlgorithm.getGlobalBestTour().size()));
+        }
+        else {
             globalBestRouteLength.setText("Not found");
         }
     }
