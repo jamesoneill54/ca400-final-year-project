@@ -88,4 +88,25 @@ public class TestNode {
         Node testNode4 = matrix1[2][3];
         Assert.assertEquals(141, testNode4.getDistanceValue(homeNode));
     }
+
+    @Test
+    void descendancyTest() {
+        Node root = new Node(1, 1);
+        Node child1 = new Node (1, 2);
+        Node child2 = new Node (2, 2);
+        Node grandchild = new Node (2, 3);
+        Node greatGrandchild = new Node (3, 3);
+
+        root.addChild(child1);
+        root.addChild(child2);
+        child1.addChild(grandchild);
+        grandchild.addChild(greatGrandchild);
+
+        Assert.assertEquals(root.getDescendants(root).size(), 1);
+        Assert.assertEquals(child1.getDescendants(root).size(), 2);
+        Assert.assertEquals(grandchild.getDescendants(root).size(), 3);
+        Assert.assertEquals(greatGrandchild.getDescendants(root).size(), 4);
+        Assert.assertEquals(child2.getDescendants(root).size(), 2);
+        Assert.assertEquals(child2.getDescendants(child2).size(), 2);
+    }
 }
