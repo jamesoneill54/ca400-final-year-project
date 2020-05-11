@@ -44,7 +44,7 @@ public class Scenario {
     }
 
     private String generateScenarioID() {
-        String size = acoAlgorithm.getGraph().length + "*" + acoAlgorithm.getGraph()[0].length;
+        String size = acoAlgorithm.getGraph().length + "x" + acoAlgorithm.getGraph()[0].length;
         String obstacles = String.valueOf(acoAlgorithm.getObstacles().size());
         String home = "h" + acoAlgorithm.getHome().getMatrixIndexX() + "~" + acoAlgorithm.getHome().getMatrixIndexY();
         String goal = "g" + acoAlgorithm.getGoal().getMatrixIndexX() + "~" + acoAlgorithm.getGoal().getMatrixIndexY();
@@ -157,7 +157,7 @@ public class Scenario {
                         Scenario.HUGE_ENV,
                         new int[] {10, 35},
                         new int[] {60, 35},
-                        new int[][] {{25, 25, 20, 20}, {50, 25, 20, 20}})
+                        new int[][] {{25, 25, 20, 20}, {25, 50, 20, 19}})
         };
         for (Scenario scenario: scenarios) {
             scenario.runScenario();

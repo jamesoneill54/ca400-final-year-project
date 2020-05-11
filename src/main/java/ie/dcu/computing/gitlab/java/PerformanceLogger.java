@@ -3,6 +3,7 @@ package ie.dcu.computing.gitlab.java;
 import java.io.*;
 import java.sql.Timestamp;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -12,8 +13,6 @@ public class PerformanceLogger {
     protected int firstBestLength = 0;
     private LinkedHashMap<Integer, Integer[]> bestAntsPerIteration = new LinkedHashMap<>();
     protected int globalBestLength = 0;
-    // Dummy value for optimumLength
-    private int optimumLength = 10;
 
     private int indentSize = 1;
     private String indent = new String(new char[indentSize]).replace("\0", "    ");
@@ -74,7 +73,6 @@ public class PerformanceLogger {
         printAsJson("Attempt_Number", attemptNum, false);
         printAsJson("HOME_NODE", homeNode.toString(), false);
         printAsJson("GOAL_NODE", goalNode.toString(), false);
-        printAsJson("Calculated_Optimum_Length", optimumLength, false);
         printAsJson("Pheromone_Importance", pheromoneImportance, false);
         printAsJson("Distance_Priority", distancePriority, false);
         printAsJson("Number_of_Obstacles", obstacles.size(), false);
@@ -146,12 +144,14 @@ public class PerformanceLogger {
         else { printWriter.print("}, "); }
     }
 
-    public void formatResults(List<Node> globalBestTour) {
+    public void formatResults(LinkedHashSet<Node> precalculatedOptimumTour, List<Node> globalBestTour) {
         /*
         Final format; run at end of an attempt, after last iteration complete
         */
         printWriter.print("],");
         if (globalBestTour != null) {
+            printAsJson("Calculated_Optimum_Tour_Order", precalculatedOptimumTour.toString(), false);
+            printAsJson("Calculated_Optimum_Length", precalculatedOptimumTour.size(), false);
             printAsJson("Global_Best_Tour_Order: ", globalBestTour.toString(), false);
             printAsJson("Global_Best_Tour_Length",  globalBestLength, false);
             printAsJson("Iteration_When_Global_Best_Reached: ", firstBestLength, false);
@@ -172,7 +172,7 @@ public class PerformanceLogger {
             if (entry.getKey() < bestAntsPerIteration.entrySet().size()) { printWriter.print(","); }
         }
         printWriter.print(" ], ");
-        printAsJson("Proximity_To_Calculated_Optimum", Math.abs(globalBestLength - optimumLength), true);
+        printAsJson("Proximity_To_Calculated_Optimum", Math.abs(globalBestLength - precalculatedOptimumTour.size()), true);
         printWriter.print("}\n");
     }
 
