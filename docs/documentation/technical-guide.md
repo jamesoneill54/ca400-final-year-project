@@ -121,7 +121,7 @@ The **Travelling Salesman Problem** (TSP) is a well known example of a COP.
 - Each instantiated decision variable _X<sub>i</sub>_ = _v<sup>j</sup><sub>i</sub>_ is called a **solution component**, denoted by _c<sub>ij</sub>_. Set of all possible solution components is denoted by _C_.
 - The **construction graph** _G<sub>C</sub>(V,E)_ is defined by associating the components C either with the set of vertices _V_ or the set of edges _E_.
 - A **pheromone trail value** τ<sub>ij</sub> is associated with each solution component. Allows the probability distribution of different components of the solution to be modelled. Pheromone values are used and updated by the ACO algorithm during the search.
-- Ants typically move from vertex to vertex across edges of the construction graph exploiting info provided by the numerous **pheremone trails**, as well as depositing their own.  Δτ, or the **amount of pheromones** deposited depend on the quality of the solution found.
+- Ants typically move from vertex to vertex across edges of the construction graph exploiting info provided by the numerous **pheromone trails**, as well as depositing their own.  Δτ, or the **amount of pheromones** deposited depend on the quality of the solution found.
 
 The metaheuristic for an ACO algorithm is as follows:
 
@@ -142,9 +142,9 @@ The metaheuristic consists of an **initialisation** phase and three **activity**
     - A solution construction starts with an empty solution s<sup>p</sup> = ∅. 
     - At each construction step, current partial solution s<sup>p</sup> is extended by adding a feasible solution component from the set of feasible neighbours N(s<sup>p</sup>) ⊆ C.
 - The choice of a solution component from N(s<sup>p</sup>) is done **probabilistically** at each construction step. Below is Dorigo's method where,
-    - τ<sub>ij</sub> is the pheremone value associated with c<sub>ij</sub>
+    - τ<sub>ij</sub> is the pheromone value associated with c<sub>ij</sub>
     - η<sub>ij</sub> is the heuristic value associated with c<sub>ij</sub>
-    - α and β are positive real parameter whose values determine the _relative importance_ of pheremone vs heuristic info
+    - α and β are positive real parameter whose values determine the _relative importance_ of pheromone vs heuristic info
 
 ![Dorigo's equation for the ConstructAntSolutions action](./res/construct-ant-solutions-dorigo.PNG)
 
@@ -430,7 +430,7 @@ Our process for working with this data was as follows:
 
 - Create a results file for every attempt using the `PerformanceLogger` class.
 - Configure a locally installed filebeat service to harvest the data from our `./res/results` folder. This would periodically scan this folder and look for any new JSON files present to send to our AWS Elasticsearch cluster.
-- Create  
+- Arrange and display the results visually in a Kibana dashboard, a plugin allowing us to analyse the data gathered against each other in a concise way.
 
 ___
 
@@ -447,6 +447,43 @@ ___
 ___
 
 ## 8. Future Work
+
+Having undertaken this project, learning about the Ant Colony Optimisation Algorithm and it's ability in a non-exhaustive problem context, there are a few directions in which this work can be taken forward; both in future research and real world application.
+
+### 8.1 Further Research
+
+The work undertaken here aimed to introduce the ant colony optimisation algorithm to a new problem context - an open plain construction matrix with a single goal to be found rather than a fully connected matrix where each must be visited. This greatly expands the capabilities of the algorithm.
+
+However, for the purpose and scope of this project, the focus was primarily on the use of pheromone trails left by single ants and their impact on the colony as a whole over time. Impacts of the number of ants in a virtual colony and the influence of distance on the success rate of the optimisation algorithm were also studied here. Following on from the work in this project, more unexplored features of real life ant behaviour could be modelled and studied.
+
+In a real-life ant colony, the pheromones laid by each ant can have different 'scents' indicitave of that ant's immediate action or environment. The trails used by the virtual ants here served only positive reinforcement of a path to the goal, but it would be interesting to see what the adverse effect an unsuccessful ant's pheromone trail would have on the performance of the optimisation. These 'negative' trails could alert following ants of nearby obstacles or dead ends. If implementing this, it would be prudent to note that a 'baseline' pheromone value should be associated with each node, and the pheromone evaporation would either decrease back towards this baseline following its use in a positive trail (ie if it is above the baseline pheromone value), or increase towards this baseline should its current value be below due to inclusion in a negative pheromone trail.
+
+To get a more accurate and focused study of the optimisation capabilities of the Ant Colony Optimisation algorithm, the test envionments remained the same across all iterations in any given attempt. At the end of each attempt, the iteration at which the best tour was discovered (ie the 'speed' of the optimisation) was recorded, as well as the number of ants to find the best tour on each succeeding iteration (showing the accuracy and consistency of the optimisation). Evaluating these two properties of the ACO algorithm allows further research into another interesting problem; if an obstacle should be introduced blocking the original path to the goal, how long would it take the ant colony to find the next best route? This would rely heavily on the speed and accuracy of the ants, but it would be interesting to see if finding the new route would be quicker as a result of preexisting pheromone trails hinting at the general direction of the goal. This research would feed heavily into the Emergency Response application of this algorithm which is discussed below.
+
+An interesting investigation to pursue following on this project would be on the effect of multiple goal nodes on the behaviour of the ant colony. Having multiple goals of varying distance and direction from the home node would test the ants distribution, whether they balance themselves evenly between both goals or abandon the furthest goal in favour of the closer one which, inevitable, would produce a stronger pheromone trail per ant should the optimum route be found to both. The concept of weighted goals could also be introduced; inspired by the limited resources a piece of food in the real world would offer the colony. How long would it take for the ants to stop being influenced by trails to a goal no longer there? This would allow a lot more focus on the evaporation rate and its use in the `updatePheromones` stage in the ACO algorithm lifecycle. 
+
+### 8.2 Applications
+
+The use of a non-exhaustive search within this project aims to expand the capabilities of Ant Colony Optimisation algorithms and apply it to new real-world cases.
+
+#### Emergency Response
+
+In the past, Ant Colony Optimisation algorithms have been utilised when designing traffic systems. This is suited to the original algorithms as one optimum solution was all that was required. The algorithm and its context in this project have opened up the opportunity to explore the colony's ability to find alternative routes and react to potential environmental changes - not needing to explore its entire environment. One possible application of this new capability would be for route calculation in emergency response vehicles.
+
+Emergency Response teams rely on finding the fastest route to a point of crisis, in a time of crisis. The shortest path in terms of distance may not be the shortest route overall due to traffic or other road blockages. Using the algorithm and environment from this project, we could address this problem by inserting obstacles into the environment and having the virtual colony recalculate a new optimum, as described above in the Further Research section. The system in its highest level could function as follows
+
+- A road network/town plan can be modelled in the existing simulation as a combination of obstacles representing any non-navigable surfaces with the remaining tiles representing roads or accessible routes.
+- The system would receive inputs from sources identifying road closures, traffic congestion currently on specific routes, much like current navigation apps use when recalculating traffic routes.
+- These inputs would translate into the environment by adding obstacles where complete impasses occur or a reduced pheromone value associated with road nodes carring heavy traffic.
+- The ant colony optimisation algorithm could be run in this modelled environment, allowing for real-time introduction of new impasses or traffic statistics being accounted for when updating the pheromones or obstacles on any given iteration
+
+This Use Case is dependant on the effectiveness of the algorithm when responding to changes in environment, but would be very useful to quickly find alternatives on the fly when in need.
+
+#### Educational Resource
+
+The visual nature of this project would lend itself well to an educational tool to showcase the performance of an AntColonyOptimisation algorithm. The use of the variables panel within the `Simulation`, the visual representation of the algorithm and it's route strengths over time allows users to gain a real-time understanding of what values affect the ACO algorithm, and how this algorithm operates along its entire lifespan. The test results gathered can be informative to future study on the Ant Colony Optimisation algorithm and its ability to be adapted into a new context, while including research on previous implementations of the algorithm gives users a full insight into the history and original intentions for the virtual ant colony.
+
+The open plain matrix with a single goal approach would also be an effective environment to showcase the behaviour of algorithms such as A*, which thrive on similar shortest route problems.
 
 ___
 

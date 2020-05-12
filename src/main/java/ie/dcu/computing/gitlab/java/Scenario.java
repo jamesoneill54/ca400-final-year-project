@@ -157,7 +157,7 @@ public class Scenario {
                         Scenario.HUGE_ENV,
                         new int[] {10, 35},
                         new int[] {60, 35},
-                        new int[][] {{25, 25, 20, 20}, {25, 50, 20, 19}})
+                        new int[][] {{25, 25, 20, 20}, {25, 50, 20, 20}})
         };
         for (Scenario scenario: scenarios) {
             scenario.runScenario();
