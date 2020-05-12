@@ -81,34 +81,28 @@ public class PerformanceLogger {
         if (obstacles.size() > 0) {
             formatObstacles(obstacles);
         }
-        printAsJson("Iterations", "[", false);
+//        printAsJson("Iterations", "[", false);
     }
 
     public void formatObstacles(List<NodeGroup> obstacles) {
         /*
         Objects format; run before start of attempt
         */
-        printAsJson("Obstacles", "[", false);
         for (NodeGroup obstacle : obstacles) {
-            printWriter.print("{ ");
-            printAsJson("Obstacle_Number", obstacles.indexOf(obstacle), false);
-            printAsJson("Obstacle_X", obstacle.getX(), false);
-            printAsJson("Obstacle_Y", obstacle.getY(), false);
-            printAsJson("Obstacle_Width", obstacle.getWidth(), false);
-            printAsJson("Obstacle_Height", obstacle.getHeight(), true);
-            if (obstacles.indexOf(obstacle) == obstacles.size() - 1) {
-                printWriter.print("} ");
-            } else { printWriter.print("}, "); }
+            printAsJson("Obstacle_" + obstacles.indexOf(obstacle), "[", false);
+            printWriter.print((int)obstacle.getX() + ",");
+            printWriter.print((int)obstacle.getY() + ",");
+            printWriter.print((int)obstacle.getWidth() + ",");
+            printWriter.print((int)obstacle.getHeight());
+            printWriter.print(" ],");
         }
-        printWriter.print("], ");
     }
 
     public void formatResults(List<Ant> ants, int iterationNum) {
         /*
         Ants format; run throughout each iteration
         */
-        printWriter.print("{");
-        printAsJson("Iteration_Number", iterationNum, false);
+        printAsJson("Iteration_" + iterationNum, "[", false);
 //        printAsJson("Ants", "[", false);
 //        for (Ant ant : ants) {
 //            printWriter.print("{ ");
@@ -127,10 +121,13 @@ public class PerformanceLogger {
         /*
         Iteration format; run at end of an iteration
         */
-        printAsJson("Iteration_Best_Trail_Order", bestTrail.toString(), false);
-        printAsJson("Iteration_Best_Trail_Size" , bestTrail.size(), false);
+        printWriter.print((int)bestTrail.size() + ", ");
+        printWriter.print((int)successes + ", ");
+        printWriter.print((int)ants.size() - successes);
+//        printAsJson("Iteration_Best_Trail_Order", bestTrail.toString(), false);
+//        printAsJson("Iteration_Best_Trail_Size" , bestTrail.size(), false);
         setGlobalBestLength((int) bestTrail.size(), iterationNum);
-        printAsJson("Number_Of_Best_Trails_Found", numberOfBests, false);
+//        printAsJson("Number_Of_Best_Trails_Found", numberOfBests, false);
         if (bestTrail.size() < globalBestLength) {
             firstBestLength = iterationNum;
         }
@@ -140,17 +137,18 @@ public class PerformanceLogger {
             iterBests[1] = numberOfBests;
         }
         bestAntsPerIteration.put(iterationNum, iterBests);
-        printAsJson("Successful_Ants", successes, false);
-        printAsJson("Unsuccessful_Ants", (ants.size() - successes), true);
-        if (iterationNum == maxIterations) { printWriter.print("} "); }
-        else { printWriter.print("}, "); }
+//        printAsJson("Successful_Ants", successes, false);
+//        printAsJson("Unsuccessful_Ants", (ants.size() - successes), true);
+//        if (iterationNum == maxIterations) { printWriter.print("} "); }
+//        else { printWriter.print("}, "); }
+        printWriter.print("], ");
     }
 
     public void formatResults(List<Node> globalBestTour) {
         /*
         Final format; run at end of an attempt, after last iteration complete
         */
-        printWriter.print("],");
+//        printWriter.print("],");
         if (globalBestTour != null) {
             printAsJson("Global_Best_Tour_Order: ", globalBestTour.toString(), false);
             printAsJson("Global_Best_Tour_Length",  globalBestLength, false);
