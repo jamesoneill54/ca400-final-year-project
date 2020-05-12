@@ -17,7 +17,6 @@ public class BreadthFirstSearch {
     public LinkedHashSet<Node> solve() {
         visited.add(home);
         int i = 0;
-        System.out.println(visited);
         while(!visited.contains(goal)) {
             Node currNode = visited.get(i);
             List<Node> neighbs = currNode.getNeighbourNodes(graph);
@@ -27,12 +26,9 @@ public class BreadthFirstSearch {
                     visited.add(n);
                 }
             }
-            System.out.println("Iter" + i + ":" + visited);
             i ++;
         }
         goal.getDescendants(home);
-        System.out.println("Best route: " + goal.getDescendants(home).size());
-        goal.printDescendants();
         return goal.getDescendants(home);
     }
 }

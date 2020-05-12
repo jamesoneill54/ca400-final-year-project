@@ -45,6 +45,7 @@ public class AntColonyOptimisation {
 
     public List<Node> bestTour;
     public List<Node> globalBestTour;
+    public LinkedHashSet<Node> precalculatedOptimumTour;
 
     private String RESULTS_FOLDER = "./res/results/";
     private String runID;
@@ -238,7 +239,7 @@ public class AntColonyOptimisation {
     }
 
     private String createVariableID() {
-        return ants.size() + "-" + distancePriority + "-" + pheromoneImportance;
+        return ants.size() + "-" + distancePriority + "-" + (int)pheromoneImportance;
     }
 
     public void startOptimisation() throws IOException {
@@ -250,6 +251,8 @@ public class AntColonyOptimisation {
         for (NodeGroup obstacle: obstacles) {
             obstacle.setNodesToType(graph);
         }
+        BreadthFirstSearch bfs = new BreadthFirstSearch(this.getGraph(), this.getHome(), this.getGoal());
+        precalculatedOptimumTour = bfs.solve();
         if (maxSteps == 0) {
             maxSteps = (int) (numberOfNodes * 0.7);
         }
@@ -278,7 +281,7 @@ public class AntColonyOptimisation {
             }
             solve();
             if (createResults) {
-                performanceLogger.formatResults(globalBestTour);
+                performanceLogger.formatResults(precalculatedOptimumTour, globalBestTour);
                 performanceLogger.close();
             }
         }

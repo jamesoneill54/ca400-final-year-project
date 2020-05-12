@@ -73,4 +73,13 @@ public class TestBreadthFirstSearch {
         System.out.println("Best" + optTour.toString());
         Assert.assertEquals(optTour.size(), 16);
     }
+
+    @Test
+    void noObstTest3() {
+        env.setHome(5,3);
+        env.setGoal(1,1);
+        BreadthFirstSearch bfs = new BreadthFirstSearch(env.getGraph(), env.getHome(), env.getGoal());
+        LinkedHashSet<Node> optTour = bfs.solve();
+        Assert.assertEquals(optTour.size(), 5);
+    }
 }
