@@ -123,6 +123,9 @@ public class VariableControlPanel extends JPanel {
         addObstacleButton.addActionListener(event -> {
             obstaclePanel.addObstacle();
             obstaclePanel.updateObstacles();
+            if (obstaclePanel.getObstacles().size() <= 3) {
+                Simulation.updateWindowSize();
+            }
         });
         add(addObstacleButton, layoutConstraints);
         layoutConstraints.gridx = 0;

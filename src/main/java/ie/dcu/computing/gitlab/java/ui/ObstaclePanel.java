@@ -9,7 +9,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +67,10 @@ public class ObstaclePanel extends JScrollPane {
 
     public void addObstacle() {
         obstacles.add(new NodeGroup(NodeType.OBSTACLE, acoAlgorithm.getHome(), acoAlgorithm.getGoal(), acoAlgorithm.getGraph()));
+    }
+
+    public List<NodeGroup> getObstacles() {
+        return obstacles;
     }
 
     public void saveObstacles() {
