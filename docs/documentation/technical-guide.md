@@ -39,7 +39,15 @@ ___
         - [`Ant` Class](#414-ant-class)
         - [`PerformanceLogger` Class](#415-performancelogger-class)
     - [Visual Display of the Algorithm (GUI)](#42-visual-display-of-the-algorithm-gui)
-    - [Displaying Test Results using the Elastic Stack](#43-displaying-test-results-using-the-elastic-stack)
+        - [`AntEnvironment` Panel](#421-antenvironment-panel)
+        - [`RunnerControlPanel`](#422-runnercontrolpanel)
+        - [`StatusPanel`](#423-statuspanel)
+        - [`VariableControlPanel`](#424-variablecontrolpanel)
+        - [`ObstaclePanel`](#425-obstaclepanel)
+    - [Simulation & Scenarios](#43-simulation--scenarios)
+        - [`Simulation` Class](#431-simulation-class)
+        - [`Scenario` Class](#432-scenario-class)
+    - [Displaying Test Results using the Elastic Stack](#44-displaying-test-results-using-the-elastic-stack)
 5. [Sample Code](#5-sample-code)
 6. [Problems Solved](#6-problems-solved)
 7. [Results](#7-results)
@@ -323,9 +331,13 @@ ___
 
 All of the source code for this project is written in [Java 8](https://www.oracle.com/technetwork/java/javase/overview/java8-2100321.html). We thought that an object oriented design would be the best way to implement both the algorithm and the visual display, having classes for the environment, each ant, etc. Each component of the algorithm needs to hold state throughout the running of the algorithm, so an object oriented implementation seemed the best choice.  
 
-The implementation of our project follows the design, and is broken into two main components: 
+The implementation of our project follows and extends the design, with the two main components being included alongside the means of running the simulation and various scenarios, the means of testing the algorithm, gathering metrics on these tests, and displaying these metrics so that the optimum state of the variables in the `AntColonyOptimisation` algorithm can be found. 
+
+With these extensions to the design, the implementation of the project contains the following:
 1. Ant Colony Optimisation Algorithm
 2. Visual Display of the Algorithm
+3. Simulation & Scenarios
+4. Displaying Test Results using the Elastic Stack
 
 ### 4.1 Ant Colony Optimisation (ACO) Algorithm
 
@@ -402,7 +414,7 @@ Once the attempt is complete, the `close()` method is called from `ÀntColonyOpt
 
 ### 4.2 Visual Display of the Algorithm (GUI)
 
-The component of the project is responsible for displaying the algorithm's progress throughout the running of the algorithm. It queries the ACO algorithm at regular intervals and displays them to the user. The main components of the GUI are represented in the following class diagram: 
+This component of the project is responsible for displaying the algorithm's progress throughout the running of the algorithm. It queries the ACO algorithm at regular intervals and displays them to the user. The main components of the GUI are represented in the following class diagram: 
 
 ![GUI class diagram](res/technical-guide/gui-class-diagram.png)
 
@@ -416,7 +428,86 @@ The layout of the GUI is shown below, where the coloured boxes represent the dif
 - Pink Box: The `VariableControlPanel`
 - Brown Box: The `ObstaclePanel`
 
-### 4.3 Displaying Test Results using the Elastic Stack
+All of these panels are linked together in one window, which is controlled by the `UIContents` class. 
+
+#### 4.2.1 `AntEnvironment` panel
+
+This panel displays the workings of the `AntColonyOptimisation` class visually. It consists of nodes and the ants on those nodes. 
+
+**The Ants:**
+
+The ants in the environment are representative of instances of the `Ant` class, and are displayed on the environment as blue squares. They move around the given environment, with their movements dictated by the `AntColonyOptimisation` class. The `AntEnvironment` updates with each change to each ant's position. Once the ants reach the goal, they disappear from the visualisation as they have completed their task. If they run out of neighbours or run out of steps to take, their colour changes from blue to gray, and they stop moving. 
+
+**The Nodes:**
+
+The nodes/squares in the environment that the ants move over are representative of instances of the `Node` class. The different types that a node can be are also represented on the environment in the following ways: 
+
+- `NodeType.HOME`: Represents the home, where the ants start their journey, and is visually denoted on the environment as a red square. 
+- `NodeType.GOAL`: Represents the goal, which the ants need to reach, and is visually denoted on the environment as a magenta square.
+- `NodeType.OBSTACLE`: Represents obstacles on the environment, which the ants cannot pass through or stand on, and is visually denoted on the environment as a black square. 
+- `NodeType.STANDARD`: Represents a traversable area of the environment, which the ants use to reach the goal, and is visually denoted on the environment as a white square. Standard nodes also display their pheromone count visually by their shade of green. The more green a node is, the more pheromones are present on that node. 
+
+#### 4.2.2 `RunnerControlPanel` 
+
+This panel allows the user to control the running of the simulation. Using this panel, users can:
+ 
+- Start the simulation running. 
+- Stop the simulation. 
+- Pause the simulation.
+- Resume the simulation when it's paused. 
+- Fast-forward/skip to the next iteration. 
+ 
+ When the simulation is fast-forwarded, the ant colony optimisation algorithm still runs to the end of that iteration, it just removes the animation delay, so the algorithm can run at full speed. 
+
+#### 4.2.3 `StatusPanel`
+
+This panel contains all information on the current iteration of the ant colony optimisation algorithm, including:
+
+- Simulation status.
+- Iteration number.
+- Attempt number.
+- Number of ants currently alive in the simulation.
+- Number of successful ants.
+- Number of unsuccessful ants.
+- The best route found in the current iteration. 
+- The overall best route found across all iterations and attempts. 
+
+#### 4.2.4 `VariableControlPanel`
+
+This panel allows the user to change the values of specific variables that affect the running of the algorithm. These variables are:
+
+- Environment width.
+- Environment height.
+- Number of ants.
+- Pheromone importance.
+- Distance priority.
+- Home node X and Y coordinates.
+- Goal node X and Y coordinates.
+- Number of obstacles, each obstacle's X and Y coordinates, width, and height. 
+
+This panel allows different values of variables to be tested, and allows the user to see how each variable changes the working of the algorithm. It also helped us when fine-tuning the algorithm, and allowed us to construct test environments for extensive variable testing. 
+
+The user must click the "Save" button at the bottom of the `VariableControlPanel` in order for the changes they made to the variables to be applied in the next running of the ant colony optimisation algorithm. 
+
+#### 4.2.5 `ObstaclePanel`
+
+This panel is a sub-panel of the `VariableControlPanel`, and allows the user to specify specific coordinates of obstacles along with their widths and heights. When obstacles are added, they are assigned a random X, Y, width and height that are not overlapping the home and goal nodes. The user can then use the `ObstaclePanel` to assign new values to each added obstacle, or remove obstacles as they please. 
+
+### 4.3 Simulation & Scenarios
+
+This section of the project was concerned with running our ant colony optimisation algorithm in different ways, which took the form of the `Simulation` and `Scenario` classes. 
+
+#### 4.3.1 `Simulation` Class
+
+This class is responsible for instantiating and linking both the `AntColonyOptimisation` and the visual display of the `AntColonyOptimisation`. It sets all initial values in the `AntColonyOptimisation` class, although many of these can be changed by the user in the visual display. 
+
+#### 4.3.2 `Scenario` Class
+
+This class is responsible for the testing of the entire `AntColonyOptimsation` and allows extensive running of the algorithm across many environments, with the environment variables varying between each running of the algorithm. This allows us to gather extensive metrics to examine how the algorithm runs as a whole, and to find out the optimum values of the variables that influence the running of the algorithm. 
+
+For each instance of the `Scenario` class, the `runScenario()` method runs the given environment 125 times while varying the pheromone importance, distance priority and number of ants for each run. The results from each run is collected, and each run's results is stored in its own results file in json format, which can then be easily managed. 
+
+### 4.4 Displaying Test Results using the Elastic Stack
 
 We made use of the Elastic Stack for aggregating, displaying and analysing the data gathered while testing our algorithm, in particular the following tools;
 
@@ -458,7 +549,7 @@ However, for the purpose and scope of this project, the focus was primarily on t
 
 In a real-life ant colony, the pheromones laid by each ant can have different 'scents' indicitave of that ant's immediate action or environment. The trails used by the virtual ants here served only positive reinforcement of a path to the goal, but it would be interesting to see what the adverse effect an unsuccessful ant's pheromone trail would have on the performance of the optimisation. These 'negative' trails could alert following ants of nearby obstacles or dead ends. If implementing this, it would be prudent to note that a 'baseline' pheromone value should be associated with each node, and the pheromone evaporation would either decrease back towards this baseline following its use in a positive trail (ie if it is above the baseline pheromone value), or increase towards this baseline should its current value be below due to inclusion in a negative pheromone trail.
 
-To get a more accurate and focused study of the optimisation capabilities of the Ant Colony Optimisation algorithm, the test envionments remained the same across all iterations in any given attempt. At the end of each attempt, the iteration at which the best tour was discovered (ie the 'speed' of the optimisation) was recorded, as well as the number of ants to find the best tour on each succeeding iteration (showing the accuracy and consistency of the optimisation). Evaluating these two properties of the ACO algorithm allows further research into another interesting problem; if an obstacle should be introduced blocking the original path to the goal, how long would it take the ant colony to find the next best route? This would rely heavily on the speed and accuracy of the ants, but it would be interesting to see if finding the new route would be quicker as a result of preexisting pheromone trails hinting at the general direction of the goal. This research would feed heavily into the Emergency Response application of this algorithm which is discussed below.
+To get a more accurate and focused study of the optimisation capabilities of the Ant Colony Optimisation algorithm, the test environments remained the same across all iterations in any given attempt. At the end of each attempt, the iteration at which the best tour was discovered (ie the 'speed' of the optimisation) was recorded, as well as the number of ants to find the best tour on each succeeding iteration (showing the accuracy and consistency of the optimisation). Evaluating these two properties of the ACO algorithm allows further research into another interesting problem; if an obstacle should be introduced blocking the original path to the goal, how long would it take the ant colony to find the next best route? This would rely heavily on the speed and accuracy of the ants, but it would be interesting to see if finding the new route would be quicker as a result of preexisting pheromone trails hinting at the general direction of the goal. This research would feed heavily into the Emergency Response application of this algorithm which is discussed below.
 
 An interesting investigation to pursue following on this project would be on the effect of multiple goal nodes on the behaviour of the ant colony. Having multiple goals of varying distance and direction from the home node would test the ants distribution, whether they balance themselves evenly between both goals or abandon the furthest goal in favour of the closer one which, inevitable, would produce a stronger pheromone trail per ant should the optimum route be found to both. The concept of weighted goals could also be introduced; inspired by the limited resources a piece of food in the real world would offer the colony. How long would it take for the ants to stop being influenced by trails to a goal no longer there? This would allow a lot more focus on the evaporation rate and its use in the `updatePheromones` stage in the ACO algorithm lifecycle. 
 
