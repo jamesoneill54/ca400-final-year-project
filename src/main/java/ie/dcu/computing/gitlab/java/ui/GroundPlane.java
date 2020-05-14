@@ -28,14 +28,17 @@ public class GroundPlane {
         groundImage.flush();
         groundImage.getGraphics().setColor(Color.WHITE);
         groundImage.getGraphics().fillRect(0, 0, width, height);
-        acoAlgorithm.getHome().drawNode(groundImage.getGraphics());
-        acoAlgorithm.getGoal().drawNode(groundImage.getGraphics());
         for (NodeGroup obstacle: acoAlgorithm.getObstacles()) {
             obstacle.drawGroup(groundImage.getGraphics());
         }
         for (Node node: acoAlgorithm.getTrailNodes()) {
             node.drawNode(groundImage.getGraphics());
         }
+        for (Node node: acoAlgorithm.getPrecalculatedOptimumTour()) {
+            node.drawNode(groundImage.getGraphics());
+        }
+        acoAlgorithm.getHome().drawNode(groundImage.getGraphics());
+        acoAlgorithm.getGoal().drawNode(groundImage.getGraphics());
     }
 
     public BufferedImage getPlane() {

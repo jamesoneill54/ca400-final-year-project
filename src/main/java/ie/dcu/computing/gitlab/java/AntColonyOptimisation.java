@@ -1,6 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
 import ie.dcu.computing.gitlab.java.ui.UIContents;
+import ie.dcu.computing.gitlab.java.ui.UILabel;
 
 import java.awt.*;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class AntColonyOptimisation {
 
     public List<Node> bestTour;
     public List<Node> globalBestTour;
-    public LinkedHashSet<Node> precalculatedOptimumTour;
+    public LinkedHashSet<Node> precalculatedOptimumTour = new LinkedHashSet<>();
 
     private String RESULTS_FOLDER = "./res/results/";
     private String runID;
@@ -207,6 +208,10 @@ public class AntColonyOptimisation {
         obstacles = newObstacles;
     }
 
+    public LinkedHashSet<Node> getPrecalculatedOptimumTour() {
+        return precalculatedOptimumTour;
+    }
+
     public void setCreateResults(boolean createResults) {
         this.createResults = createResults;
     }
@@ -253,6 +258,12 @@ public class AntColonyOptimisation {
         }
         BreadthFirstSearch bfs = new BreadthFirstSearch(this.getGraph(), this.getHome(), this.getGoal());
         precalculatedOptimumTour = bfs.solve();
+        for (Node node: precalculatedOptimumTour) {
+            node.setAsPartOfOptimal();
+        }
+        if (runningAsVisualSimulation) {
+            UIContents.updateOptimumTourLength();
+        }
         if (maxSteps == 0) {
             maxSteps = (int) (numberOfNodes * 0.7);
         }

@@ -24,6 +24,7 @@ public class RunnerControlPanel extends JPanel {
             if (simulationRunner == null) {
                 simulationRunner = new SimulationRunner(this, acoAlgorithm, antEnvironment);
                 simulationRunner.execute();
+                antEnvironment.setOptimumTrailDisplayed(false);
             }
             else {
                 simulationRunner.resume();

@@ -23,6 +23,7 @@ public class TestStatusPanel {
         Assert.assertEquals("0/0", statusPanel.getUnsuccessfulAntsCount().getText());
         Assert.assertEquals("Not found", statusPanel.getBestRouteLength().getText());
         Assert.assertEquals("Not found", statusPanel.getGlobalBestRouteLength().getText());
+        Assert.assertEquals("Not found", statusPanel.getOptimumTrailLength().getText());
     }
 
     @Test
@@ -121,5 +122,19 @@ public class TestStatusPanel {
         statusPanel.updateBestRouteLengths();
         Assert.assertEquals("2", statusPanel.getBestRouteLength().getText());
         Assert.assertEquals("2", statusPanel.getGlobalBestRouteLength().getText());
+    }
+
+    @Test
+    void updateOptimumTourLengthTest() throws IOException {
+        StatusPanel statusPanel = new StatusPanel(acoAlgorithm);
+
+        Assert.assertEquals("Not found", statusPanel.getOptimumTrailLength().getText());
+
+        acoAlgorithm.setGoal(0, 1);
+        acoAlgorithm.setHome(0, 0);
+        acoAlgorithm.setCreateResults(false);
+        acoAlgorithm.startOptimisation();
+        statusPanel.updateOptimumTourLength();
+        Assert.assertEquals("2", statusPanel.getOptimumTrailLength().getText());
     }
 }
