@@ -16,6 +16,7 @@ public class StatusPanel extends JPanel {
     private final UILabel unsuccessfulAntsCount;
     private final UILabel bestRouteLength;
     private final UILabel globalBestRouteLength;
+    private final UILabel optimumTrailLength;
 
     StatusPanel(AntColonyOptimisation acoAlgorithm) {
         this.acoAlgorithm = acoAlgorithm;
@@ -27,8 +28,10 @@ public class StatusPanel extends JPanel {
         unsuccessfulAntsCount = new UILabel("0/0", "status");
         bestRouteLength = new UILabel("Not found", "status");
         globalBestRouteLength = new UILabel("Not found", "status");
-        UILabel[] statuses = {status, iterationCount, attemptCount, aliveAntsCount,
-                successfulAntsCount, unsuccessfulAntsCount, bestRouteLength, globalBestRouteLength};
+        optimumTrailLength = new UILabel("Not found", "status");
+        UILabel[] statuses = {status, iterationCount, attemptCount,
+                aliveAntsCount, successfulAntsCount, unsuccessfulAntsCount,
+                bestRouteLength, globalBestRouteLength, optimumTrailLength};
         UILabel statusLabel = new UILabel("Status:", "identifier");
         UILabel iterationLabel = new UILabel("Iteration:", "identifier");
         UILabel attemptLabel = new UILabel("Attempt:", "identifier");
@@ -37,8 +40,10 @@ public class StatusPanel extends JPanel {
         UILabel unsuccessfulAntsLabel = new UILabel("Unsuccessful Ants:", "identifier");
         UILabel bestRouteLengthLabel = new UILabel("Iteration Best Route:", "identifier");
         UILabel globalBestRouteLengthLabel = new UILabel("Overall Best Route:", "identifier");
-        UILabel[] statusIdentifiers = {statusLabel, iterationLabel, attemptLabel, aliveAntsLabel,
-                successfulAntsLabel, unsuccessfulAntsLabel, bestRouteLengthLabel, globalBestRouteLengthLabel};
+        UILabel optimumTrailLengthLabel = new UILabel("Optimum Trail Length:", "identifier");
+        UILabel[] statusIdentifiers = {statusLabel, iterationLabel, attemptLabel,
+                aliveAntsLabel, successfulAntsLabel, unsuccessfulAntsLabel,
+                bestRouteLengthLabel, globalBestRouteLengthLabel, optimumTrailLengthLabel};
 
         populatePanel(statusIdentifiers, statuses);
     }
@@ -84,6 +89,15 @@ public class StatusPanel extends JPanel {
         aliveAntsCount.setText((acoAlgorithm.getNumberOfAnts() - acoAlgorithm.getStoppedAnts().size()) + "/" + acoAlgorithm.getNumberOfAnts());
         successfulAntsCount.setText(acoAlgorithm.getSuccesses() + "/" + acoAlgorithm.getNumberOfAnts());
         unsuccessfulAntsCount.setText((acoAlgorithm.getStoppedAnts().size() - acoAlgorithm.getSuccesses()) + "/" + acoAlgorithm.getNumberOfAnts());
+    }
+
+    public void updateOptimumTourLength() {
+        if (acoAlgorithm.getPrecalculatedOptimumTour().size() > 0) {
+            optimumTrailLength.setText(String.valueOf(acoAlgorithm.getPrecalculatedOptimumTour().size()));
+        }
+        else {
+            optimumTrailLength.setText("Not found");
+        }
     }
 
     public void updateBestRouteLengths() {
@@ -144,5 +158,9 @@ public class StatusPanel extends JPanel {
 
     public UILabel getGlobalBestRouteLength() {
         return globalBestRouteLength;
+    }
+
+    public UILabel getOptimumTrailLength() {
+        return optimumTrailLength;
     }
 }

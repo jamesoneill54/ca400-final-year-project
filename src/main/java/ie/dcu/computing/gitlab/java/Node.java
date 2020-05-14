@@ -14,6 +14,7 @@ public class Node {
     private int x;
     private int y;
     private ArrayList<Node> children;
+    private boolean isPartOfOptimal = false;
     private Node parent;
     private LinkedHashSet<Node> descendants;
 
@@ -94,6 +95,10 @@ public class Node {
         System.out.print("(" + this.getMatrixIndexX() + ", " + this.getMatrixIndexY() + ")");
     }
 
+    public void setAsPartOfOptimal() {
+        isPartOfOptimal = true;
+    }
+
     public List<Node> getNeighbourNodes(Node[][] matrix) {
         List<Node> neighbours = new ArrayList<Node>(){};
         int startY = matrixIndexY - 1;
@@ -170,5 +175,9 @@ public class Node {
     private void draw(Graphics graphics, Color nodeColor) {
         graphics.setColor(nodeColor);
         graphics.fillRect(this.getX(), this.getY(), size, size);
+        if (isPartOfOptimal) {
+            graphics.setColor(Color.BLACK);
+            graphics.drawRect(this.getX(), this.getY(), size, size);
+        }
     }
 }

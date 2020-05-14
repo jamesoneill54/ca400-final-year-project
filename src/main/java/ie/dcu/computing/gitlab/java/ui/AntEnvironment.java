@@ -19,6 +19,7 @@ public class AntEnvironment extends JPanel implements ActionListener {
     private AntColonyOptimisation acoAlgorithm;
     private GroundPlane groundPlane;
     private int currentIteration = -1;
+    private boolean optimumTrailDisplayed = false;
     private Timer timer;
 
     public AntEnvironment(AntColonyOptimisation acoAlgorithm) {
@@ -51,9 +52,12 @@ public class AntEnvironment extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if (acoAlgorithm.getIterationNumber() != currentIteration) {
+        if (acoAlgorithm.getIterationNumber() != currentIteration || !optimumTrailDisplayed) {
             groundPlane.update();
             currentIteration = acoAlgorithm.getIterationNumber();
+            if (acoAlgorithm.getPrecalculatedOptimumTour().size() > 0) {
+                optimumTrailDisplayed = true;
+            }
         }
         repaint();
     }
@@ -61,6 +65,10 @@ public class AntEnvironment extends JPanel implements ActionListener {
     public void updateGroundPlane() {
         groundPlane.update();
         repaint();
+    }
+
+    public void setOptimumTrailDisplayed(boolean value) {
+        optimumTrailDisplayed = value;
     }
 
     public void updateDimensions() {

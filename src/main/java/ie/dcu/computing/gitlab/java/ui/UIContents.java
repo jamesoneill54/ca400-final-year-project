@@ -49,6 +49,10 @@ public class UIContents extends JPanel {
         statusPanel.updateAntCounts();
     }
 
+    public static void updateOptimumTourLength() {
+        statusPanel.updateOptimumTourLength();
+    }
+
     public static void updateBestTour() {
         statusPanel.updateBestRouteLengths();
     }

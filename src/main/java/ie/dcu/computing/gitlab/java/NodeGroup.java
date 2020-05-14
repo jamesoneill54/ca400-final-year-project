@@ -59,7 +59,7 @@ public class NodeGroup {
     }
 
     public boolean isValid(Node home, Node goal) {
-        boolean withinBounds = x + width <= xBounds && y + height <= yBounds;
+        boolean withinBounds = x + width < xBounds && y + height < yBounds;
         boolean xValidWithHome = home.getMatrixIndexX() < x || home.getMatrixIndexX() >= x + width;
         boolean yValidWithHome = home.getMatrixIndexY() < y || home.getMatrixIndexY() >= y + height;
         boolean xValidWithGoal = goal.getMatrixIndexX() < x || goal.getMatrixIndexX() >= x + width;
