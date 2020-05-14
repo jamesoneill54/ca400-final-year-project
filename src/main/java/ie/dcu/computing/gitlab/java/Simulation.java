@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 public class Simulation {
 
@@ -49,8 +50,8 @@ public class Simulation {
         simulationWindow.setResizable(true);
         simulationWindow.setMinimumSize(new Dimension(250, 250));
         simulationWindow.setTitle("ACO Simulation");
-        BufferedImage image = ImageIO.read(new File("./res/ui-icons/favicon-ant.png"));
-        simulationWindow.setIconImage(image);
+        //BufferedImage image = ImageIO.read(this.getClass().getResource("favicon-ant.png"));
+        //simulationWindow.setIconImage(image);
         simulationWindow.setLocationRelativeTo(null);
         simulationWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         simulationWindow.setVisible(true);
