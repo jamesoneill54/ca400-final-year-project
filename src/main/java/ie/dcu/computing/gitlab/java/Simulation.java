@@ -31,6 +31,7 @@ public class Simulation {
         numberOfObstacles = 5;
         Node.setSize(10);
         acoAlgorithm = new AntColonyOptimisation(environmentWidth, environmentHeight, numberOfAnts);
+        acoAlgorithm.setCreateResults(false);
         acoAlgorithm.setRunningAsVisualSimulation(true);
         antEnvironment = new AntEnvironment(acoAlgorithm);
     }
