@@ -164,16 +164,16 @@ public class PerformanceLogger {
         if (globalBestTour != null) {
             printAsJson("Calculated_Optimum_Tour_Order", precalculatedOptimumTour.toString(), false);
             printAsJson("Calculated_Optimum_Length", precalculatedOptimumTour.size(), false);
-            printAsJson("Global_Best_Tour_Order: ", globalBestTour.toString(), false);
+            printAsJson("Global_Best_Tour_Order", globalBestTour.toString(), false);
             printAsJson("Global_Best_Tour_Length",  globalBestLength, false);
-            printAsJson("Iteration_When_Global_Best_Reached: ", firstBestLength, false);
-            printAsJson("Global_Best_Tours_Per_Iteration:", "[", false);
+            printAsJson("Iteration_When_Global_Best_Reached", firstBestLength, false);
+            printAsJson("Global_Best_Tours_Per_Iteration", "[", false);
         }
         else {
-            printAsJson("Global_Best_Tour_Order: ", "Not found", false);
+            printAsJson("Global_Best_Tour_Order", "Not found", false);
             printAsJson("Global_Best_Tour_Length",  "Not found", false);
-            printAsJson("Iteration_When_Global_Best_Reached: ", "Not found", false);
-            printAsJson("Global_Best_Tours_Per_Iteration:", "[", false);
+            printAsJson("Iteration_When_Global_Best_Reached", "Not found", false);
+            printAsJson("Global_Best_Tours_Per_Iteration", "[", false);
         }
         for (Map.Entry<Integer, Integer[]> entry : bestAntsPerIteration.entrySet()) {
             if (entry.getValue()[0] != null && entry.getValue()[0] == globalBestLength) {

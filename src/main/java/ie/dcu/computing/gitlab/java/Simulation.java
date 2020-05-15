@@ -1,6 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
 import ie.dcu.computing.gitlab.java.ui.AntEnvironment;
+import ie.dcu.computing.gitlab.java.ui.Report;
 import ie.dcu.computing.gitlab.java.ui.UIContents;
 
 import javax.imageio.ImageIO;
@@ -9,29 +10,22 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Simulation {
 
     private static int animationDelay = 100;
     private static int minimumSimulationWidth = 4;
     private static int minimumSimulationHeight = 4;
-    private AntColonyOptimisation acoAlgorithm;
+    private static AntColonyOptimisation acoAlgorithm;
     private AntEnvironment antEnvironment;
-    private int environmentWidth;
-    private int environmentHeight;
-    private int numberOfAnts;
-    private int numberOfObstacles;
     private static JFrame simulationWindow;
+    private static ArrayList<Report> reports;
     private JPanel contentPanel;
 
     Simulation() {
-        environmentWidth = 40;
-        environmentHeight = 40;
-        numberOfAnts = 20;
-        numberOfObstacles = 5;
         Node.setSize(10);
-        acoAlgorithm = new AntColonyOptimisation(environmentWidth, environmentHeight, numberOfAnts);
-        acoAlgorithm.setCreateResults(false);
+        acoAlgorithm = new AntColonyOptimisation(40, 40, 20);
         acoAlgorithm.setRunningAsVisualSimulation(true);
         antEnvironment = new AntEnvironment(acoAlgorithm);
     }
@@ -46,6 +40,7 @@ public class Simulation {
 
     private void displaySimulationWindow() throws IOException {
         simulationWindow = new JFrame();
+        reports = new ArrayList<>();
         simulationWindow.add(new UIContents(acoAlgorithm, antEnvironment));
         simulationWindow.setResizable(true);
         simulationWindow.setMinimumSize(new Dimension(250, 250));
@@ -63,6 +58,12 @@ public class Simulation {
 
     public static void showDialog(String message) {
         JOptionPane.showMessageDialog(simulationWindow, message, "Warning", JOptionPane.WARNING_MESSAGE);
+    }
+
+    public static void showResultsFrame() {
+        Report report = new Report(acoAlgorithm);
+        reports.add(report);
+        report.displayReportFrame();
     }
 
     public static void updateWindowSize() {

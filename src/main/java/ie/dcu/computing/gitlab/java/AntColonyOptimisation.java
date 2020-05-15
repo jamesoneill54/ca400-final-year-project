@@ -48,7 +48,8 @@ public class AntColonyOptimisation {
     public List<Node> globalBestTour;
     public LinkedHashSet<Node> precalculatedOptimumTour = new LinkedHashSet<>();
 
-    private String RESULTS_FOLDER = "./res/results/";
+    private String resultsFilePattern;
+    private String resultsFolder = "./res/results/";
     private String runID;
 
     protected PerformanceLogger performanceLogger;
@@ -216,6 +217,14 @@ public class AntColonyOptimisation {
         this.createResults = createResults;
     }
 
+    public String getResultsFilePattern() {
+        return resultsFilePattern;
+    }
+
+    public String getResultsFolder() {
+        return resultsFolder;
+    }
+
     public void generateObstacles() {
         obstacles.clear();
         for (int i = 0; i < numberOfObstacles; i++) {
@@ -267,6 +276,20 @@ public class AntColonyOptimisation {
         if (maxSteps == 0) {
             maxSteps = (int) (numberOfNodes * 0.7);
         }
+        if (runningAsVisualSimulation) {
+            runID = "visual";
+        }
+        if (createResults) {
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            String ts = timestamp.toString().replace(" ", "-").replace(".", "_").replace(":", "_");
+            resultsFilePattern = "adhoc_" + ts;
+            if (runID.equals("visual")) {
+                resultsFilePattern = runID + "_" + ts;
+            }
+            else if (runID.startsWith("S_") || runID.startsWith("RS_")) {
+                resultsFilePattern = runID + "-" + createVariableID() + "_" + ts;
+            }
+        }
         globalBestTour = null;
         bestTour = null;
         for (attemptNumber = 1; attemptNumber <= maxAttempts; attemptNumber++) {
@@ -278,16 +301,10 @@ public class AntColonyOptimisation {
                 runID = "visual";
             }
             if (createResults) {
+                String resultsFile = resultsFolder + resultsFilePattern + "_ATTEMPT" + attemptNumber + ".json";
+                performanceLogger = new PerformanceLogger(resultsFile);
                 Timestamp timestamp = new Timestamp(System.currentTimeMillis());
                 String ts = timestamp.toString().replace(" ", "-").replace(".", "_").replace(":", "_");
-                String fileName = RESULTS_FOLDER + "adhoc_" + ts + "_ATTEMPT" + attemptNumber + ".json";
-                if (runID.equals("visual")) {
-                    fileName = RESULTS_FOLDER + runID + "_" + ts + "_ATTEMPT" + attemptNumber + ".json";
-                }
-                else if (runID.startsWith("S_") || runID.startsWith("RS_")) {
-                    fileName = RESULTS_FOLDER + runID + "-" + createVariableID() + "_" + ts + "_ATTEMPT" + attemptNumber + ".json";
-                }
-                performanceLogger = new PerformanceLogger(fileName);
                 performanceLogger.formatResults(ts, attemptNumber, homeNode, goalNode, pheromoneImportance, distancePriority, ants, obstacles);
             }
             solve();
@@ -298,6 +315,9 @@ public class AntColonyOptimisation {
         }
         if (runningAsVisualSimulation) {
             UIContents.unlockVariableControls();
+            if (createResults) {
+                Simulation.showResultsFrame();
+            }
         }
     }
 
