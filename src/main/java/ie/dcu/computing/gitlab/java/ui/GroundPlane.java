@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.nio.Buffer;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 public class GroundPlane {
@@ -31,8 +32,20 @@ public class GroundPlane {
         for (NodeGroup obstacle: acoAlgorithm.getObstacles()) {
             obstacle.drawGroup(groundImage.getGraphics());
         }
-        for (Node node: acoAlgorithm.getTrailNodes()) {
-            node.drawNode(groundImage.getGraphics());
+        try {
+            for (Node node: acoAlgorithm.getTrailNodes()) {
+                node.drawNode(groundImage.getGraphics());
+            }
+        }
+        catch (ConcurrentModificationException e) {
+            try {
+                Thread.sleep(100);
+            }
+            catch (InterruptedException interruptedException) {
+                System.out.println("Ground Plane update interrupted: " + interruptedException.getMessage());
+            }
+            System.out.println("Ground plane update failed, retrying...");
+            update();
         }
         for (Node node: acoAlgorithm.getPrecalculatedOptimumTour()) {
             node.drawNode(groundImage.getGraphics());

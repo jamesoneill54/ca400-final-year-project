@@ -22,6 +22,7 @@ public class VariableControlPanel extends JPanel {
     private UITextField pheromoneImportance;
     private UITextField distancePriority;
     private JSlider distancePrioritySlider;
+    private JCheckBox createResultsCheckbox;
     UITextField homeX;
     UITextField homeY;
     UITextField goalX;
@@ -48,11 +49,14 @@ public class VariableControlPanel extends JPanel {
         distancePrioritySlider.addChangeListener(e -> distancePriority.setText(String.valueOf(distancePrioritySlider.getValue())));
         distancePrioritySlider.setMajorTickSpacing(100);
         distancePrioritySlider.setPaintTicks(true);
+        createResultsCheckbox = new JCheckBox();
+        createResultsCheckbox.setSelected(true);
         UILabel environmentWidthLabel = new UILabel("Environment Width:", "identifier");
         UILabel environmentHeightLabel = new UILabel("Environment Height:", "identifier");
         UILabel numberOfAntsLabel = new UILabel("Number of ants:", "identifier");
         UILabel pheromoneLabel = new UILabel("Pheromone Importance:", "identifier");
         UILabel distancePriorityLabel = new UILabel("Distance Priority:", "identifier");
+        UILabel createResultsCheckboxLabel = new UILabel("Create Results:", "identifier");
         saveVariables = new UIButton("Save");
         saveVariables.addActionListener(event -> saveVariables());
 
@@ -88,9 +92,15 @@ public class VariableControlPanel extends JPanel {
         layoutConstraints.gridx = 0;
         layoutConstraints.gridy++;
         listHomeAndGoal(layoutConstraints);
-        listObstacles(layoutConstraints);
         layoutConstraints.gridx = 0;
         layoutConstraints.gridy++;
+        add(createResultsCheckboxLabel, layoutConstraints);
+        layoutConstraints.gridx = 1;
+        add(createResultsCheckbox, layoutConstraints);
+        listObstacles(layoutConstraints);
+        layoutConstraints.gridwidth = 3;
+        layoutConstraints.gridy++;
+        layoutConstraints.gridx = 0;
         add(saveVariables, layoutConstraints);
         validate();
     }
@@ -184,6 +194,7 @@ public class VariableControlPanel extends JPanel {
         acoAlgorithm.setHome(Integer.parseInt(homeX.getText()), Integer.parseInt(homeY.getText()));
         acoAlgorithm.setGoal(Integer.parseInt(goalX.getText()), Integer.parseInt(goalY.getText()));
         obstaclePanel.saveObstacles();
+        acoAlgorithm.setCreateResults(createResultsCheckbox.isSelected());
         updateVariables();
         antEnvironment.updateGroundPlane();
         Simulation.updateWindowSize();
