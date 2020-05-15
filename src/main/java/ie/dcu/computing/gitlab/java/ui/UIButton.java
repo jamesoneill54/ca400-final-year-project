@@ -9,11 +9,11 @@ import java.io.IOException;
 
 public class UIButton extends JButton {
 
-    UIButton(String defaultText) {
+    public UIButton(String defaultText) {
         this(defaultText, null);
     }
 
-    UIButton(String defaultText, String iconFileLocation) {
+    public UIButton(String defaultText, String iconFileLocation) {
         if (iconFileLocation != null) {
             try {
                 BufferedImage icon = ImageIO.read(new File(iconFileLocation));

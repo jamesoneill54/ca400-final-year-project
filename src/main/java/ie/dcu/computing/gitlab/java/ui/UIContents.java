@@ -18,7 +18,7 @@ public class UIContents extends JPanel {
         variableControlPanel = new VariableControlPanel(acoAlgorithm, antEnvironment);
         setLayout(new GridBagLayout());
 
-        JLabel title = new JLabel("Ant Colony Optimisation Simulation");
+        JLabel title = new JLabel("Visual Simulation");
         title.setFont(new Font("Helvetica", Font.PLAIN, 20));
 
         layoutConstraints.gridx = 0;
