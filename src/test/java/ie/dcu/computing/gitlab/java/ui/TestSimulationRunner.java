@@ -15,8 +15,7 @@ public class TestSimulationRunner {
         acoAlgorithm.setHome(0, 0);
         acoAlgorithm.setGoal(0, 1);
         acoAlgorithm.setCreateResults(false);
-        AntEnvironment antEnvironment = new AntEnvironment(acoAlgorithm);
-        simulationRunner = new SimulationRunner(null, acoAlgorithm, antEnvironment);
+        simulationRunner = new SimulationRunner(null, acoAlgorithm);
     }
 
     @Test

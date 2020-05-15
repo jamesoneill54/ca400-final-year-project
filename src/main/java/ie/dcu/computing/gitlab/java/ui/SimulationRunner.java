@@ -9,12 +9,10 @@ public class SimulationRunner extends SwingWorker<String, Object> {
 
     private final RunnerControlPanel runnerControlPanel;
     private final AntColonyOptimisation acoAlgorithm;
-    private final AntEnvironment antEnvironment;
 
-    SimulationRunner(RunnerControlPanel runnerControlPanel, AntColonyOptimisation acoAlgorithm, AntEnvironment antEnvironment) {
+    SimulationRunner(RunnerControlPanel runnerControlPanel, AntColonyOptimisation acoAlgorithm) {
         this.runnerControlPanel = runnerControlPanel;
         this.acoAlgorithm = acoAlgorithm;
-        this.antEnvironment = antEnvironment;
     }
 
     @Override

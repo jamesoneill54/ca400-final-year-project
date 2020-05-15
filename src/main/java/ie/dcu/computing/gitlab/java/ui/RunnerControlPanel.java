@@ -22,7 +22,7 @@ public class RunnerControlPanel extends JPanel {
 
         startButton.addActionListener(pressed -> {
             if (simulationRunner == null) {
-                simulationRunner = new SimulationRunner(this, acoAlgorithm, antEnvironment);
+                simulationRunner = new SimulationRunner(this, acoAlgorithm);
                 simulationRunner.execute();
                 antEnvironment.setOptimumTrailDisplayed(false);
             }
