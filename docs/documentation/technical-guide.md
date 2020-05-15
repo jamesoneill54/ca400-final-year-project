@@ -50,6 +50,11 @@ ___
     - [Displaying Test Results using the Elastic Stack](#44-displaying-test-results-using-the-elastic-stack)
 5. [Sample Code](#5-sample-code)
 6. [Problems Solved](#6-problems-solved)
+    - [6.1 Adapting to nature of problem](#61-adapting-to-nature-of-problem)
+    - [6.2 Determining the Optimum Solution](#62-determining-the-optimum-solution)
+    - [6.3 Animation](#63-animation)
+    - [6.4 Structure of UI](#64-structure-of-ui)
+    - [6.5 Setting up the Elastic Stack](#65-setting-up-the-elastic-stack)
 7. [Results](#7-results)
 8. [Future Work](#8-future-work)
 9. [Acknowledgements](#9-acknowledgements)
@@ -530,6 +535,42 @@ ___
 ___
 
 ## 6. Problems Solved
+
+### 6.1 Adapting to nature of problem
+
+Using this ACO algorithm to find the minimum distance between two specified nodes within an open matrix instead of exhaustively traversing a fully connected matrix challenged us to rethink how the algorithm operated without changing the fundamental principles. This also required us to think about the differences between our problem and the traditional ACO problem while researching previous ACO algorithm implementations. 
+
+We had to take the following into consideration:
+
+#### Defining a successful solution: 
+
+Originally, the solutions constructed within the for a combinatorial problem such as the Travelling Salesman Problem, the goal of each ant was to create a route visiting every node within the construction matrix and then returning to the node at which it started. This is an exhaustive traversal; all solutions are valid and the combined length of each move is used to determine the shortest path.
+
+The ants in this project are not required to visit every node in their graph, rather they all begin at the same node and try to find the same goal node within the graph in as few moves as possible. They are not required to visit every node in their environment, and are considered successful as soon as their trail contains the goal node. Each node is equidistant from all its neighbouring nodes and so the trail with the smallest number of nodes is considered the shortest.
+
+#### Introducing an unsuccessful solution
+
+Following on from our new definition of the successful trail, there now exists a case where an ant runs out of available moves before reaching the goal. In this case, when an ants trail does not contain the goal node, that ant will be considered unsuccessful and it will not apply positive pheromone update to any of the nodes in its trail.
+
+#### Distance Heuristic
+
+In the traditional ACO algorithm, each move made by an ant is determined probabilistically taking into account the pheromone value associated with each candidate node and its distance heuristic; favouring moves closer to the end of the route (i.e the final move, and the "goal" in TSP). As the problem we are trying to solve is trying to find a route to a goal node not known by the ants at the start, the use of the original distance heuristic had to be changed so that it did not rely on the position of the goal node. When addressing this change, we included a distance heuristic favouring nodes further from the home node rather than closer to the goal node, to encourage further exploration of the environment and minimise ants backtracking.
+
+### 6.2 Determining the Optimum Solution
+
+In order to accurately test for the fitness of this algorithm, we needed to determine the optimum solution of any given environment to compare results to. 
+
+We made use of a breadth-first-search traversal that searched the environment exhaustively until the goal node was found. This was implemented as a tree which took the home as the root node and, for each node visited, each of it's unvisited neighbours would be included as that current node's children. Once found, the height of the tree between the goal node to the root home node would be taken as the optimum solution.
+
+### 6.3 Animation
+
+### 6.4 Structure of UI
+
+### 6.5 Setting up the Elastic Stack
+
+While aggregating all the results files within the project, we faced many challenges in setting up an AWS ElasticSearch cluster and harvesting the results folder automatically using Filebeat.
+
+Elasticsearch requires JSON objects to parse and display, but require an index configuration object and an entire JSON object on a single line in order to be recognised by the cluster. In contrast, Filebeat expects to receive text based logfiles that don't automatically recognise and parse JSON objects. We had to configure filebeat to both recognise and extract JSON objects within any result file so that numbers, strings and objects could be treated separately when displaying the data in Kibana. 
 
 ___
 
