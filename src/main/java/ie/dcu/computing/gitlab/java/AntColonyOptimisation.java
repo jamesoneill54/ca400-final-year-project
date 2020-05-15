@@ -273,11 +273,11 @@ public class AntColonyOptimisation {
                 if (runID.equals("visual")) {
                     fileName = RESULTS_FOLDER + runID + "_" + ts + "_ATTEMPT" + attemptNumber + ".json";
                 }
-                else if (runID.startsWith("S_")) {
+                else if (runID.startsWith("S_") || runID.startsWith("RS_")) {
                     fileName = RESULTS_FOLDER + runID + "-" + createVariableID() + "_" + ts + "_ATTEMPT" + attemptNumber + ".json";
                 }
                 performanceLogger = new PerformanceLogger(fileName);
-                performanceLogger.formatResults(ts, attemptNumber, homeNode, goalNode, pheromoneImportance, distancePriority, obstacles);
+                performanceLogger.formatResults(ts, attemptNumber, homeNode, goalNode, pheromoneImportance, distancePriority, ants, obstacles);
             }
             solve();
             if (createResults) {

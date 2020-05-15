@@ -16,11 +16,13 @@ public class PerformanceLogger {
 
     private int indentSize = 1;
     private String indent = new String(new char[indentSize]).replace("\0", "    ");
+    private String runType;
 
     public PerformanceLogger(String fileName) throws IOException {
 
         FileWriter fileWriter = new FileWriter(fileName, true);
         printWriter = new PrintWriter(fileWriter);
+        setRunType(fileName);
     }
 
     public void setFirstBestLength(int iterationNumber) {
@@ -64,17 +66,29 @@ public class PerformanceLogger {
         else { printWriter.print(" \""+string+"\": "+ value + ","); }
     }
 
-    public void formatResults(String timestamp, int attemptNum, Node homeNode, Node goalNode, double pheromoneImportance, double distancePriority, List<NodeGroup> obstacles) {
+    private void setRunType(String filename) {
+        if (filename.contains("RS_")) { runType = "Random Scenario"; }
+        else if (filename.contains("S_")) { runType = "Predefined Scenario"; }
+        else { runType = "Visual Scenario"; }
+    }
+
+    private String getRunType() {
+        return runType;
+    }
+
+    public void formatResults(String timestamp, int attemptNum, Node homeNode, Node goalNode, double pheromoneImportance, double distancePriority, List<Ant> ants, List<NodeGroup> obstacles) {
         /*
         Initial format; run before start of attempt
         */
-        printWriter.println("{ \"index\" : { \"_index\" :  \"testresult\", \"_id\" : \"" + timestamp + "-" + attemptNum + "\" } }");
+        //printWriter.println("{ \"index\" : { \"_index\" :  \"testresult\", \"_id\" : \"" + timestamp + "-" + attemptNum + "\" } }");
         printWriter.print("{");
+        printAsJson("Run_Type", getRunType(), false);
         printAsJson("Attempt_Number", attemptNum, false);
         printAsJson("HOME_NODE", homeNode.toString(), false);
         printAsJson("GOAL_NODE", goalNode.toString(), false);
         printAsJson("Pheromone_Importance", pheromoneImportance, false);
         printAsJson("Distance_Priority", distancePriority, false);
+        printAsJson("Number_of_Ants", ants.size(), false);
         printAsJson("Number_of_Obstacles", obstacles.size(), false);
         if (obstacles.size() > 0) {
             formatObstacles(obstacles);

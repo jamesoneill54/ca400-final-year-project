@@ -21,10 +21,12 @@ public class Scenario {
     private boolean randomiseObstacles = true;
     private int numberOfObstacles;
     private int[][] obstacles;
+    private boolean randomScenario = false;
 
     Scenario(AntColonyOptimisation acoAlgorithm) {
         this.acoAlgorithm = acoAlgorithm;
         randomiseAll();
+        randomScenario = true;
     }
 
     Scenario(AntColonyOptimisation acoAlgorithm, int environmentSize, int numberOfObstacles) {
@@ -48,7 +50,8 @@ public class Scenario {
         String obstacles = String.valueOf(acoAlgorithm.getObstacles().size());
         String home = "h" + acoAlgorithm.getHome().getMatrixIndexX() + "~" + acoAlgorithm.getHome().getMatrixIndexY();
         String goal = "g" + acoAlgorithm.getGoal().getMatrixIndexX() + "~" + acoAlgorithm.getGoal().getMatrixIndexY();
-        return "S_" + String.join("-", new String[] {size, obstacles, home, goal});
+        if (randomScenario) { return "RS_" + String.join("-", new String[] {size, obstacles, home, goal}); }
+        else { return "S_" + String.join("-", new String[] {size, obstacles, home, goal}); }
     }
 
     private void randomiseAll() {
@@ -93,7 +96,7 @@ public class Scenario {
         long startTime = System.currentTimeMillis();
         for (int pheromoneImportance = 0; pheromoneImportance <= 400; pheromoneImportance += 100) {
             System.out.print("25 runs | ");
-            for (int distancePriority = 0; distancePriority <= 400; distancePriority += 100) {
+            for (int distancePriority = 0; distancePriority <= 800; distancePriority += 100) {
                 for (int numberOfAnts = 10; numberOfAnts <= 100; numberOfAnts += 20) {
                     acoAlgorithm.setPheromoneImportance(pheromoneImportance);
                     acoAlgorithm.setDistancePriority(distancePriority);
@@ -164,6 +167,14 @@ public class Scenario {
         }
     }
 
+    public static void runMultipleRandomScenarios() {
+        AntColonyOptimisation acoAlgorithm = new AntColonyOptimisation(10, 10, 10);
+        for (int i = 0; i < 8; i++) {
+            Scenario randomScenario = new Scenario(acoAlgorithm);
+            randomScenario.runScenario();
+        }
+    }
+
     public int getEnvironmentSize() {
         return environmentSize;
     }
@@ -182,6 +193,7 @@ public class Scenario {
 
     public static void main(String[] args) {
         runMultipleScenarios();
+        runMultipleRandomScenarios();
         //Scenario scenario = new Scenario(new AntColonyOptimisation(10, 10, null));
         //scenario.runScenario();
     }
