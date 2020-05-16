@@ -1,5 +1,7 @@
 package ie.dcu.computing.gitlab.java;
 
+import ie.dcu.computing.gitlab.java.ui.ScenariosPanel;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -22,6 +24,8 @@ public class Scenario {
     private int numberOfObstacles;
     private int[][] obstacles;
     private boolean randomScenario = false;
+    private boolean stopScenario = false;
+    private ScenariosPanel scenariosPanel;
 
     Scenario(AntColonyOptimisation acoAlgorithm) {
         this.acoAlgorithm = acoAlgorithm;
@@ -35,7 +39,7 @@ public class Scenario {
         this.numberOfObstacles = numberOfObstacles;
     }
 
-    Scenario(AntColonyOptimisation acoAlgorithm, int environmentSize, int[] home, int[] goal, int[][] obstacles) {
+    public Scenario(AntColonyOptimisation acoAlgorithm, int environmentSize, int[] home, int[] goal, int[][] obstacles) {
         this.acoAlgorithm = acoAlgorithm;
         this.environmentSize = environmentSize;
         this.home = home;
@@ -94,10 +98,14 @@ public class Scenario {
         setupScenario();
         System.out.println("Running Scenario " + generateScenarioID());
         long startTime = System.currentTimeMillis();
+        int i = 0;
         for (int pheromoneImportance = 0; pheromoneImportance <= 400; pheromoneImportance += 100) {
-            System.out.print("25 runs | ");
             for (int distancePriority = 0; distancePriority <= 800; distancePriority += 100) {
                 for (int numberOfAnts = 10; numberOfAnts <= 100; numberOfAnts += 20) {
+                    if (stopScenario) {
+                        System.out.println("Stopping Scenario");
+                        break;
+                    }
                     acoAlgorithm.setPheromoneImportance(pheromoneImportance);
                     acoAlgorithm.setDistancePriority(distancePriority);
                     acoAlgorithm.generateAnts(numberOfAnts);
@@ -107,15 +115,37 @@ public class Scenario {
                     catch (IOException e) {
                         System.out.println("Error writing to file in Scenario: " + e.getMessage());
                     }
+                    if (scenariosPanel != null) {
+                        scenariosPanel.updateStatus("Currently running the following scenario variables:\n" +
+                                "Pheromone Importance: " + pheromoneImportance + "\n" +
+                                "Distance Priorities: 0 -> 800 in steps of 100\n" +
+                                "Number of Ants: 10 -> 100 in steps of 10\n" +
+                                "Number of simulations run: " + i);
+                    }
                     System.out.print(".");
+                    i++;
+                }
+                if (stopScenario) {
+                    break;
                 }
             }
             System.out.println();
+            if (stopScenario) {
+                break;
+            }
         }
         DateFormat formatter = new SimpleDateFormat("HH:mm:ss.SSS");
         formatter.setTimeZone(TimeZone.getTimeZone("GMT"));
         Date runTime = new Date(System.currentTimeMillis() - startTime);
         System.out.println("Scenario finished in " + formatter.format(runTime));
+        if (scenariosPanel != null) {
+            scenariosPanel.updateStatus("Scenario finished in "+ formatter.format(runTime) + "\n" +
+                    "Output to file pattern: " + acoAlgorithm.getResultsFolder() + acoAlgorithm.getResultsFilePattern());
+        }
+    }
+
+    public void stopScenario() {
+        stopScenario = true;
     }
 
     public static void runMultipleScenarios() {
@@ -189,6 +219,10 @@ public class Scenario {
 
     public int[][] getObstacles() {
         return obstacles;
+    }
+
+    public void setScenariosPanel(ScenariosPanel scenariosPanel) {
+        this.scenariosPanel = scenariosPanel;
     }
 
     public static void main(String[] args) {
