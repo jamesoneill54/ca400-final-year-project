@@ -542,7 +542,7 @@ Using this ACO algorithm to find the minimum distance between two specified node
 
 We had to take the following into consideration:
 
-#### Defining a successful solution: 
+#### Defining a successful solution
 
 Originally, the solutions constructed within the for a combinatorial problem such as the Travelling Salesman Problem, the goal of each ant was to create a route visiting every node within the construction matrix and then returning to the node at which it started. This is an exhaustive traversal; all solutions are valid and the combined length of each move is used to determine the shortest path.
 
@@ -560,11 +560,21 @@ In the traditional ACO algorithm, each move made by an ant is determined probabi
 
 In order to accurately test for the fitness of this algorithm, we needed to determine the optimum solution of any given environment to compare results to. 
 
-We made use of a breadth-first-search traversal that searched the environment exhaustively until the goal node was found. This was implemented as a tree which took the home as the root node and, for each node visited, each of it's unvisited neighbours would be included as that current node's children. Once found, the height of the tree between the goal node to the root home node would be taken as the optimum solution.
+We made use of a breadth-first-search traversal that searched the environment exhaustively until the goal node was found. This was implemented as a tree which took the home as the root node and, for each node visited, each of its unvisited neighbours would be included as that current node's children. Once found, the height of the tree between the goal node to the root home node would be taken as the optimum solution.
 
 ### 6.3 Animation
 
+When we began the project, we had little-to-no prior knowledge of animation, so we needed to learn the basics of animation, and the basics of animation in Java. We also had no prior knowledge of Java Swing or Java AWT, which are the Java windowing tools. 
+
+In order to overcome this, we took various online tutorials on animation and Java Swing and AWT, and read the documentation on Java Swing and Java AWT. Our knowledge of Java Swing and AWT grew through trial and error, and by the end of this project, we have acquired a good understanding of both animation, and the ways to implement it in Java. 
+
+Another challenge with animation was ensuring that the UI could properly represent the workings of the Ant Colony Optimisation algorithm. This challenge was overcome by representing the environment as a matrix of nodes, and displaying each node as a uniform size in the UI. 
+
 ### 6.4 Structure of UI
+
+The way to structure the UI, and the way to transfer data from the Ant Colony Optimisation algorithm to the UI and vice-versa, were unknown to us in the beginning. In order for the simulation to be displayed, all ant positions, obstacle positions, goal and home positions needed to be known to the user interface. 
+
+We accomplished this by ensuring that the project was separated into two components; the Ant Colony Optimisation algorithm and the UI. This way, changes could be made to the UI without affecting the Ant Colony Optimisation algorithm, and both could be scaled independently. 
 
 ### 6.5 Setting up the Elastic Stack
 
