@@ -56,6 +56,9 @@ ___
     - [6.4 Structure of UI](#64-structure-of-ui)
     - [6.5 Setting up the Elastic Stack](#65-setting-up-the-elastic-stack)
 7. [Results](#7-results)
+    - [7.1 Accuracy Statistics](#71-accuracy-statistics)
+    - [7.2 Speed Test](#72-speed-test)
+    - [7.3 Cross-Section of Parameters](#73-cross-section-of-parameters)
 8. [Future Work](#8-future-work)
 9. [Acknowledgements](#9-acknowledgements)
 
@@ -570,6 +573,26 @@ ___
 
 ## 5. Sample Code
 
+The `solve` method in `AntColonyOptimisation`, which runs the algorithm once initiated.
+
+![Solve](./res/technical-guide/solve.png)
+
+The `updateTrails` method in `AntColonyOptimisation`, which applies pheromone evaporation and checks for nodes used in ant paths to give a pheromone boost
+
+![updateTrails](./res/technical-guide/update-trails.png)
+
+The `selectNextNode` method in `Ant`, which picks the next node for an ant to visit in the matrix
+
+![select](./res/technical-guide/select-next-node.png)
+
+The `calculateProbabilities` method in `Ant`, which helps the select next node process
+
+![calc](./res/technical-guide/calculate-probabilities.png)
+
+The `getNeighbourNodes` method in `Node`, which fetches all neighbouring nodes that are visitable
+
+![neighbs](./res/technical-guide/get-neighbour-nodes.png)
+
 ___
 
 ## 6. Problems Solved
@@ -624,6 +647,101 @@ ___
 
 ## 7. Results
 
+To evaluate the fitness of our algorithm, we used three different `Scenario` types; a 'Predefined' scenario with a specified environment, a 'Random' Scenario which was generated at random, and a 'SpeedTest' Scenario which used the specified environments but utilised more iterations within attempts to further assess the number of iterations in which a solution was found. 
+
+The three factors we wished to analyse in our evaluation were the following:
+
+- `Pheromone Importance` - whether a smaller or greater preference to nodes with a strong pheromone value would work more efficiently
+- `Distance Priority` - whether a smaller or greater preference to nodes further away from the home would work more efficiently.
+- `Number of Ants` - whether a smaller or larger colony would work more efficiently.
+
+As we were measuring three separate factors; we had to ensure each possible combination was tested to find the best cross-section. To do this, each scenario comprised of a single environment in which many attempts were run. Each attempt used a different combination of these values until every possibility within our defined constraints was tried. 
+
+When measuring "efficiency", we focused on two areas: Accuracy and Speed. The accuracy of an attempt was a measure of how close to the precalculated optimum distance the algorithm would achieve by the end of its run. We logged the difference between the `globalBestTrail` and `precalculatedOptimumRoute` lengths, and favoured those nearing 0 as more accurate attempts. The speed of an attempt considered the iteration at which the best trail or optimum was reached. The less iterations it took an algorithm attempt to reach its `globalBestTrail`, the faster it would operate. 
+
+All results gathered throughout the testing process have been saved to an AWS Elasticsearch cluster and were analysed using the Kibana plugin.
+
+### 7.1 Accuracy Statistics
+
+The overall stats are as follows:
+
+Out of _13,551_ Predefined Scenario attempts 
+
+- 1,025 were fully accurate i.e managed to find the precalculated optimum (7.56%)
+- 1,372 had best route lengths that were 1 node longer than the precalculated optimum (10.12%)
+- 1,235 had best route lengths 2 nodes longer than the precalculated optimum (9.11%)
+- The average proximity to the precalculated optimum was 8.839 nodes.
+
+![Counts Predefined](./res/technical-guide/proximities_counts_pd.png)
+
+Out of _32,266_ Random Scenario attempts
+
+- 9,114 were fully accurate (28.25%)
+- 991 had best routes that were 1 node longer than the precalculated optimum (3.07%)
+- 800 had best routes that were 2 nodes longer than the precalculated optimum (2.48%)
+- The average proximity to the precalculated optimum was 23.609 nodes.
+
+![Counts Random](./res/technical-guide/proximities_counts_rn.png)
+
+### 7.2 Speed Test
+
+A separate Speed centric test was run with an extended number of iterations to measure the number of iterations 
+
+For the 3,301 completely accurate attempts:
+
+- 1,409 attempts found the optimum route in 2 moves (42.68%)
+- 841 attempts found the optimum route in 3 moves (25.48%)
+- 576 attempts found the optimum in 4 moves (17.45%)
+- 423 attempts found the optimum in 5 moves (12.81%)
+- 52 attempts found the optimum in over 5 moves (1.58%)
+
+For the 2,362 attempts in which the best Trail length was 1 node off the optimum:
+
+- 753 attempts found the optimum route in 2 moves (31.88%)
+- 527 attempts found the optimum route in 3 moves (22.31%)
+- 542 attempts found the optimum in 4 moves (22.95%)
+- 472 attempts found the optimum in 5 moves (19.98%)
+- 68 attempts found the optimum in over 5 moves (2.88%)
+
+For the 2,362 attempts in which the best Trail length was 2 node off the optimum:
+
+- 635 attempts found the optimum route in 2 moves (26.84%)
+- 546 attempts found the optimum in 3 moves (23.08%)
+- 577 attempts found the optimum route in 3 moves (24.39%)
+- 544 attempts found the optimum in 5 moves (22.99%)
+- 64 attempts found the optimum in over 5 moves (2.7%)
+
+![Speed Test Pies](./res/technical-guide/speedtest.png)
+
+Based on this information, the algorithm would tend to reach it's own best length in 1-2 iterations, especially if that best length was closer to the precalculated optimum. There seems to be a slight correlation between an attempt taking longer to reach its own best length and being further from achieiving the precalculated optimum in general.
+
+
+### 7.3 Cross-Section of Parameters
+
+While investigating the best cross section of values between the pheromone importance, distance priority and number of ants, we generated the following graphs. Each is based off all Scenario types i.e for all 50,817 recorded attempts.
+
+#### Average Accuracy with Pheromone Importance
+
+![Pheromone Importance](./res/technical-guide/pheromone-graph.png)
+
+#### Average Accuracy with Distance Priority
+
+![Distance Priority](./res/technical-guide/dist-graph.png)
+
+#### Average Accuracy with Number of Ants
+
+![Number of Ants](./res/technical-guide/ants-graph.png)
+
+#### Cross section of values
+
+![Cross Section](./res/technical-guide/crossSection-results.PNG)
+
+This has the proximity to calculated optimum on the x-axis, with each of the  averages of the different factor values represented as dots on the y axis. Red dot denotes the distance priority, green represents the pheromone importance and blue represents the number of ants. A lower proximity indicates a more accurate attempt, and so from this cross section we can gather the following 'ideal' parameters:
+
+- Distance priority: 415.188
+- Pheromone importanec: 180.741
+- Number of ants: 53
+
 ___
 
 ## 8. Future Work
@@ -668,3 +786,5 @@ The open plain matrix with a single goal approach would also be an effective env
 ___
 
 ## 9. Acknowledgements
+
+This project draws inspiration from the Ant Colony Optimisation algorithm originally conceived by Marco Dorigo et al at IRIDIA in 1997. All code within this repository is our own, and we have made use of an AWS Elasticsearch cluster to store test results created from running this project. All result images are courtesy of the Kibana plugin within Elasticsearch.
