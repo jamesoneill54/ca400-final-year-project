@@ -1,10 +1,13 @@
-# Modelling an Ant Colony
+# Modelling an Ant Colony - User Manual
 
-Technical Guide
-
-Kevin Cleary - 16373026
-
-James O'Neill - 16410652
+|                      |                         |
+|----------------------|-------------------------|
+|**Project Title**     | Modelling An Ant Colony |
+|**Student 1 Name**    | Kevin Thomas Cleary     |
+|**Student 1 ID**      | 16373026                |
+|**Student 2 Name**    | James Edward O'Neill    |
+|**Student 2 ID**      | 16410652                |
+|**Project Supervisor**| Alistair Sutherland     |
 
 Date: 16/05/2020
 
@@ -205,8 +208,8 @@ The Obstacle panel, upon initialisation, displays a `+` button. When clicked, an
 
 When first created, obstacles are assigned random properties, but each can be edited by the user. These properties are as follows:
 
-- **X**: Specifies the X co-ordinate of the _leftmost_ node within the obstacle
-- **Y**: Specifies the Y co-ordinate of the _topmost_ node within the obstacle
+- **X**: Specifies the X co-ordinate of the leftmost node within the obstacle
+- **Y**: Specifies the Y co-ordinate of the topmost node within the obstacle
 - **Width**: Specifies the width of the obstacle as a number of nodes. The width extends to the right of the specified X co-ordinate.
 - **Height**: Specifies the height of the obstacle as a number of nodes. The height extends downwards from the specified Y co-ordinate.
 

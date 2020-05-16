@@ -1,10 +1,13 @@
-# Modelling an Ant Colony
+# Modelling an Ant Colony - Technical Guide
 
-Technical Guide
-
-Kevin Cleary - 16373026
-
-James O'Neill - 16410652
+|                      |                         |
+|----------------------|-------------------------|
+|**Project Title**     | Modelling An Ant Colony |
+|**Student 1 Name**    | Kevin Thomas Cleary     |
+|**Student 1 ID**      | 16373026                |
+|**Student 2 Name**    | James Edward O'Neill    |
+|**Student 2 ID**      | 16410652                |
+|**Project Supervisor**| Alistair Sutherland     |
 
 Date: 16/05/2020
 
