@@ -38,14 +38,14 @@ ___
         - [`NodeGroup` Class](#413-nodegroup-class)
         - [`Ant` Class](#414-ant-class)
         - [`PerformanceLogger` Class](#415-performancelogger-class)
-    - [Visual Display of the Algorithm (GUI)](#42-visual-display-of-the-algorithm-gui)
+    - [Visual Display of the Algorithm](#42-visual-display-of-the-algorithm)
         - [`AntEnvironment` Panel](#421-antenvironment-panel)
         - [`RunnerControlPanel`](#422-runnercontrolpanel)
         - [`StatusPanel`](#423-statuspanel)
         - [`VariableControlPanel`](#424-variablecontrolpanel)
         - [`ObstaclePanel`](#425-obstaclepanel)
-    - [Simulation & Scenarios](#43-simulation--scenarios)
-        - [`Simulation` Class](#431-simulation-class)
+    - [Scenarios](#43-scenarios)
+        - [Scenarios GUI](#431-scenarios-gui)
         - [`Scenario` Class](#432-scenario-class)
     - [Displaying Test Results using the Elastic Stack](#44-displaying-test-results-using-the-elastic-stack)
 5. [Sample Code](#5-sample-code)
@@ -417,15 +417,25 @@ The main method included in `PerformanceLogger` is an overloaded method `formatR
 
 Once the attempt is complete, the `close()` method is called from `ÀntColonyOptimisation`, and the `printWriter` within the `performanceLogger` instance is closed, with all the data formatted in the newly created JSON results file.
 
-### 4.2 Visual Display of the Algorithm (GUI)
+---
 
-This component of the project is responsible for displaying the algorithm's progress throughout the running of the algorithm. It queries the ACO algorithm at regular intervals and displays them to the user. The main components of the GUI are represented in the following class diagram: 
+The next two components of the project are accessed through the GUI, and allow the Ant Colony Optimisation algorithm to be run in two different ways:
+1. Through a visual simulation where every calculation and movement of the algorithm is visualised.
+2. Through a scenario, where an environment is set by the user (which we call a "scenario"), and the algorithm is then run multiple times on the same environment, while systematically changing the algorithm variables to different combinations. 
 
-![GUI class diagram](res/technical-guide/gui-class-diagram.png)
+The user can choose between running a visual simulation, or a scenario in the "Simulation Options Window", which is the first window shown to the window, and is displayed below:
 
-The layout of the GUI is shown below, where the coloured boxes represent the different components found in the class diagram above. 
+![Simulation Options Window](res/technical-guide/simulation-options-window.png)
 
-![GUI Screenshot](res/technical-guide/gui-screenshot.png)
+### 4.2 Visual Display of the Algorithm
+
+If the user pressed the "Visual Simulation" button in the simulation options window, then the visual simulation GUI will be shown. The visual simulation GUI is represented by the following class diagram: 
+
+![Visual Simulation class diagram](res/technical-guide/visual-simulation-class-diagram.png)
+
+The layout of the visual simulation GUI is shown below, where the coloured boxes represent the different components found in the class diagram above. 
+
+![Visual Simulation GUI Screenshot](res/technical-guide/simulation-window.png)
 
 - Red Box: The `AntEnvironment` panel
 - Green Box: The `RunnerControlPanel`
@@ -451,6 +461,7 @@ The nodes/squares in the environment that the ants move over are representative 
 - `NodeType.GOAL`: Represents the goal, which the ants need to reach, and is visually denoted on the environment as a magenta square.
 - `NodeType.OBSTACLE`: Represents obstacles on the environment, which the ants cannot pass through or stand on, and is visually denoted on the environment as a black square. 
 - `NodeType.STANDARD`: Represents a traversable area of the environment, which the ants use to reach the goal, and is visually denoted on the environment as a white square. Standard nodes also display their pheromone count visually by their shade of green. The more green a node is, the more pheromones are present on that node. 
+- The optimal trail: The optimal trail is shown as a series of black squares surrounding the nodes which make up the shortest route from the home node to the goal node. This optimal trail is calculated using the Breadth First Search algorithm, and is only one of many possible optimal routes. The ants aim to generate a trail that is of the same length as the optimal trail. 
 
 #### 4.2.2 `RunnerControlPanel` 
 
@@ -488,6 +499,7 @@ This panel allows the user to change the values of specific variables that affec
 - Distance priority.
 - Home node X and Y coordinates.
 - Goal node X and Y coordinates.
+- A checkbox to specify whether or not to gather results on this run of the algorithm. 
 - Number of obstacles, each obstacle's X and Y coordinates, width, and height. 
 
 This panel allows different values of variables to be tested, and allows the user to see how each variable changes the working of the algorithm. It also helped us when fine-tuning the algorithm, and allowed us to construct test environments for extensive variable testing. 
@@ -498,19 +510,45 @@ The user must click the "Save" button at the bottom of the `VariableControlPanel
 
 This panel is a sub-panel of the `VariableControlPanel`, and allows the user to specify specific coordinates of obstacles along with their widths and heights. When obstacles are added, they are assigned a random X, Y, width and height that are not overlapping the home and goal nodes. The user can then use the `ObstaclePanel` to assign new values to each added obstacle, or remove obstacles as they please. 
 
-### 4.3 Simulation & Scenarios
+---
 
-This section of the project was concerned with running our ant colony optimisation algorithm in different ways, which took the form of the `Simulation` and `Scenario` classes. 
+If the user has checked the box "Create Results", and the simulation has been run to completion or has been stopped by the user, then the "Results Window" will be shown. Here, the user can see all the metrics gathered by the program during the running of the visual simulation. The GUI of the results window is shown below:
 
-#### 4.3.1 `Simulation` Class
+![Results Window GUI](res/technical-guide/results-window.png)
 
-This class is responsible for instantiating and linking both the `AntColonyOptimisation` and the visual display of the `AntColonyOptimisation`. It sets all initial values in the `AntColonyOptimisation` class, although many of these can be changed by the user in the visual display. 
+### 4.3 Scenarios
+
+Scenarios allow the user to specify a certain environment to run the algorithm on multiple times while systematically varying the environment variables. 
+
+#### 4.3.1 Scenarios GUI
+
+If the user pressed the "Scenarios" button in the simulation options window, then the scenarios GUI will be shown. A screenshot of the scenarios GUI is shown below: 
+
+![Scenarios GUI before run](res/technical-guide/scenarios-window-before-run.png)
+
+This window allows the user to specify an environment in which many iterations of the algorithm will be run. The user can specify the square environment size (rectangular environments are restricted for scenarios), the home coordinates, the goal coordinates, and the obstacles present in the environment. The same class is used for both the obstacles' specification box in the scenario window, and the corresponding obstacles' specification box in the visual simulation window (which is denoted by the brown box in the visual simulation GUI screenshot). 
+
+Once the "Run Scenario" button is clicked, the window changes to show the status of the current scenario, specifying which range of variable values are currently being tested on the specified environment. The variable values that are changed for each run are: 
+
+1. Pheromone Importance: This value changes in increments of 100, starting at 0 and up to a maximum of 400.
+2. Distance Priority: This value changes in increments of 100, starting at 0 and up to a maximum of 800.
+3. Number of Ants: This value changes in increments of 20, starting at 10 and up to a maximum of 100.
+
+A screenshot of the scenarios GUI while the scenario is running is shown below:
+
+![Scenarios GUI during run](res/technical-guide/scenarios-window-during-run.png)
+
+Once the scenario runs until completion, or if the user presses the "Stop Scenario" button, then the results gathered are written to the "res/results/" directory in the project directory. The runtime of the scenario is displayed to the user, and the file location and file pattern of the results file are also shown. 
+
+A screenshot of the scenarios GUI when the scenario has finished running is shown below:
+
+![Scenarios GUI after run](res/technical-guide/scenarios-window-after-run.png)
 
 #### 4.3.2 `Scenario` Class
 
-This class is responsible for the testing of the entire `AntColonyOptimsation` and allows extensive running of the algorithm across many environments, with the environment variables varying between each running of the algorithm. This allows us to gather extensive metrics to examine how the algorithm runs as a whole, and to find out the optimum values of the variables that influence the running of the algorithm. 
+This class is responsible for the testing of the entire `AntColonyOptimsation` and allows extensive running of the algorithm across a given environment, with the environment variables varying between each running of the algorithm. This allows us to gather extensive metrics to examine how the algorithm runs as a whole, and to find out the optimum values of the variables that influence the running of the algorithm. 
 
-For each instance of the `Scenario` class, the `runScenario()` method runs the given environment 125 times while varying the pheromone importance, distance priority and number of ants for each run. The results from each run is collected, and each run's results is stored in its own results file in json format, which can then be easily managed. 
+For each instance of the `Scenario` class, the `runScenario()` method runs the given environment 225 times while varying the pheromone importance, distance priority and number of ants for each run. The results from each run is collected, and each run's results is stored in its own results file in json format.
 
 ### 4.4 Displaying Test Results using the Elastic Stack
 

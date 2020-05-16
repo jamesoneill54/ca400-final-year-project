@@ -41,10 +41,10 @@ public class TestNodeGroup {
 
     @Test
     void setNodesToTypeTest() {
-        NodeGroup testNodeGroup1 = new NodeGroup(NodeType.OBSTACLE, 5, 5, 3, 3, testACO.getGraph());
-        testNodeGroup1.setNodesToType(testACO.getGraph());
         testACO.setGoal(2, 4);
         testACO.setHome(3, 2);
+        NodeGroup testNodeGroup1 = new NodeGroup(NodeType.OBSTACLE, 5, 5, 3, 3, testACO.getGraph());
+        testNodeGroup1.setNodesToType(testACO.getGraph());
         for (int x = 0; x < 10; x++) {
             for (int y = 0; y < 10; y++) {
                 if (x >= 5 && x < 8 && y >= 5 && y < 8) {
