@@ -1,12 +1,10 @@
-# CA400 clearyk6-oneilj54
+# CA400 Final Year Project
 
 |                      |                         |
 |----------------------|-------------------------|
 |**Project Title**     | Modelling An Ant Colony |
 |**Student 1 Name**    | Kevin Thomas Cleary     |
-|**Student 1 ID**      | 16373026                |
 |**Student 2 Name**    | James Edward O'Neill    |
-|**Student 2 ID**      | 16410652                |
 |**Project Supervisor**| Alistair Sutherland     |
 
 ## Project Overview
